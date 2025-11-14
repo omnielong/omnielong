@@ -6,7 +6,7 @@ import useStore from '../store/useStore';
 const ShiftPage: React.FC = () => {
   const [openingBalance, setOpeningBalance] = useState('100.00');
   const navigate = useNavigate();
-  const { currentOperator, openShift, logout } = useStore();
+  const { currentOperator, openShift, logout, currentStore } = useStore();
 
   const handleOpenShift = () => {
     if (currentOperator) {
@@ -16,8 +16,14 @@ const ShiftPage: React.FC = () => {
   };
 
   const handleLogout = () => {
-    logout();
-    navigate('/');
+    // Se è un Reseller Manager virtuale, torna alla lista negozi
+    if (currentOperator?.id.startsWith('reseller-manager-') && currentStore) {
+      logout();
+      navigate(`/reseller/businesses/${currentStore.businessId}/stores`);
+    } else {
+      logout();
+      navigate('/');
+    }
   };
 
   return (

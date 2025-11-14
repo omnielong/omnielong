@@ -13,14 +13,14 @@ import {
   Calendar,
   Eye,
 } from 'lucide-react';
-import type { Store } from '../types';
+import type { Store, Operator } from '../types';
 import useStore from '../store/useStore';
 import { mockStores } from '../utils/storeMockData';
 
 const ResellerBusinessStoresPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { businesses, stores, setStores } = useStore();
+  const { businesses, stores, setStores, login } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
@@ -82,6 +82,38 @@ const ResellerBusinessStoresPage: React.FC = () => {
       generic: 'bg-gray-100 text-gray-800',
     };
     return colors[sector];
+  };
+
+  // Funzione per entrare nel punto vendita come Manager
+  const handleEnterStore = (store: Store) => {
+    // Crea un operatore virtuale "Reseller Manager"
+    const virtualOperator: Operator = {
+      id: `reseller-manager-${store.id}`,
+      storeId: store.id,
+      businessId: store.businessId,
+      name: 'Reseller Manager',
+      email: 'reseller@system.local',
+      role: 'manager',
+      pin: '0000',
+      active: true,
+      createdAt: new Date(),
+      permissions: {
+        canAccessReports: true,
+        canManageProducts: true,
+        canManageCustomers: true,
+        canManagePromotions: true,
+        canManageOperators: false,
+        canViewSensitiveData: true,
+        canProcessRefunds: true,
+        canOpenCloseCashRegister: true,
+      }
+    };
+
+    // Effettua il login come Manager
+    login(virtualOperator);
+
+    // Naviga alla pagina shift
+    navigate('/shift');
   };
 
   if (!business) {
@@ -256,10 +288,18 @@ const ResellerBusinessStoresPage: React.FC = () => {
               )}
 
               {/* Actions */}
-              <div className="pt-4 border-t border-gray-200">
+              <div className="pt-4 border-t border-gray-200 space-y-2">
+                <button
+                  onClick={() => handleEnterStore(store)}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
+                  disabled={!store.active}
+                >
+                  <StoreIcon className="w-4 h-4 mr-2" />
+                  {store.active ? 'Entra nel Punto Vendita' : 'Punto Vendita Inattivo'}
+                </button>
                 <button
                   onClick={() => navigate(`/business/stores/${store.id}`)}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
+                  className="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Visualizza Dettagli
