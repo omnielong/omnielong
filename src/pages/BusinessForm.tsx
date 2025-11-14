@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -17,6 +17,7 @@ import {
   Package,
 } from 'lucide-react';
 import type { Business } from '../types';
+import { getBusinessById } from '../utils/businessMockData';
 
 const BusinessForm: React.FC = () => {
   const navigate = useNavigate();
@@ -43,6 +44,33 @@ const BusinessForm: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  // Carica i dati del business in modalità edit
+  useEffect(() => {
+    if (isEditing && id) {
+      const business = getBusinessById(id);
+      if (business) {
+        setFormData({
+          companyName: business.companyName,
+          vatNumber: business.vatNumber || '',
+          fiscalCode: business.fiscalCode || '',
+          email: business.email,
+          phone: business.phone,
+          address: business.address || '',
+          website: business.website || '',
+          businessSector: business.businessSector || 'generic',
+          adminEmail: business.adminEmail,
+          adminName: business.adminName,
+          subscriptionPlan: business.subscriptionPlan,
+          maxStores: business.maxStores,
+          maxOperatorsPerStore: business.maxOperatorsPerStore,
+          billingEmail: business.billingEmail || '',
+          paymentMethod: business.paymentMethod || 'bank_transfer',
+          active: business.active,
+        });
+      }
+    }
+  }, [id, isEditing]);
 
   const plans = [
     {

@@ -18,69 +18,7 @@ import {
 } from 'lucide-react';
 import type { Business, ResellerStats } from '../types';
 import useStore from '../store/useStore';
-
-// Mock data - in produzione verrebbe da API
-const mockBusinesses: Business[] = [
-  {
-    id: 'bus-1',
-    resellerId: 'res-1',
-    companyName: 'Boutique Milano Centro',
-    vatNumber: 'IT12345678901',
-    fiscalCode: undefined,
-    email: 'admin@boutiquemilano.it',
-    phone: '+39 02 1234567',
-    address: 'Via Montenapoleone 1, Milano',
-    active: true,
-    createdAt: new Date('2024-01-15'),
-    subscriptionPlan: 'professional',
-    subscriptionStartDate: new Date('2024-01-15'),
-    subscriptionEndDate: new Date('2025-01-15'),
-    adminEmail: 'admin@boutiquemilano.it',
-    adminName: 'Maria Rossi',
-    maxStores: 5,
-    maxOperatorsPerStore: 10,
-    billingEmail: 'billing@boutiquemilano.it',
-    paymentMethod: 'credit_card',
-  },
-  {
-    id: 'bus-2',
-    resellerId: 'res-1',
-    companyName: 'Bar Centrale S.r.l.',
-    vatNumber: 'IT98765432109',
-    email: 'info@barcentrale.it',
-    phone: '+39 06 9876543',
-    address: 'Piazza del Popolo 10, Roma',
-    active: true,
-    createdAt: new Date('2024-02-01'),
-    subscriptionPlan: 'basic',
-    subscriptionStartDate: new Date('2024-02-01'),
-    subscriptionEndDate: new Date('2025-02-01'),
-    adminEmail: 'admin@barcentrale.it',
-    adminName: 'Giuseppe Bianchi',
-    maxStores: 2,
-    maxOperatorsPerStore: 5,
-    paymentMethod: 'bank_transfer',
-  },
-  {
-    id: 'bus-3',
-    resellerId: 'res-1',
-    companyName: 'Ristorante da Luca',
-    vatNumber: 'IT11223344556',
-    email: 'luca@ristorantedaluca.it',
-    phone: '+39 055 1122334',
-    address: 'Via dei Servi 25, Firenze',
-    active: false,
-    createdAt: new Date('2023-11-10'),
-    subscriptionPlan: 'enterprise',
-    subscriptionStartDate: new Date('2023-11-10'),
-    subscriptionEndDate: new Date('2024-11-10'),
-    adminEmail: 'luca@ristorantedaluca.it',
-    adminName: 'Luca Verdi',
-    maxStores: 10,
-    maxOperatorsPerStore: 20,
-    paymentMethod: 'bank_transfer',
-  },
-];
+import { mockBusinesses } from '../utils/businessMockData';
 
 const ResellerDashboard: React.FC = () => {
   const navigate = useNavigate();

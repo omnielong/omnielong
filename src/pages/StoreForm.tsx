@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -14,6 +14,7 @@ import {
   Package,
 } from 'lucide-react';
 import type { Store, BusinessSector } from '../types';
+import { getStoreById } from '../utils/storeMockData';
 
 const StoreForm: React.FC = () => {
   const navigate = useNavigate();
@@ -58,6 +59,51 @@ const StoreForm: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  // Carica i dati dello store in modalità edit
+  useEffect(() => {
+    if (isEditing && id) {
+      const store = getStoreById(id);
+      if (store) {
+        setFormData({
+          name: store.name,
+          code: store.code,
+          address: store.address,
+          city: store.city,
+          province: store.province,
+          postalCode: store.postalCode,
+          phone: store.phone || '',
+          email: store.email || '',
+          sector: store.sector,
+          active: store.active,
+          cashRegisterCode: store.cashRegisterCode || '',
+          fiscalPrinterSerial: store.fiscalPrinterSerial || '',
+          // Carica orari se presenti
+          mondayOpen: store.openingHours?.monday?.open || '09:00',
+          mondayClose: store.openingHours?.monday?.close || '20:00',
+          mondayClosed: store.openingHours?.monday?.closed || false,
+          tuesdayOpen: store.openingHours?.tuesday?.open || '09:00',
+          tuesdayClose: store.openingHours?.tuesday?.close || '20:00',
+          tuesdayClosed: store.openingHours?.tuesday?.closed || false,
+          wednesdayOpen: store.openingHours?.wednesday?.open || '09:00',
+          wednesdayClose: store.openingHours?.wednesday?.close || '20:00',
+          wednesdayClosed: store.openingHours?.wednesday?.closed || false,
+          thursdayOpen: store.openingHours?.thursday?.open || '09:00',
+          thursdayClose: store.openingHours?.thursday?.close || '20:00',
+          thursdayClosed: store.openingHours?.thursday?.closed || false,
+          fridayOpen: store.openingHours?.friday?.open || '09:00',
+          fridayClose: store.openingHours?.friday?.close || '20:00',
+          fridayClosed: store.openingHours?.friday?.closed || false,
+          saturdayOpen: store.openingHours?.saturday?.open || '09:00',
+          saturdayClose: store.openingHours?.saturday?.close || '20:00',
+          saturdayClosed: store.openingHours?.saturday?.closed || false,
+          sundayOpen: store.openingHours?.sunday?.open || '10:00',
+          sundayClose: store.openingHours?.sunday?.close || '19:00',
+          sundayClosed: store.openingHours?.sunday?.closed || false,
+        });
+      }
+    }
+  }, [id, isEditing]);
 
   const sectors = [
     {
