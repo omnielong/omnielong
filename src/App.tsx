@@ -5,6 +5,7 @@ import POSPage from './pages/POSPage';
 import DashboardPage from './pages/DashboardPage';
 import SettingsPage from './pages/SettingsPage';
 import SetupPage from './pages/SetupPage';
+import ProductsPage from './pages/ProductsPage';
 import useStore from './store/useStore';
 
 function App() {
@@ -47,6 +48,12 @@ function App() {
           path="/settings"
           element={
             currentOperator ? <SettingsPage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/products"
+          element={
+            currentOperator ? <ProductsPage /> : <Navigate to="/" replace />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

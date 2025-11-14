@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {
   ShoppingCart,
   Search,
-  Grid3x3,
+  Package,
   LogOut,
   User,
   BarChart3,
@@ -80,9 +80,10 @@ const POSPage: React.FC = () => {
         <div className="flex-1 flex flex-col items-center py-8 space-y-8">
           <button
             className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
-            title="Catalogo"
+            onClick={() => navigate('/products')}
+            title="Gestione Prodotti"
           >
-            <Grid3x3 className="w-6 h-6" />
+            <Package className="w-6 h-6" />
           </button>
           <button
             className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
