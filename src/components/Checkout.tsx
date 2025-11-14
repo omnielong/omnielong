@@ -5,10 +5,11 @@ import {
   Banknote,
   Smartphone,
   Check,
-  Receipt,
+  Receipt as ReceiptIcon,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { PaymentMethod, Sale } from '../types';
+import Receipt from './Receipt';
 
 interface CheckoutProps {
   onClose: () => void;
@@ -35,6 +36,8 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
   >(null);
   const [cashAmount, setCashAmount] = useState('');
   const [completed, setCompleted] = useState(false);
+  const [completedSale, setCompletedSale] = useState<Sale | null>(null);
+  const [showReceipt, setShowReceipt] = useState(false);
 
   const total = getCartTotal();
   const paidAmount = payments.reduce((sum, p) => sum + p.amount, 0);
@@ -99,18 +102,14 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
     }
 
     addSale(sale);
+    setCompletedSale(sale);
     setCompleted(true);
-
-    // Auto close after 3 seconds
-    setTimeout(() => {
-      clearCart();
-      onClose();
-    }, 3000);
+    setShowReceipt(true); // Show receipt automatically after sale
   };
 
   const quickAmounts = [5, 10, 20, 50, 100, 200];
 
-  if (completed) {
+  if (completed && !showReceipt) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
         <div className="bg-white rounded-2xl w-full max-w-md p-8 text-center">
@@ -138,13 +137,31 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
             )}
           </div>
           {activeLoyaltyCard && (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm">
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm mb-4">
               <p className="text-yellow-800">
                 <strong>{Math.floor(total / 10)} punti</strong> aggiunti alla
                 carta fedeltà
               </p>
             </div>
           )}
+          <div className="flex flex-col space-y-2">
+            <button
+              onClick={() => setShowReceipt(true)}
+              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition-colors flex items-center justify-center"
+            >
+              <ReceiptIcon className="w-5 h-5 mr-2" />
+              Visualizza e Stampa Scontrino
+            </button>
+            <button
+              onClick={() => {
+                clearCart();
+                onClose();
+              }}
+              className="w-full bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-3 rounded-lg transition-colors"
+            >
+              Chiudi
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -340,12 +357,24 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
               onClick={handleCompleteSale}
               className="w-full bg-gradient-to-r from-green-600 to-green-700 hover:from-green-700 hover:to-green-800 text-white font-bold py-4 rounded-xl transition-all shadow-lg hover:shadow-xl flex items-center justify-center touch-manipulation active:scale-98"
             >
-              <Receipt className="w-6 h-6 mr-2" />
+              <ReceiptIcon className="w-6 h-6 mr-2" />
               Completa Vendita
             </button>
           )}
         </div>
       </div>
+
+      {/* Receipt Modal */}
+      {showReceipt && completedSale && (
+        <Receipt
+          sale={completedSale}
+          onClose={() => {
+            setShowReceipt(false);
+            clearCart();
+            onClose();
+          }}
+        />
+      )}
     </div>
   );
 };
