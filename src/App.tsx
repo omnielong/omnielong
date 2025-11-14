@@ -15,6 +15,8 @@ import ResellerDashboard from './pages/ResellerDashboard';
 import BusinessDashboard from './pages/BusinessDashboard';
 import BusinessForm from './pages/BusinessForm';
 import StoreForm from './pages/StoreForm';
+import BusinessOperatorsPage from './pages/BusinessOperatorsPage';
+import OperatorForm from './pages/OperatorForm';
 import RoleSelectionPage from './pages/RoleSelectionPage';
 import AdminLoginPage from './pages/AdminLoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -100,6 +102,36 @@ function App() {
           element={
             currentUser?.type === 'business' ? (
               <StoreForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/business/operators"
+          element={
+            currentUser?.type === 'business' ? (
+              <BusinessOperatorsPage />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/business/operators/new"
+          element={
+            currentUser?.type === 'business' ? (
+              <OperatorForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/business/operators/:id/edit"
+          element={
+            currentUser?.type === 'business' ? (
+              <OperatorForm />
             ) : (
               <Navigate to="/admin-login" replace />
             )
