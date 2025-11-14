@@ -15,6 +15,7 @@ import {
   Coffee,
   Utensils,
   Package,
+  Calendar,
 } from 'lucide-react';
 import type { Business } from '../types';
 import useStore from '../store/useStore';
@@ -41,6 +42,7 @@ const BusinessForm: React.FC = () => {
     maxOperatorsPerStore: 5,
     billingEmail: '',
     paymentMethod: 'bank_transfer' as 'credit_card' | 'bank_transfer' | 'paypal',
+    subscriptionEndDate: '',
     active: true,
   });
 
@@ -51,6 +53,11 @@ const BusinessForm: React.FC = () => {
     if (isEditing && id) {
       const business = businesses.find((b) => b.id === id);
       if (business) {
+        // Converti subscriptionEndDate in formato YYYY-MM-DD per input date
+        const endDate = business.subscriptionEndDate
+          ? new Date(business.subscriptionEndDate).toISOString().split('T')[0]
+          : '';
+
         setFormData({
           companyName: business.companyName,
           vatNumber: business.vatNumber || '',
@@ -67,6 +74,7 @@ const BusinessForm: React.FC = () => {
           maxOperatorsPerStore: business.maxOperatorsPerStore,
           billingEmail: business.billingEmail || '',
           paymentMethod: business.paymentMethod || 'bank_transfer',
+          subscriptionEndDate: endDate,
           active: business.active,
         });
       }
@@ -153,6 +161,19 @@ const BusinessForm: React.FC = () => {
     // Trova il business esistente per preservare date
     const existingBusiness = isEditing && id ? businesses.find((b) => b.id === id) : null;
 
+    // Calcola subscriptionEndDate
+    let subscriptionEndDate: Date;
+    if (formData.subscriptionEndDate) {
+      // Usa la data dal form
+      subscriptionEndDate = new Date(formData.subscriptionEndDate);
+    } else if (existingBusiness?.subscriptionEndDate) {
+      // Preserva la data esistente
+      subscriptionEndDate = new Date(existingBusiness.subscriptionEndDate);
+    } else {
+      // Default: +1 anno da oggi
+      subscriptionEndDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
+    }
+
     const businessData: Business = {
       id: isEditing ? id! : `bus-${Date.now()}`,
       resellerId: existingBusiness?.resellerId || 'res-1', // Mock - verrebbe dal contesto
@@ -168,9 +189,7 @@ const BusinessForm: React.FC = () => {
       createdAt: existingBusiness?.createdAt || new Date(),
       subscriptionPlan: formData.subscriptionPlan,
       subscriptionStartDate: existingBusiness?.subscriptionStartDate || new Date(),
-      subscriptionEndDate:
-        existingBusiness?.subscriptionEndDate ||
-        new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // +1 anno
+      subscriptionEndDate: subscriptionEndDate,
       adminEmail: formData.adminEmail,
       adminName: formData.adminName,
       maxStores: formData.maxStores,
@@ -462,7 +481,7 @@ const BusinessForm: React.FC = () => {
               ))}
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Max Punti Vendita
@@ -486,6 +505,20 @@ const BusinessForm: React.FC = () => {
                   min="1"
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  <Calendar className="w-4 h-4 inline mr-1" />
+                  Scadenza Sottoscrizione
+                </label>
+                <input
+                  type="date"
+                  value={formData.subscriptionEndDate}
+                  onChange={(e) => setFormData({ ...formData, subscriptionEndDate: e.target.value })}
+                  className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="YYYY-MM-DD"
+                />
+                <p className="text-xs text-gray-500 mt-1">Lascia vuoto per +1 anno</p>
               </div>
             </div>
           </div>

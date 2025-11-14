@@ -5,14 +5,12 @@ import {
   Plus,
   Search,
   Edit2,
-  Eye,
   CheckCircle,
   XCircle,
   MapPin,
   Clock,
   Phone,
   Mail,
-  ShoppingBag,
   Calendar,
   LogOut,
   Users,
@@ -293,25 +291,11 @@ const BusinessDashboard: React.FC = () => {
               {/* Actions */}
               <div className="flex gap-2 pt-4 border-t border-gray-200">
                 <button
-                  onClick={() => navigate(`/store/${store.id}/pos`)}
+                  onClick={() => navigate(`/business/stores/${store.id}/edit`)}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
                 >
-                  <ShoppingBag className="w-4 h-4 mr-1" />
-                  Apri POS
-                </button>
-                <button
-                  onClick={() => navigate(`/business/stores/${store.id}`)}
-                  className="px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
-                  title="Dettagli"
-                >
-                  <Eye className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => navigate(`/business/stores/${store.id}/edit`)}
-                  className="px-3 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
-                  title="Modifica"
-                >
-                  <Edit2 className="w-4 h-4" />
+                  <Edit2 className="w-4 h-4 mr-2" />
+                  Modifica Store
                 </button>
               </div>
             </div>
