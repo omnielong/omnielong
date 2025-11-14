@@ -12,6 +12,7 @@ import type {
   SectorConfig,
   Table,
   QuickButton,
+  Return,
 } from '../types';
 import type { Customer } from '../utils/customerMockData';
 
@@ -57,6 +58,11 @@ interface AppState {
   // Sales
   sales: Sale[];
   addSale: (sale: Sale) => void;
+  updateSale: (sale: Sale) => void;
+
+  // Returns
+  returns: Return[];
+  addReturn: (returnTransaction: Return) => void;
 
   // Discounts
   discounts: Discount[];
@@ -105,6 +111,7 @@ const useStore = create<AppState>()(
       products: [],
       categories: [],
       sales: [],
+      returns: [],
       discounts: [],
       loyaltyCards: [],
       operators: [],
@@ -261,6 +268,17 @@ const useStore = create<AppState>()(
           sales: [...state.sales, sale],
         })),
 
+      updateSale: (sale) =>
+        set((state) => ({
+          sales: state.sales.map((s) => (s.id === sale.id ? sale : s)),
+        })),
+
+      // Returns
+      addReturn: (returnTransaction) =>
+        set((state) => ({
+          returns: [...state.returns, returnTransaction],
+        })),
+
       // Discounts
       setDiscounts: (discounts) => set({ discounts }),
 
@@ -367,6 +385,7 @@ const useStore = create<AppState>()(
         products: state.products,
         categories: state.categories,
         sales: state.sales,
+        returns: state.returns,
         discounts: state.discounts,
         loyaltyCards: state.loyaltyCards,
         operators: state.operators,

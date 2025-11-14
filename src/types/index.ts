@@ -212,3 +212,34 @@ export interface ExtendedCartItem extends CartItem {
   modifiers?: OrderModifier[]; // Per Ristorante
   itemNotes?: string; // Note specifiche item
 }
+
+// ===== RESI E RIMBORSI =====
+
+export type ReturnReason =
+  | 'defective' // Prodotto difettoso
+  | 'wrong_size' // Taglia/misura sbagliata
+  | 'wrong_item' // Articolo sbagliato
+  | 'not_as_described' // Non conforme alla descrizione
+  | 'customer_changed_mind' // Cliente ha cambiato idea
+  | 'duplicate' // Duplicato
+  | 'other'; // Altro
+
+export interface ReturnItem {
+  cartItem: CartItem; // Item originale dalla vendita
+  quantityToReturn: number; // Quantità da rendere (può essere parziale)
+  reason: ReturnReason;
+  notes?: string;
+  refundAmount: number; // Importo rimborsato per questo item
+}
+
+export interface Return {
+  id: string;
+  date: Date;
+  originalSale: Sale; // Vendita originale
+  returnItems: ReturnItem[]; // Items restituiti
+  totalRefund: number; // Totale rimborso
+  refundPayments: PaymentMethod[]; // Come viene rimborsato
+  operator: Operator;
+  notes?: string;
+  status: 'completed' | 'partial' | 'cancelled';
+}

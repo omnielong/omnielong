@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Package, Users, Tag, BarChart3, Clock, Settings, LogOut } from 'lucide-react';
+import { X, Package, Users, Tag, BarChart3, Clock, Settings, LogOut, RotateCcw } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface MobileMenuProps {
@@ -80,6 +80,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, curr
           >
             <Tag className="w-6 h-6 mr-4" />
             <span className="font-semibold">Promozioni</span>
+          </button>
+
+          <button
+            onClick={() => handleNavigate('/returns')}
+            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
+          >
+            <RotateCcw className="w-6 h-6 mr-4" />
+            <span className="font-semibold">Resi e Rimborsi</span>
           </button>
 
           <button

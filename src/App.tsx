@@ -8,6 +8,7 @@ import SetupPage from './pages/SetupPage';
 import ProductsPage from './pages/ProductsPage';
 import CustomersPage from './pages/CustomersPage';
 import PromotionsPage from './pages/PromotionsPage';
+import ReturnsPage from './pages/ReturnsPage';
 import useStore from './store/useStore';
 
 function App() {
@@ -68,6 +69,12 @@ function App() {
           path="/promotions"
           element={
             currentOperator ? <PromotionsPage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/returns"
+          element={
+            currentOperator ? <ReturnsPage /> : <Navigate to="/" replace />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
