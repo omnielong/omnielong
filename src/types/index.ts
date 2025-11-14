@@ -40,11 +40,24 @@ export interface CartItem {
   subtotal: number;
 }
 
+// Tipi di promozione avanzati
+export type DiscountType =
+  | 'percentage'        // Sconto percentuale semplice
+  | 'fixed'             // Sconto fisso in euro
+  | 'coupon'            // Codice coupon
+  | 'buy_x_get_y'       // 3x2, compra N prendi M gratis
+  | 'bundle'            // Bundle di prodotti
+  | 'progressive'       // Sconti progressivi per fasce di spesa
+  | 'second_item'       // Seconda unità scontata
+  | 'category'          // Sconto per categoria
+  | 'happy_hour'        // Sconto per fascia oraria
+  | 'quantity';         // Sconto per quantità minima
+
 // Sconto
 export interface Discount {
   id: string;
   name: string;
-  type: 'percentage' | 'fixed' | 'coupon';
+  type: DiscountType;
   value: number; // percentuale o importo fisso
   description?: string;
   code?: string; // Alias per couponCode (deprecated)
@@ -58,6 +71,55 @@ export interface Discount {
   maxUses?: number;
   usedCount?: number;
   active?: boolean;
+
+  // ===== NUOVI CAMPI PER PROMOZIONI AVANZATE =====
+
+  // 3x2, NxM - compra N prendi M gratis
+  buyQuantity?: number;      // Es. compra 3
+  getQuantity?: number;      // Es. prendi 1 gratis (totale 4 prodotti)
+
+  // Bundle - pacchetti di prodotti
+  bundleProductIds?: string[];  // Lista IDs prodotti nel bundle
+  bundlePrice?: number;         // Prezzo speciale del bundle
+
+  // Sconti progressivi per fasce di spesa
+  progressiveTiers?: Array<{
+    minSpend: number;      // Soglia minima di spesa
+    discount: number;      // Sconto (percentuale o fisso a seconda del type)
+  }>;
+
+  // Seconda unità scontata
+  secondItemDiscount?: number;  // Percentuale sconto sulla seconda unità
+
+  // Sconto per categoria
+  categoryIds?: string[];       // IDs categorie a cui si applica
+
+  // Happy Hour - fasce orarie
+  timeRanges?: Array<{
+    startTime: string;    // Es. "17:00"
+    endTime: string;      // Es. "19:00"
+  }>;
+
+  // Giorni della settimana (0=Domenica, 1=Lunedì, ..., 6=Sabato)
+  validDays?: number[];   // Es. [1, 2, 3] = Lun, Mar, Mer
+
+  // Quantità minima richiesta
+  minQuantity?: number;   // Es. compra almeno 3 articoli
+
+  // Applicazione specifica
+  productIds?: string[];  // IDs prodotti specifici (se vuoto = tutti)
+
+  // Esclusioni
+  excludeProductIds?: string[];     // Prodotti esclusi
+  excludeCategoryIds?: string[];    // Categorie escluse
+
+  // Solo per clienti con carta fedeltà
+  loyaltyOnly?: boolean;
+  minLoyaltyLevel?: 'bronze' | 'silver' | 'gold' | 'platinum';
+
+  // Combinabilità con altre promozioni
+  combinable?: boolean;   // Default false = non combinabile
+  priority?: number;      // Priorità applicazione (più alto = prima)
 }
 
 // Carta fedeltà
