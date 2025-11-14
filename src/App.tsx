@@ -6,6 +6,7 @@ import DashboardPage from './pages/DashboardPage';
 import SettingsPage from './pages/SettingsPage';
 import SetupPage from './pages/SetupPage';
 import ProductsPage from './pages/ProductsPage';
+import CustomersPage from './pages/CustomersPage';
 import useStore from './store/useStore';
 
 function App() {
@@ -54,6 +55,12 @@ function App() {
           path="/products"
           element={
             currentOperator ? <ProductsPage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/customers"
+          element={
+            currentOperator ? <CustomersPage /> : <Navigate to="/" replace />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
