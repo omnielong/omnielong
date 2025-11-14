@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, Package, Users, Tag, BarChart3, Clock, Settings, LogOut, RotateCcw, UserCog, ClipboardCheck } from 'lucide-react';
+import { X, Package, Users, Tag, BarChart3, Clock, Settings, LogOut, RotateCcw, UserCog, ClipboardCheck, Database } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 interface MobileMenuProps {
@@ -120,6 +120,14 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, curr
           >
             <ClipboardCheck className="w-6 h-6 mr-4" />
             <span className="font-semibold">Chiusura Fiscale</span>
+          </button>
+
+          <button
+            onClick={() => handleNavigate('/backup')}
+            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
+          >
+            <Database className="w-6 h-6 mr-4" />
+            <span className="font-semibold">Backup e Export</span>
           </button>
 
           <button

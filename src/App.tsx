@@ -11,6 +11,7 @@ import PromotionsPage from './pages/PromotionsPage';
 import ReturnsPage from './pages/ReturnsPage';
 import OperatorsPage from './pages/OperatorsPage';
 import FiscalClosurePage from './pages/FiscalClosurePage';
+import BackupPage from './pages/BackupPage';
 import useStore from './store/useStore';
 
 function App() {
@@ -89,6 +90,12 @@ function App() {
           path="/fiscal-closure"
           element={
             currentOperator ? <FiscalClosurePage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/backup"
+          element={
+            currentOperator ? <BackupPage /> : <Navigate to="/" replace />
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />

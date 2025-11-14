@@ -17,6 +17,7 @@ import {
   RotateCcw,
   UserCog,
   ClipboardCheck,
+  Database,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import { mockProducts, mockCategories, mockDiscounts, mockLoyaltyCards } from '../utils/mockData';
@@ -166,6 +167,13 @@ const POSPage: React.FC = () => {
             title="Chiusura Fiscale"
           >
             <ClipboardCheck className="w-6 h-6" />
+          </button>
+          <button
+            className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
+            onClick={() => navigate('/backup')}
+            title="Backup e Export"
+          >
+            <Database className="w-6 h-6" />
           </button>
           <button
             className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
