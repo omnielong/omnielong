@@ -13,6 +13,7 @@ import {
   Coffee,
   Grid3x3,
   Tag,
+  Menu,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import { mockProducts, mockCategories, mockDiscounts, mockLoyaltyCards } from '../utils/mockData';
@@ -21,6 +22,7 @@ import { fashionProducts } from '../utils/fashionMockData';
 import ProductGrid from '../components/ProductGrid';
 import Cart from '../components/Cart';
 import CartModal from '../components/CartModal';
+import MobileMenu from '../components/MobileMenu';
 import Checkout from '../components/Checkout';
 import BarQuickButtons from '../components/BarQuickButtons';
 import RestaurantTables from '../components/RestaurantTables';
@@ -45,6 +47,7 @@ const POSPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
   const [showCartModal, setShowCartModal] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [barViewMode, setBarViewMode] = useState<'quick' | 'all'>('quick');
 
   useEffect(() => {
@@ -197,10 +200,18 @@ const POSPage: React.FC = () => {
                       </p>
                     </div>
                   </div>
-                  <div className="lg:hidden">
+                  <div className="lg:hidden flex items-center space-x-2">
+                    <button
+                      onClick={() => setShowMobileMenu(true)}
+                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                      title="Menu"
+                    >
+                      <Menu className="w-6 h-6" />
+                    </button>
                     <button
                       onClick={handleLogout}
-                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                      className="p-2 text-red-600 hover:bg-red-100 rounded-lg"
+                      title="Esci"
                     >
                       <LogOut className="w-5 h-5" />
                     </button>
@@ -315,6 +326,14 @@ const POSPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Mobile Menu */}
+      <MobileMenu
+        isOpen={showMobileMenu}
+        onClose={() => setShowMobileMenu(false)}
+        onLogout={handleLogout}
+        currentOperator={currentOperator}
+      />
 
       {/* Cart Modal - Mobile */}
       <CartModal
