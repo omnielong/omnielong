@@ -14,6 +14,7 @@ import {
   Calendar,
   LogOut,
   Users,
+  LogIn,
 } from 'lucide-react';
 import type { Store, BusinessStats } from '../types';
 import useStore from '../store/useStore';
@@ -21,7 +22,7 @@ import { mockStores } from '../utils/storeMockData';
 
 const BusinessDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { stores, setStores, logoutUser } = useStore();
+  const { stores, setStores, logoutUser, setCurrentStore, login, currentUser } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
@@ -93,6 +94,25 @@ const BusinessDashboard: React.FC = () => {
       generic: 'bg-gray-100 text-gray-800',
     };
     return colors[sector];
+  };
+
+  const handleEnterStore = (store: Store) => {
+    // Crea un operatore business_admin per accedere al negozio
+    const businessOperator = {
+      id: `business-admin-${Date.now()}`,
+      storeId: store.id,
+      businessId: store.businessId,
+      name: currentUser?.data?.adminName || 'Business Admin',
+      email: currentUser?.data?.email || 'business@admin.it',
+      role: 'business_admin' as const,
+      pin: '0000',
+      active: true,
+      createdAt: new Date(),
+    };
+
+    setCurrentStore(store);
+    login(businessOperator);
+    navigate('/dashboard');
   };
 
   return (
@@ -291,11 +311,19 @@ const BusinessDashboard: React.FC = () => {
               {/* Actions */}
               <div className="flex gap-2 pt-4 border-t border-gray-200">
                 <button
+                  onClick={() => handleEnterStore(store)}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
+                  title="Entra nel negozio"
+                >
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Entra
+                </button>
+                <button
                   onClick={() => navigate(`/business/stores/${store.id}/edit`)}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
-                  Modifica Store
+                  Modifica
                 </button>
               </div>
             </div>

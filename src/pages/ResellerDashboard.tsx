@@ -326,7 +326,7 @@ const ResellerDashboard: React.FC = () => {
                     Modifica
                   </button>
                   <button
-                    onClick={() => navigate(`/reseller/businesses/${business.id}/stores`)}
+                    onClick={() => navigate(`/reseller/businesses/${business.id}`)}
                     className="flex-1 bg-purple-100 hover:bg-purple-200 text-purple-700 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center"
                   >
                     <StoreIcon className="w-4 h-4 mr-2" />

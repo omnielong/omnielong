@@ -13,6 +13,7 @@ import FiscalClosurePage from './pages/FiscalClosurePage';
 import BackupPage from './pages/BackupPage';
 import ResellerDashboard from './pages/ResellerDashboard';
 import BusinessDashboard from './pages/BusinessDashboard';
+import BusinessDetailPage from './pages/BusinessDetailPage';
 import BusinessForm from './pages/BusinessForm';
 import StoreForm from './pages/StoreForm';
 import BusinessOperatorsPage from './pages/BusinessOperatorsPage';
@@ -60,6 +61,16 @@ function App() {
           element={
             currentUser?.type === 'reseller' ? (
               <BusinessForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/:id"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <BusinessDetailPage />
             ) : (
               <Navigate to="/admin-login" replace />
             )

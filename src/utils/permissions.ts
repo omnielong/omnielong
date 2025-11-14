@@ -10,7 +10,7 @@ export const ROLE_PERMISSIONS = {
     canManageOperators: true,
     canViewSensitiveData: true,
     canProcessRefunds: true,
-    canOpenCloseCashRegister: true,
+    canOpenCloseCashRegister: false, // Business Admin NON vende
     canAccessAllStores: true, // Vede tutti i negozi del business
     canAccessSettings: true,
     canAccessBackup: true,
@@ -35,7 +35,7 @@ export const ROLE_PERMISSIONS = {
     canManageProducts: true,
     canManageCustomers: true,
     canManagePromotions: true,
-    canManageOperators: false, // Manager non può gestire operatori
+    canManageOperators: true, // Manager può gestire operatori del suo negozio
     canViewSensitiveData: true,
     canProcessRefunds: true,
     canOpenCloseCashRegister: true,
