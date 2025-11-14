@@ -25,13 +25,15 @@ const BusinessDashboard: React.FC = () => {
   const { stores, setStores, logoutUser } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+  const [initialized, setInitialized] = useState(false);
 
   // Inizializza lo store con i mock data se vuoto
   useEffect(() => {
-    if (stores.length === 0) {
+    if (!initialized && stores.length === 0) {
       setStores(mockStores);
+      setInitialized(true);
     }
-  }, []);
+  }, [stores.length, setStores, initialized]);
 
   const stats: BusinessStats = useMemo(() => {
     return {

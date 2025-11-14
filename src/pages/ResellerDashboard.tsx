@@ -26,13 +26,15 @@ const ResellerDashboard: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPlan, setFilterPlan] = useState<'all' | 'free' | 'basic' | 'professional' | 'enterprise'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+  const [initialized, setInitialized] = useState(false);
 
   // Inizializza lo store con i mock data se vuoto
   useEffect(() => {
-    if (businesses.length === 0) {
+    if (!initialized && businesses.length === 0) {
       setBusinesses(mockBusinesses);
+      setInitialized(true);
     }
-  }, []);
+  }, [businesses.length, setBusinesses, initialized]);
 
   const stats: ResellerStats = useMemo(() => {
     return {
