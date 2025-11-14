@@ -1,11 +1,9 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
+  ArrowLeft,
   Store as StoreIcon,
-  Plus,
   Search,
-  Edit2,
-  Eye,
   CheckCircle,
   XCircle,
   MapPin,
@@ -13,16 +11,15 @@ import {
   Phone,
   Mail,
   Calendar,
-  LogOut,
-  Users,
 } from 'lucide-react';
-import type { Store, BusinessStats } from '../types';
+import type { Store } from '../types';
 import useStore from '../store/useStore';
 import { mockStores } from '../utils/storeMockData';
 
-const BusinessDashboard: React.FC = () => {
+const ResellerBusinessStoresPage: React.FC = () => {
   const navigate = useNavigate();
-  const { stores, setStores, logoutUser } = useStore();
+  const { id } = useParams<{ id: string }>();
+  const { businesses, stores, setStores } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
@@ -35,19 +32,16 @@ const BusinessDashboard: React.FC = () => {
     }
   }, [stores.length, setStores, initialized]);
 
-  const stats: BusinessStats = useMemo(() => {
-    return {
-      totalStores: stores.length,
-      activeStores: stores.filter(s => s.active).length,
-      totalOperators: 25, // Mock
-      totalSales: 1534,
-      totalRevenue: 125340.50,
-      totalCustomers: 856,
-    };
-  }, [stores]);
+  // Trova il business corrente
+  const business = businesses.find(b => b.id === id);
+
+  // Filtra gli stores per questo business
+  const businessStores = useMemo(() => {
+    return stores.filter(store => store.businessId === id);
+  }, [stores, id]);
 
   const filteredStores = useMemo(() => {
-    return stores.filter((store) => {
+    return businessStores.filter((store) => {
       // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
@@ -67,14 +61,7 @@ const BusinessDashboard: React.FC = () => {
 
       return true;
     });
-  }, [stores, searchQuery, filterStatus]);
-
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat('it-IT', {
-      style: 'currency',
-      currency: 'EUR',
-    }).format(amount);
-  };
+  }, [businessStores, searchQuery, filterStatus]);
 
   const getSectorLabel = (sector: Store['sector']) => {
     const labels = {
@@ -96,69 +83,63 @@ const BusinessDashboard: React.FC = () => {
     return colors[sector];
   };
 
+  if (!business) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 flex items-center justify-center">
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-gray-900 mb-4">Business non trovato</h2>
+          <button
+            onClick={() => navigate('/reseller')}
+            className="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold px-6 py-3 rounded-lg inline-flex items-center transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            Torna alla Dashboard
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 to-purple-50 pb-20">
       {/* Header */}
-      <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 shadow-lg">
+      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 shadow-lg">
         <div className="flex items-center justify-between mb-4">
-          <div>
-            <h1 className="text-2xl font-bold">Dashboard Business</h1>
-            <p className="text-blue-100">Gestisci i tuoi punti vendita</p>
-          </div>
-          <div className="flex space-x-3">
+          <div className="flex items-center">
             <button
-              onClick={() => navigate('/business/operators')}
-              className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
-              title="Gestisci Operatori"
+              onClick={() => navigate('/reseller')}
+              className="bg-white/20 hover:bg-white/30 p-2 rounded-lg mr-4 transition-colors"
             >
-              <Users className="w-5 h-5 mr-2" />
-              Operatori
+              <ArrowLeft className="w-5 h-5" />
             </button>
-            <button
-              onClick={() => navigate('/business/stores/new')}
-              className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
-            >
-              <Plus className="w-5 h-5 mr-2" />
-              Nuovo Punto Vendita
-            </button>
-            <button
-              onClick={() => {
-                logoutUser();
-                navigate('/admin-login');
-              }}
-              className="bg-white/20 hover:bg-white/30 text-white font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
-              title="Logout"
-            >
-              <LogOut className="w-5 h-5" />
-            </button>
+            <div>
+              <h1 className="text-2xl font-bold">Punti Vendita - {business.companyName}</h1>
+              <p className="text-indigo-100">Visualizza i punti vendita del cliente</p>
+            </div>
           </div>
         </div>
 
         {/* Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-6 gap-3 mt-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-            <p className="text-blue-100 text-xs mb-1">Punti Vendita</p>
-            <p className="text-2xl font-bold">{stats.totalStores}</p>
+            <p className="text-indigo-100 text-xs mb-1">Punti Vendita Totali</p>
+            <p className="text-2xl font-bold">{businessStores.length}</p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-            <p className="text-blue-100 text-xs mb-1">Attivi</p>
-            <p className="text-2xl font-bold text-green-200">{stats.activeStores}</p>
+            <p className="text-indigo-100 text-xs mb-1">Attivi</p>
+            <p className="text-2xl font-bold text-green-200">
+              {businessStores.filter(s => s.active).length}
+            </p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-            <p className="text-blue-100 text-xs mb-1">Operatori Tot.</p>
-            <p className="text-2xl font-bold">{stats.totalOperators}</p>
+            <p className="text-indigo-100 text-xs mb-1">Inattivi</p>
+            <p className="text-2xl font-bold text-red-200">
+              {businessStores.filter(s => !s.active).length}
+            </p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-            <p className="text-blue-100 text-xs mb-1">Vendite</p>
-            <p className="text-2xl font-bold">{stats.totalSales.toLocaleString()}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-            <p className="text-blue-100 text-xs mb-1">Fatturato</p>
-            <p className="text-xl font-bold">{formatCurrency(stats.totalRevenue)}</p>
-          </div>
-          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-3">
-            <p className="text-blue-100 text-xs mb-1">Clienti</p>
-            <p className="text-2xl font-bold">{stats.totalCustomers}</p>
+            <p className="text-indigo-100 text-xs mb-1">Max Consentiti</p>
+            <p className="text-2xl font-bold text-yellow-200">{business.maxStores}</p>
           </div>
         </div>
       </div>
@@ -173,13 +154,13 @@ const BusinessDashboard: React.FC = () => {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Cerca per nome, codice, città o indirizzo..."
-              className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full pl-10 pr-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
             />
           </div>
           <select
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value as any)}
-            className="px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-[140px]"
+            className="px-4 py-3 bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent min-w-[140px]"
           >
             <option value="all">Tutti gli stati</option>
             <option value="active">Attivi</option>
@@ -194,14 +175,14 @@ const BusinessDashboard: React.FC = () => {
               key={store.id}
               className={`bg-white rounded-xl border-2 p-6 transition-all hover:shadow-lg ${
                 store.active
-                  ? 'border-blue-200 hover:border-blue-400'
+                  ? 'border-indigo-200 hover:border-indigo-400'
                   : 'border-gray-200 opacity-60'
               }`}
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex items-center flex-1">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-lg flex items-center justify-center mr-3">
+                  <div className="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-lg flex items-center justify-center mr-3">
                     <StoreIcon className="w-6 h-6 text-white" />
                   </div>
                   <div className="flex-1">
@@ -255,12 +236,12 @@ const BusinessDashboard: React.FC = () => {
 
               {/* Opening Hours */}
               {store.openingHours && (
-                <div className="bg-blue-50 rounded-lg p-3 mb-4">
-                  <div className="flex items-center text-xs text-blue-800 mb-2">
+                <div className="bg-indigo-50 rounded-lg p-3">
+                  <div className="flex items-center text-xs text-indigo-800 mb-2">
                     <Clock className="w-3 h-3 mr-1" />
                     <span className="font-semibold">Orari</span>
                   </div>
-                  <div className="text-xs text-blue-900">
+                  <div className="text-xs text-indigo-900">
                     {store.openingHours.monday?.closed ? (
                       <p>Lun-Dom: Orari personalizzati</p>
                     ) : (
@@ -272,40 +253,6 @@ const BusinessDashboard: React.FC = () => {
                   </div>
                 </div>
               )}
-
-              {/* Mock Stats */}
-              <div className="grid grid-cols-3 gap-2 mb-4">
-                <div className="bg-green-50 rounded-lg p-2 text-center">
-                  <p className="text-xs text-green-600">Vendite</p>
-                  <p className="text-lg font-bold text-green-900">342</p>
-                </div>
-                <div className="bg-blue-50 rounded-lg p-2 text-center">
-                  <p className="text-xs text-blue-600">Operatori</p>
-                  <p className="text-lg font-bold text-blue-900">8</p>
-                </div>
-                <div className="bg-purple-50 rounded-lg p-2 text-center">
-                  <p className="text-xs text-purple-600">Prodotti</p>
-                  <p className="text-lg font-bold text-purple-900">456</p>
-                </div>
-              </div>
-
-              {/* Actions */}
-              <div className="flex gap-2 pt-4 border-t border-gray-200">
-                <button
-                  onClick={() => navigate(`/business/stores/${store.id}`)}
-                  className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  Dettagli
-                </button>
-                <button
-                  onClick={() => navigate(`/business/stores/${store.id}/edit`)}
-                  className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
-                >
-                  <Edit2 className="w-4 h-4 mr-2" />
-                  Modifica
-                </button>
-              </div>
             </div>
           ))}
         </div>
@@ -322,17 +269,8 @@ const BusinessDashboard: React.FC = () => {
             <p className="text-gray-600 mb-4">
               {searchQuery || filterStatus !== 'all'
                 ? 'Prova con criteri di ricerca diversi'
-                : 'Crea il tuo primo punto vendita per iniziare'}
+                : 'Questo cliente non ha ancora punti vendita configurati'}
             </p>
-            {!searchQuery && filterStatus === 'all' && (
-              <button
-                onClick={() => navigate('/business/stores/new')}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg inline-flex items-center transition-colors"
-              >
-                <Plus className="w-5 h-5 mr-2" />
-                Crea Punto Vendita
-              </button>
-            )}
           </div>
         )}
       </div>
@@ -340,4 +278,4 @@ const BusinessDashboard: React.FC = () => {
   );
 };
 
-export default BusinessDashboard;
+export default ResellerBusinessStoresPage;

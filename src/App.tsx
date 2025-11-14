@@ -12,9 +12,12 @@ import OperatorsPage from './pages/OperatorsPage';
 import FiscalClosurePage from './pages/FiscalClosurePage';
 import BackupPage from './pages/BackupPage';
 import ResellerDashboard from './pages/ResellerDashboard';
+import ResellerBusinessDetailsPage from './pages/ResellerBusinessDetailsPage';
+import ResellerBusinessStoresPage from './pages/ResellerBusinessStoresPage';
 import BusinessDashboard from './pages/BusinessDashboard';
 import BusinessForm from './pages/BusinessForm';
 import StoreForm from './pages/StoreForm';
+import StoreDetailsPage from './pages/StoreDetailsPage';
 import BusinessOperatorsPage from './pages/BusinessOperatorsPage';
 import OperatorForm from './pages/OperatorForm';
 import RoleSelectionPage from './pages/RoleSelectionPage';
@@ -75,6 +78,26 @@ function App() {
             )
           }
         />
+        <Route
+          path="/reseller/businesses/:id/stores"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <ResellerBusinessStoresPage />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/:id"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <ResellerBusinessDetailsPage />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
 
         {/* Business Routes - Protected */}
         <Route
@@ -102,6 +125,16 @@ function App() {
           element={
             currentUser?.type === 'business' ? (
               <StoreForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/business/stores/:id"
+          element={
+            currentUser?.type === 'business' ? (
+              <StoreDetailsPage />
             ) : (
               <Navigate to="/admin-login" replace />
             )
