@@ -8,18 +8,46 @@
 - **Accesso:** Gestione completa di tutti i business e negozi
 
 ### 🏢 Business Admin 1 - Eleganza Fashion Group
-- **Email:** `admin@eleganzafashion.it`
-- **Password:** `business123`
-- **Negozi associati:** 2 punti vendita moda
-  - Eleganza Milano Montenapoleone
-  - Eleganza Roma Via Condotti
+- **Email:** `info@eleganzafashion.it`
+- **Password:** `fashion123`
+- **Piano:** Professional
+- **Negozi associati:** 2 punti vendita moda (max 5)
 
 ### 🏢 Business Admin 2 - Caffè Da Vinci
-- **Email:** `admin@caffedavinci.com`
-- **Password:** `business123`
-- **Negozi associati:** 2 bar
-  - Caffè Da Vinci Navona
-  - Caffè Da Vinci Trastevere
+- **Email:** `gestione@caffedavinci.com`
+- **Password:** `caffe123`
+- **Piano:** Basic
+- **Negozi associati:** 2 bar (max 3)
+
+### 🏢 Business Admin 3 - Trattoria Toscana
+- **Email:** `info@trattoriatoscana.it`
+- **Password:** `toscana123`
+- **Piano:** Professional
+- **Negozi associati:** 1 ristorante (max 2)
+
+### 🏢 Business Admin 4 - SportWear Italia
+- **Email:** `amministrazione@sportwearitalia.it`
+- **Password:** `sport123`
+- **Piano:** Basic
+- **Negozi associati:** 1 negozio sport (max 2)
+
+### 🏢 Business Admin 5 - Dolce Vita Pasticceria
+- **Email:** `info@dolcevitapasticceria.it`
+- **Password:** `dolce123`
+- **Piano:** Free
+- **Negozi associati:** 1 pasticceria (max 1)
+
+### 🏢 Business Admin 6 - Pizzeria Napoletana Tradizione
+- **Email:** `pizzeria@tradizionenapoli.com`
+- **Password:** `pizza123`
+- **Piano:** Basic
+- **Negozi associati:** 1 pizzeria (max 2)
+
+### 🏢 Business Admin 7 - La Matita Magica
+- **Email:** `info@lamatitamagica.it`
+- **Password:** `matita123`
+- **Piano:** Basic
+- **Negozi associati:** 1 cartoleria (max 1)
 
 ### 👨‍💼 Operatori Punto Vendita (Login con PIN)
 - **PIN 1234** - Mario Rossi (Store Admin)
@@ -33,13 +61,19 @@
 ### Flusso Reseller
 1. Login con `admin@techpos.it` / `reseller123`
 2. Visualizza dashboard con lista business
-3. Click su "Negozi" di un business → Vedi lista negozi del business
-4. Click su "Entra nel Punto Vendita" → Accedi come Manager virtuale
-5. Apri turno → Usa il POS completo
-6. Logout → Torna alla lista negozi
+   - **Le credenziali sono visibili su ogni card business** (email + password)
+   - Click sull'icona "Copia" per copiare la password
+3. Click su "Dettagli" → Vedi info complete + sezione **Credenziali di Accesso**
+   - Puoi visualizzare/nascondere la password
+   - Puoi copiare la password negli appunti
+   - Puoi modificare la password del cliente
+4. Click su "Negozi" → Vedi lista negozi del business
+5. Click su "Entra nel Punto Vendita" → Accedi come Manager virtuale
+6. Apri turno → Usa il POS completo
+7. Logout → Torna alla lista negozi
 
 ### Flusso Business Admin
-1. Login con `admin@eleganzafashion.it` / `business123`
+1. Login con una delle email business (es. `info@eleganzafashion.it` / `fashion123`)
 2. Visualizza dashboard con i TUOI negozi (solo quelli del tuo business)
 3. Click su "Dettagli" → Vedi informazioni complete negozio
 4. Click su "Modifica" → Modifica configurazione negozio
