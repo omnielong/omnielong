@@ -97,7 +97,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                 {sectorConfig?.sector === 'fashion' && hasVariants && (
                   <div className="absolute top-2 right-2 bg-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center">
                     <Shirt className="w-3 h-3 mr-1" />
-                    {fashionProduct.variants.length}
+                    {fashionProduct.variants?.length || 0}
                   </div>
                 )}
               </div>

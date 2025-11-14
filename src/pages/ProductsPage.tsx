@@ -9,7 +9,6 @@ import {
   Package,
   Save,
   X,
-  Image as ImageIcon,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { Product, ProductVariant, FashionProduct } from '../types';

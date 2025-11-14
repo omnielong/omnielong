@@ -8,6 +8,8 @@ import {
   CheckCircle,
   XCircle,
   Save,
+  Store,
+  AlertTriangle,
 } from 'lucide-react';
 import { useAPI } from '../services/api';
 import useStore from '../store/useStore';
@@ -15,7 +17,8 @@ import useStore from '../store/useStore';
 const SettingsPage: React.FC = () => {
   const navigate = useNavigate();
   const api = useAPI();
-  const { setProducts, setLoyaltyCards, setOperators } = useStore();
+  const { sectorConfig, setSectorConfig, setProducts, setLoyaltyCards, setOperators } = useStore();
+  const [showReconfigModal, setShowReconfigModal] = useState(false);
 
   const [apiConfig, setApiConfig] = useState({
     baseUrl: 'https://api.zucchetti.it',
@@ -106,6 +109,72 @@ const SettingsPage: React.FC = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+        {/* Sector Configuration Section */}
+        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center">
+              <Store className="w-6 h-6 text-blue-600 mr-3" />
+              <div>
+                <h2 className="text-xl font-bold text-gray-900">
+                  Configurazione Settore
+                </h2>
+                <p className="text-sm text-gray-600">
+                  Impostazioni del settore merceologico attualmente configurato
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg p-6 mb-4">
+            <div className="flex items-start justify-between">
+              <div className="flex-1">
+                <p className="text-sm text-gray-600 mb-2">Settore Corrente</p>
+                <h3 className="text-3xl font-bold text-blue-600 mb-3 capitalize">
+                  {sectorConfig?.sector === 'fashion' && '👗 MODA'}
+                  {sectorConfig?.sector === 'bar' && '☕ BAR & TABACCHI'}
+                  {sectorConfig?.sector === 'restaurant' && '🍽️ RISTORANTE'}
+                  {sectorConfig?.sector === 'generic' && '🏪 GENERICO'}
+                </h3>
+
+                <div className="space-y-1 text-sm">
+                  <p className="text-gray-700">
+                    <strong>Negozio:</strong> {sectorConfig?.storeName || 'N/D'}
+                  </p>
+                  {sectorConfig?.vatNumber && (
+                    <p className="text-gray-700">
+                      <strong>P.IVA:</strong> {sectorConfig.vatNumber}
+                    </p>
+                  )}
+                  {sectorConfig?.address && (
+                    <p className="text-gray-700">
+                      <strong>Indirizzo:</strong> {sectorConfig.address}
+                    </p>
+                  )}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setShowReconfigModal(true)}
+                className="ml-4 px-4 py-2 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors flex items-center"
+              >
+                <RefreshCw className="w-4 h-4 mr-2" />
+                Riconfigura
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+            <p className="text-xs text-yellow-800 flex items-start">
+              <AlertTriangle className="w-4 h-4 mr-2 flex-shrink-0 mt-0.5" />
+              <span>
+                <strong>Attenzione:</strong> Cambiare il settore potrebbe richiedere una riconfigurazione
+                dei prodotti e delle funzionalità specifiche. Si consiglia di fare questa operazione solo
+                se necessario.
+              </span>
+            </p>
+          </div>
+        </div>
+
         {/* Integration Section */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-6">
           <div className="flex items-center mb-6">
@@ -320,6 +389,59 @@ const SettingsPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Reconfiguration Modal */}
+      {showReconfigModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md">
+            <div className="p-6 border-b border-gray-200">
+              <h3 className="text-xl font-bold text-gray-900">Conferma Riconfigurazione</h3>
+              <p className="text-sm text-gray-600 mt-2">
+                Sei sicuro di voler riconfigurare il settore del negozio?
+              </p>
+            </div>
+
+            <div className="p-6">
+              <div className="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
+                <div className="flex items-start">
+                  <AlertTriangle className="w-5 h-5 text-orange-600 mr-3 flex-shrink-0 mt-0.5" />
+                  <div className="text-sm text-orange-800">
+                    <p className="font-semibold mb-2">Questa operazione:</p>
+                    <ul className="list-disc list-inside space-y-1">
+                      <li>Riporterà l'app alla schermata di configurazione iniziale</li>
+                      <li>Permetterà di scegliere un nuovo settore merceologico</li>
+                      <li>Potrebbe richiedere la riconfigurazione dei prodotti</li>
+                      <li>Non eliminerà i dati delle vendite esistenti</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex space-x-3">
+                <button
+                  onClick={() => setShowReconfigModal(false)}
+                  className="flex-1 px-4 py-3 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold rounded-lg transition-colors"
+                >
+                  Annulla
+                </button>
+                <button
+                  onClick={() => {
+                    // Reset sector config to show setup page
+                    if (sectorConfig) {
+                      setSectorConfig({ ...sectorConfig, configured: false });
+                    }
+                    setShowReconfigModal(false);
+                    navigate('/');
+                  }}
+                  className="flex-1 px-4 py-3 bg-orange-600 hover:bg-orange-700 text-white font-semibold rounded-lg transition-colors"
+                >
+                  Conferma Riconfigurazione
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

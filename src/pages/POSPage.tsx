@@ -9,12 +9,18 @@ import {
   BarChart3,
   Clock,
   Settings,
+  Users as CustomersIcon,
+  Coffee,
+  Grid3x3,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import { mockProducts, mockCategories, mockDiscounts, mockLoyaltyCards } from '../utils/mockData';
+import { barProducts, quickButtons as barQuickButtons } from '../utils/barMockData';
 import ProductGrid from '../components/ProductGrid';
 import Cart from '../components/Cart';
 import Checkout from '../components/Checkout';
+import BarQuickButtons from '../components/BarQuickButtons';
+import RestaurantTables from '../components/RestaurantTables';
 
 const POSPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,16 +28,20 @@ const POSPage: React.FC = () => {
     currentOperator,
     currentShift,
     cart,
+    sectorConfig,
+    products,
     setProducts,
     setCategories,
     setDiscounts,
     setLoyaltyCards,
+    setQuickButtons,
     logout,
   } = useStore();
 
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
+  const [barViewMode, setBarViewMode] = useState<'quick' | 'all'>('quick');
 
   useEffect(() => {
     if (!currentOperator) {
@@ -44,12 +54,24 @@ const POSPage: React.FC = () => {
       return;
     }
 
-    // Initialize data
-    setProducts(mockProducts);
+    // Initialize data based on sector
+    if (sectorConfig?.sector === 'bar') {
+      // Initialize bar products and quick buttons if not already loaded
+      if (products.length === 0) {
+        setProducts([...mockProducts, ...barProducts]);
+        setQuickButtons(barQuickButtons);
+      }
+    } else {
+      // Initialize generic products
+      if (products.length === 0) {
+        setProducts(mockProducts);
+      }
+    }
+
     setCategories(mockCategories);
     setDiscounts(mockDiscounts);
     setLoyaltyCards(mockLoyaltyCards);
-  }, [currentOperator, currentShift, navigate, setProducts, setCategories, setDiscounts, setLoyaltyCards]);
+  }, [currentOperator, currentShift, navigate, sectorConfig, products.length, setProducts, setCategories, setDiscounts, setLoyaltyCards, setQuickButtons]);
 
   const handleLogout = () => {
     if (cart.length > 0) {
@@ -84,6 +106,13 @@ const POSPage: React.FC = () => {
             title="Gestione Prodotti"
           >
             <Package className="w-6 h-6" />
+          </button>
+          <button
+            className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
+            onClick={() => navigate('/customers')}
+            title="Clienti"
+          >
+            <CustomersIcon className="w-6 h-6" />
           </button>
           <button
             className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
@@ -123,94 +152,156 @@ const POSPage: React.FC = () => {
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
-        {/* Products Section */}
+        {/* Content Section - Conditional based on sector */}
         <div className="flex-1 flex flex-col overflow-hidden">
-          {/* Header */}
-          <div className="bg-white border-b border-gray-200 px-4 py-4 lg:px-6">
-            <div className="flex items-center justify-between mb-4">
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">POS</h1>
-                <p className="text-sm text-gray-600">
-                  {currentOperator?.name} - Turno aperto
-                </p>
+          {/* Restaurant Tables View */}
+          {sectorConfig?.sector === 'restaurant' ? (
+            <RestaurantTables />
+          ) : (
+            <>
+              {/* Header */}
+              <div className="bg-white border-b border-gray-200 px-4 py-4 lg:px-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center">
+                    <div>
+                      <div className="flex items-center">
+                        <h1 className="text-2xl font-bold text-gray-900">
+                          {sectorConfig?.sector === 'bar' ? 'BAR' : 'POS'}
+                        </h1>
+                        {sectorConfig?.sector && (
+                          <span className={`ml-3 px-3 py-1 rounded-full text-xs font-bold ${
+                            sectorConfig.sector === 'fashion' ? 'bg-purple-100 text-purple-700' :
+                            sectorConfig.sector === 'bar' ? 'bg-amber-100 text-amber-700' :
+                            'bg-blue-100 text-blue-700'
+                          }`}>
+                            {sectorConfig.sector === 'fashion' && '👗 MODA'}
+                            {sectorConfig.sector === 'bar' && '☕ BAR'}
+                            {sectorConfig.sector === 'generic' && '🏪 GENERICO'}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-600">
+                        {currentOperator?.name} - Turno aperto
+                      </p>
+                    </div>
+                  </div>
+                  <div className="lg:hidden">
+                    <button
+                      onClick={handleLogout}
+                      className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                    >
+                      <LogOut className="w-5 h-5" />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Cerca prodotti per nome o barcode..."
+                    className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
               </div>
-              <div className="lg:hidden">
+
+              {/* Bar: Toggle between Quick Buttons and All Products */}
+              {sectorConfig?.sector === 'bar' && (
+                <div className="bg-white border-b border-gray-200 px-4 py-3">
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => setBarViewMode('quick')}
+                      className={`flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-colors touch-manipulation flex items-center justify-center ${
+                        barViewMode === 'quick'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      <Coffee className="w-4 h-4 mr-2" />
+                      Pulsanti Rapidi
+                    </button>
+                    <button
+                      onClick={() => setBarViewMode('all')}
+                      className={`flex-1 py-2 px-4 rounded-lg font-semibold text-sm transition-colors touch-manipulation flex items-center justify-center ${
+                        barViewMode === 'all'
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      <Grid3x3 className="w-4 h-4 mr-2" />
+                      Tutti i Prodotti
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Categories - Only show for non-bar or when in 'all' mode */}
+              {(sectorConfig?.sector !== 'bar' || barViewMode === 'all') && (
+                <div className="bg-white border-b border-gray-200 px-4 py-3 overflow-x-auto">
+                  <div className="flex space-x-2">
+                    <button
+                      onClick={() => setSelectedCategory(null)}
+                      className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap transition-colors touch-manipulation ${
+                        selectedCategory === null
+                          ? 'bg-blue-600 text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      Tutti
+                    </button>
+                    {mockCategories.map((category) => (
+                      <button
+                        key={category.id}
+                        onClick={() => setSelectedCategory(category.id)}
+                        className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap transition-colors touch-manipulation ${
+                          selectedCategory === category.id
+                            ? 'bg-blue-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        <span className="mr-2">{category.icon}</span>
+                        {category.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Content Area */}
+              <div className="flex-1 overflow-auto p-4 lg:p-6">
+                {sectorConfig?.sector === 'bar' && barViewMode === 'quick' ? (
+                  <BarQuickButtons />
+                ) : (
+                  <ProductGrid
+                    categoryFilter={selectedCategory}
+                    searchQuery={searchQuery}
+                  />
+                )}
+              </div>
+
+              {/* Mobile Checkout Button */}
+              <div className="lg:hidden bg-white border-t border-gray-200 p-4">
                 <button
-                  onClick={handleLogout}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg"
+                  onClick={handleCheckout}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center touch-manipulation"
                 >
-                  <LogOut className="w-5 h-5" />
+                  <ShoppingCart className="w-5 h-5 mr-2" />
+                  Carrello ({cart.length})
                 </button>
               </div>
-            </div>
-
-            {/* Search */}
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Cerca prodotti per nome o barcode..."
-                className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              />
-            </div>
-          </div>
-
-          {/* Categories */}
-          <div className="bg-white border-b border-gray-200 px-4 py-3 overflow-x-auto">
-            <div className="flex space-x-2">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap transition-colors touch-manipulation ${
-                  selectedCategory === null
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
-              >
-                Tutti
-              </button>
-              {mockCategories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => setSelectedCategory(category.id)}
-                  className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap transition-colors touch-manipulation ${
-                    selectedCategory === category.id
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                  }`}
-                >
-                  <span className="mr-2">{category.icon}</span>
-                  {category.name}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Products Grid */}
-          <div className="flex-1 overflow-auto p-4 lg:p-6">
-            <ProductGrid
-              categoryFilter={selectedCategory}
-              searchQuery={searchQuery}
-            />
-          </div>
-
-          {/* Mobile Checkout Button */}
-          <div className="lg:hidden bg-white border-t border-gray-200 p-4">
-            <button
-              onClick={handleCheckout}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center touch-manipulation"
-            >
-              <ShoppingCart className="w-5 h-5 mr-2" />
-              Carrello ({cart.length})
-            </button>
-          </div>
+            </>
+          )}
         </div>
 
-        {/* Cart Section - Desktop */}
-        <div className="hidden lg:flex lg:flex-col w-96 xl:w-[450px] bg-white border-l border-gray-200">
-          <Cart onCheckout={handleCheckout} />
-        </div>
+        {/* Cart Section - Desktop (hidden for restaurant) */}
+        {sectorConfig?.sector !== 'restaurant' && (
+          <div className="hidden lg:flex lg:flex-col w-96 xl:w-[450px] bg-white border-l border-gray-200">
+            <Cart onCheckout={handleCheckout} />
+          </div>
+        )}
       </div>
 
       {/* Checkout Modal */}

@@ -10,7 +10,6 @@ import {
   Phone,
   Mail,
   MapPin,
-  CreditCard,
   Save,
   X,
 } from 'lucide-react';
@@ -31,7 +30,7 @@ interface Customer {
 
 const CustomersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { loyaltyCards, sales } = useStore();
+  const { loyaltyCards } = useStore();
 
   // Mock customers - in produzione saranno nello store
   const [customers, setCustomers] = useState<Customer[]>([
