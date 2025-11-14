@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,
@@ -14,6 +14,11 @@ import {
   MapPin,
   Users,
   ShoppingBag,
+  Key,
+  Eye,
+  EyeOff,
+  Copy,
+  Check,
 } from 'lucide-react';
 import type { Business } from '../types';
 import useStore from '../store/useStore';
@@ -21,10 +26,30 @@ import useStore from '../store/useStore';
 const ResellerBusinessDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { businesses } = useStore();
+  const { businesses, updateBusiness } = useStore();
+  const [showPassword, setShowPassword] = useState(false);
+  const [copiedPassword, setCopiedPassword] = useState(false);
+  const [isEditingPassword, setIsEditingPassword] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
 
   // Trova il business corrente
   const business = businesses.find(b => b.id === id);
+
+  const handleCopyPassword = async () => {
+    if (business?.adminPassword) {
+      await navigator.clipboard.writeText(business.adminPassword);
+      setCopiedPassword(true);
+      setTimeout(() => setCopiedPassword(false), 2000);
+    }
+  };
+
+  const handleSavePassword = () => {
+    if (business && newPassword.trim().length >= 6) {
+      updateBusiness({ ...business, adminPassword: newPassword });
+      setIsEditingPassword(false);
+      setNewPassword('');
+    }
+  };
 
   const getPlanBadge = (plan: Business['subscriptionPlan']) => {
     const badges = {
@@ -227,6 +252,101 @@ const ResellerBusinessDetailsPage: React.FC = () => {
                   {new Date(business.createdAt).toLocaleDateString('it-IT')}
                 </p>
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Credenziali di Accesso */}
+        <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+          <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+            <Key className="w-6 h-6 mr-2 text-indigo-600" />
+            Credenziali di Accesso
+          </h2>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-gray-600 mb-2">Email di Login</p>
+              <div className="flex items-center bg-gray-50 rounded-lg p-3">
+                <Mail className="w-5 h-5 text-gray-500 mr-3" />
+                <span className="text-lg font-mono text-gray-900">{business.email}</span>
+              </div>
+            </div>
+
+            <div>
+              <p className="text-sm text-gray-600 mb-2">Password</p>
+              {!isEditingPassword ? (
+                <div className="space-y-3">
+                  <div className="flex items-center bg-gray-50 rounded-lg p-3">
+                    <Key className="w-5 h-5 text-gray-500 mr-3" />
+                    <span className="text-lg font-mono text-gray-900 flex-1">
+                      {showPassword ? business.adminPassword || '(non impostata)' : '••••••••'}
+                    </span>
+                    <button
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="p-2 hover:bg-gray-200 rounded-lg transition-colors mr-2"
+                      title={showPassword ? 'Nascondi password' : 'Mostra password'}
+                    >
+                      {showPassword ? (
+                        <EyeOff className="w-5 h-5 text-gray-600" />
+                      ) : (
+                        <Eye className="w-5 h-5 text-gray-600" />
+                      )}
+                    </button>
+                    <button
+                      onClick={handleCopyPassword}
+                      className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+                      title="Copia password"
+                      disabled={!business.adminPassword}
+                    >
+                      {copiedPassword ? (
+                        <Check className="w-5 h-5 text-green-600" />
+                      ) : (
+                        <Copy className="w-5 h-5 text-gray-600" />
+                      )}
+                    </button>
+                  </div>
+                  <button
+                    onClick={() => setIsEditingPassword(true)}
+                    className="w-full bg-indigo-100 hover:bg-indigo-200 text-indigo-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                  >
+                    Modifica Password
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  <input
+                    type="text"
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Nuova password (minimo 6 caratteri)"
+                    className="w-full px-4 py-3 border-2 border-indigo-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    autoFocus
+                  />
+                  <div className="flex space-x-3">
+                    <button
+                      onClick={handleSavePassword}
+                      disabled={newPassword.trim().length < 6}
+                      className="flex-1 bg-indigo-600 hover:bg-indigo-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      Salva
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsEditingPassword(false);
+                        setNewPassword('');
+                      }}
+                      className="flex-1 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-lg transition-colors"
+                    >
+                      Annulla
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mt-4">
+              <p className="text-sm text-yellow-800">
+                <strong>Nota:</strong> Comunica queste credenziali al cliente. Potrà modificare la password dopo il primo accesso.
+              </p>
             </div>
           </div>
         </div>

@@ -15,6 +15,9 @@ import {
   Phone,
   MapPin,
   LogOut,
+  Key,
+  Copy,
+  Check,
 } from 'lucide-react';
 import type { Business, ResellerStats } from '../types';
 import useStore from '../store/useStore';
@@ -27,6 +30,7 @@ const ResellerDashboard: React.FC = () => {
   const [filterPlan, setFilterPlan] = useState<'all' | 'free' | 'basic' | 'professional' | 'enterprise'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
+  const [copiedPasswords, setCopiedPasswords] = useState<Record<string, boolean>>({});
 
   // Inizializza lo store con i mock data se vuoto
   useEffect(() => {
@@ -97,6 +101,14 @@ const ResellerDashboard: React.FC = () => {
       style: 'currency',
       currency: 'EUR',
     }).format(amount);
+  };
+
+  const handleCopyPassword = async (businessId: string, password: string) => {
+    await navigator.clipboard.writeText(password);
+    setCopiedPasswords({ ...copiedPasswords, [businessId]: true });
+    setTimeout(() => {
+      setCopiedPasswords(prev => ({ ...prev, [businessId]: false }));
+    }, 2000);
   };
 
   return (
@@ -288,6 +300,39 @@ const ResellerDashboard: React.FC = () => {
                     Creato: {new Date(business.createdAt).toLocaleDateString('it-IT')}
                   </div>
                 </div>
+
+                {/* Credenziali */}
+                {business.adminPassword && (
+                  <div className="bg-indigo-50 border border-indigo-200 rounded-lg p-3 mb-4">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center">
+                        <Key className="w-4 h-4 mr-2 text-indigo-600" />
+                        <span className="text-xs font-semibold text-indigo-900">Credenziali Accesso</span>
+                      </div>
+                      <button
+                        onClick={() => handleCopyPassword(business.id, business.adminPassword!)}
+                        className="p-1 hover:bg-indigo-100 rounded transition-colors"
+                        title="Copia password"
+                      >
+                        {copiedPasswords[business.id] ? (
+                          <Check className="w-4 h-4 text-green-600" />
+                        ) : (
+                          <Copy className="w-4 h-4 text-indigo-600" />
+                        )}
+                      </button>
+                    </div>
+                    <div className="text-xs text-gray-700 space-y-1">
+                      <div className="flex items-center">
+                        <Mail className="w-3 h-3 mr-2 text-gray-500" />
+                        <span className="font-mono">{business.email}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Key className="w-3 h-3 mr-2 text-gray-500" />
+                        <span className="font-mono">{business.adminPassword}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Stats */}
                 <div className="grid grid-cols-3 gap-3 mb-4">
