@@ -20,6 +20,7 @@ import { barProducts, quickButtons as barQuickButtons } from '../utils/barMockDa
 import { fashionProducts } from '../utils/fashionMockData';
 import ProductGrid from '../components/ProductGrid';
 import Cart from '../components/Cart';
+import CartModal from '../components/CartModal';
 import Checkout from '../components/Checkout';
 import BarQuickButtons from '../components/BarQuickButtons';
 import RestaurantTables from '../components/RestaurantTables';
@@ -43,6 +44,7 @@ const POSPage: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [showCheckout, setShowCheckout] = useState(false);
+  const [showCartModal, setShowCartModal] = useState(false);
   const [barViewMode, setBarViewMode] = useState<'quick' | 'all'>('quick');
 
   useEffect(() => {
@@ -292,10 +294,10 @@ const POSPage: React.FC = () => {
                 )}
               </div>
 
-              {/* Mobile Checkout Button */}
+              {/* Mobile Cart Button */}
               <div className="lg:hidden bg-white border-t border-gray-200 p-4">
                 <button
-                  onClick={handleCheckout}
+                  onClick={() => setShowCartModal(true)}
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center touch-manipulation"
                 >
                   <ShoppingCart className="w-5 h-5 mr-2" />
@@ -313,6 +315,13 @@ const POSPage: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Cart Modal - Mobile */}
+      <CartModal
+        isOpen={showCartModal}
+        onClose={() => setShowCartModal(false)}
+        onCheckout={handleCheckout}
+      />
 
       {/* Checkout Modal */}
       {showCheckout && (

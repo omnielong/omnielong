@@ -10,7 +10,7 @@ import {
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import CustomerSearch from './CustomerSearch';
-import { mockCustomers, type Customer } from '../utils/customerMockData';
+import { mockCustomers } from '../utils/customerMockData';
 
 interface CartProps {
   onCheckout: () => void;
@@ -19,6 +19,8 @@ interface CartProps {
 const Cart: React.FC<CartProps> = ({ onCheckout }) => {
   const {
     cart,
+    selectedCustomer,
+    setSelectedCustomer,
     removeFromCart,
     updateQuantity,
     applyDiscountToItem,
@@ -38,7 +40,6 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
   const [showDiscountMenu, setShowDiscountMenu] = useState(false);
   const [showLoyaltyMenu, setShowLoyaltyMenu] = useState(false);
   const [selectedItemForDiscount, setSelectedItemForDiscount] = useState<string | null>(null);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
   const subtotal = getCartSubtotal();
   const totalDiscount = getTotalDiscount();

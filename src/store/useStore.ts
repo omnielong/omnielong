@@ -13,6 +13,7 @@ import type {
   Table,
   QuickButton,
 } from '../types';
+import type { Customer } from '../utils/customerMockData';
 
 interface AppState {
   // Auth
@@ -32,6 +33,10 @@ interface AppState {
   updateQuantity: (productId: string, quantity: number) => void;
   applyDiscountToItem: (productId: string, discount: Discount) => void;
   clearCart: () => void;
+
+  // Selected Customer
+  selectedCustomer: Customer | null;
+  setSelectedCustomer: (customer: Customer | null) => void;
 
   // Global discount
   globalDiscount: Discount | null;
@@ -94,6 +99,7 @@ const useStore = create<AppState>()(
       currentOperator: null,
       currentShift: null,
       cart: [],
+      selectedCustomer: null,
       globalDiscount: null,
       activeLoyaltyCard: null,
       products: [],
@@ -112,6 +118,7 @@ const useStore = create<AppState>()(
         set({
           currentOperator: null,
           cart: [],
+          selectedCustomer: null,
           globalDiscount: null,
           activeLoyaltyCard: null,
         }),
@@ -228,9 +235,13 @@ const useStore = create<AppState>()(
       clearCart: () =>
         set({
           cart: [],
+          selectedCustomer: null,
           globalDiscount: null,
           activeLoyaltyCard: null,
         }),
+
+      // Selected Customer
+      setSelectedCustomer: (customer) => set({ selectedCustomer: customer }),
 
       // Global discount
       applyGlobalDiscount: (discount) => set({ globalDiscount: discount }),
