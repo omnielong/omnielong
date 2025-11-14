@@ -7,6 +7,12 @@ import { mockOperators } from '../utils/mockData';
 import { mockStores } from '../utils/storeMockData';
 
 // Mock data - In produzione verrebbe da API
+// CREDENZIALI DI TEST:
+// Reseller: admin@techpos.it / reseller123
+// Business 1 (2 negozi moda): admin@eleganzafashion.it / business123
+// Business 2 (2 bar): admin@caffedavinci.com / business123
+// Operatori: PIN 1234, 5678, 9012
+
 const mockResellers: (Reseller & { password: string })[] = [
   {
     id: 'reseller-1',
@@ -27,25 +33,52 @@ const mockResellers: (Reseller & { password: string })[] = [
 
 const mockBusinesses: (Business & { password: string })[] = [
   {
-    id: 'business-1',
-    resellerId: 'reseller-1',
-    companyName: 'Fashion Store SRL',
-    vatNumber: 'IT98765432109',
-    fiscalCode: 'FSTSRL98765432',
-    email: 'admin@fashionstore.it',
+    id: 'bus-1', // Corrisponde agli stores in storeMockData.ts
+    resellerId: 'res-1',
+    companyName: 'Eleganza Fashion Group S.p.A.',
+    vatNumber: 'IT02891740967',
+    fiscalCode: 'EFG02891740967',
+    email: 'admin@eleganzafashion.it',
     password: 'business123',
-    phone: '+39 06 9876543',
-    address: 'Via Condotti 45, Roma',
+    phone: '+39 02 7601 3456',
+    address: 'Via Montenapoleone 8, 20121 Milano',
+    website: 'https://www.eleganzafashion.it',
+    businessSector: 'fashion',
     active: true,
     subscriptionPlan: 'professional',
-    subscriptionStartDate: new Date('2024-01-15'),
-    adminEmail: 'admin@fashionstore.it',
-    adminName: 'Laura Bianchi',
+    subscriptionStartDate: new Date('2023-06-15'),
+    subscriptionEndDate: new Date('2026-06-15'),
+    adminEmail: 'maria.rossi@eleganzafashion.it',
+    adminName: 'Maria Rossi',
     maxStores: 5,
     maxOperatorsPerStore: 10,
-    billingEmail: 'billing@fashionstore.it',
+    billingEmail: 'amministrazione@eleganzafashion.it',
     paymentMethod: 'credit_card',
-    createdAt: new Date('2024-01-15'),
+    createdAt: new Date('2023-06-15'),
+  },
+  {
+    id: 'bus-2', // Caffè Da Vinci - ha 2 negozi
+    resellerId: 'res-1',
+    companyName: 'Caffè & Tabacchi Da Vinci S.r.l.',
+    vatNumber: 'IT03456789012',
+    fiscalCode: 'CTD03456789012',
+    email: 'admin@caffedavinci.com',
+    password: 'business123',
+    phone: '+39 06 6854 2190',
+    address: 'Piazza Navona 47, 00186 Roma',
+    website: 'https://www.caffedavinci.com',
+    businessSector: 'bar',
+    active: true,
+    subscriptionPlan: 'basic',
+    subscriptionStartDate: new Date('2024-01-10'),
+    subscriptionEndDate: new Date('2026-01-10'),
+    adminEmail: 'giuseppe.bianchi@caffedavinci.com',
+    adminName: 'Giuseppe Bianchi',
+    maxStores: 3,
+    maxOperatorsPerStore: 5,
+    billingEmail: 'contabilita@caffedavinci.com',
+    paymentMethod: 'bank_transfer',
+    createdAt: new Date('2024-01-10'),
   },
 ];
 
