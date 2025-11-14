@@ -25,6 +25,9 @@ import useStore from './store/useStore';
 function App() {
   const { currentOperator, currentUser, sectorConfig } = useStore();
 
+  console.log('[App] Current user:', currentUser);
+  console.log('[App] Sector config:', sectorConfig);
+
   // Se il settore non è configurato, mostra setup
   if (!sectorConfig?.configured) {
     return (

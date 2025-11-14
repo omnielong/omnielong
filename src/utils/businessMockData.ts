@@ -1,7 +1,10 @@
 import type { Business } from '../types';
 
+// Tipo esteso per includere password per il login
+export type BusinessWithPassword = Business & { password: string };
+
 // Mock data - in produzione verrebbe da API
-export const mockBusinesses: Business[] = [
+export const mockBusinesses: BusinessWithPassword[] = [
   // Fashion - Catena boutique alta moda
   {
     id: 'bus-1',
@@ -10,6 +13,7 @@ export const mockBusinesses: Business[] = [
     vatNumber: 'IT02891740967',
     fiscalCode: 'EFG02891740967',
     email: 'info@eleganzafashion.it',
+    password: 'business123',
     phone: '+39 02 7601 3456',
     address: 'Via Montenapoleone 8, 20121 Milano',
     website: 'https://www.eleganzafashion.it',
@@ -35,6 +39,7 @@ export const mockBusinesses: Business[] = [
     vatNumber: 'IT03456789012',
     fiscalCode: 'CTD03456789012',
     email: 'gestione@caffedavinci.com',
+    password: 'business123',
     phone: '+39 06 6854 2190',
     address: 'Piazza Navona 47, 00186 Roma',
     website: 'https://www.caffedavinci.com',
@@ -60,6 +65,7 @@ export const mockBusinesses: Business[] = [
     vatNumber: 'IT04567890123',
     fiscalCode: 'VRD04567890123',
     email: 'info@trattoriatoscana.it',
+    password: 'business123',
     phone: '+39 055 284 735',
     address: 'Via dei Calzaiuoli 32, 50122 Firenze',
     website: 'https://www.trattoriatoscana.it',
@@ -84,6 +90,7 @@ export const mockBusinesses: Business[] = [
     companyName: 'SportWear Italia S.r.l.',
     vatNumber: 'IT05678901234',
     email: 'amministrazione@sportwearitalia.it',
+    password: 'business123',
     phone: '+39 011 543 8921',
     address: 'Corso Vittorio Emanuele II 76, 10121 Torino',
     website: 'https://www.sportwearitalia.it',
@@ -109,6 +116,7 @@ export const mockBusinesses: Business[] = [
     vatNumber: 'IT06789012345',
     fiscalCode: 'DVP06789012345',
     email: 'info@dolcevitapasticceria.it',
+    password: 'business123',
     phone: '+39 081 764 5321',
     address: 'Via Toledo 156, 80134 Napoli',
     businessSector: 'bar',
@@ -131,6 +139,7 @@ export const mockBusinesses: Business[] = [
     companyName: 'Pizzeria Napoletana Tradizione S.r.l.',
     vatNumber: 'IT07890123456',
     email: 'pizzeria@tradizionenapoli.com',
+    password: 'business123',
     phone: '+39 041 528 6743',
     address: 'Campo Santa Maria Formosa 5252, 30122 Venezia',
     website: 'https://www.tradizionenapoli.com',
@@ -155,6 +164,7 @@ export const mockBusinesses: Business[] = [
     companyName: 'La Matita Magica di Ferretti & Figli',
     vatNumber: 'IT08901234567',
     email: 'info@lamatitamagica.it',
+    password: 'business123',
     phone: '+39 051 234 8765',
     address: 'Via Rizzoli 18, 40125 Bologna',
     businessSector: 'generic',

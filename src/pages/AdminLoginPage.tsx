@@ -2,9 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Mail, Eye, EyeOff, Building2, Store, User } from 'lucide-react';
 import useStore from '../store/useStore';
-import type { Reseller, Business } from '../types';
+import type { Reseller } from '../types';
 import { mockOperators } from '../utils/mockData';
 import { mockStores } from '../utils/storeMockData';
+import { mockBusinesses } from '../utils/businessMockData';
 
 // Mock data - In produzione verrebbe da API
 const mockResellers: (Reseller & { password: string })[] = [
@@ -22,30 +23,6 @@ const mockResellers: (Reseller & { password: string })[] = [
     commissionRate: 15,
     maxBusinesses: 50,
     createdAt: new Date('2024-01-01'),
-  },
-];
-
-const mockBusinesses: (Business & { password: string })[] = [
-  {
-    id: 'business-1',
-    resellerId: 'reseller-1',
-    companyName: 'Fashion Store SRL',
-    vatNumber: 'IT98765432109',
-    fiscalCode: 'FSTSRL98765432',
-    email: 'admin@fashionstore.it',
-    password: 'business123',
-    phone: '+39 06 9876543',
-    address: 'Via Condotti 45, Roma',
-    active: true,
-    subscriptionPlan: 'professional',
-    subscriptionStartDate: new Date('2024-01-15'),
-    adminEmail: 'admin@fashionstore.it',
-    adminName: 'Laura Bianchi',
-    maxStores: 5,
-    maxOperatorsPerStore: 10,
-    billingEmail: 'billing@fashionstore.it',
-    paymentMethod: 'credit_card',
-    createdAt: new Date('2024-01-15'),
   },
 ];
 
@@ -76,28 +53,38 @@ const AdminLoginPage: React.FC = () => {
     e.preventDefault();
     setError('');
 
+    console.log('[Login] Attempting login:', { email, loginType });
+
     if (loginType === 'reseller') {
       const reseller = mockResellers.find(
         (r) => r.email === email && r.password === password && r.active
       );
 
       if (reseller) {
+        console.log('[Login] Reseller found, logging in:', reseller.id);
         const { password: _, ...resellerData } = reseller;
         loginUser(resellerData, 'reseller');
+        console.log('[Login] Navigating to /reseller');
         navigate('/reseller');
       } else {
+        console.log('[Login] Reseller not found or invalid credentials');
         setError('Email o password non validi');
       }
     } else if (loginType === 'business') {
+      console.log('[Login] Searching for business in mockBusinesses:', mockBusinesses.length, 'businesses');
       const business = mockBusinesses.find(
         (b) => b.email === email && b.password === password && b.active
       );
 
       if (business) {
+        console.log('[Login] Business found, logging in:', business.id);
         const { password: _, ...businessData } = business;
+        console.log('[Login] Business data:', { id: businessData.id, email: businessData.email });
         loginUser(businessData, 'business');
+        console.log('[Login] Navigating to /business');
         navigate('/business');
       } else {
+        console.log('[Login] Business not found. Available businesses:', mockBusinesses.map(b => ({ email: b.email, active: b.active })));
         setError('Email o password non validi');
       }
     }
@@ -363,8 +350,11 @@ const AdminLoginPage: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-sm text-blue-800 space-y-1">
-                  <p>Email: <span className="font-mono">admin@fashionstore.it</span></p>
-                  <p>Password: <span className="font-mono">business123</span></p>
+                  <p className="font-semibold mb-1">Business disponibili (password: business123):</p>
+                  <p>• <span className="font-mono">info@eleganzafashion.it</span> (Fashion)</p>
+                  <p>• <span className="font-mono">gestione@caffedavinci.com</span> (Bar)</p>
+                  <p>• <span className="font-mono">info@trattoriatoscana.it</span> (Restaurant)</p>
+                  <p className="text-xs mt-2 text-blue-600">+ altri 4 business (vedi businessMockData.ts)</p>
                 </div>
               )}
             </div>

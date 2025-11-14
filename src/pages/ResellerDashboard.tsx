@@ -31,7 +31,9 @@ const ResellerDashboard: React.FC = () => {
   // Inizializza lo store con i mock data se vuoto
   useEffect(() => {
     if (!initialized && businesses.length === 0) {
-      setBusinesses(mockBusinesses);
+      // Rimuovi il campo password dai business prima di salvarli nello store
+      const businessesWithoutPasswords = mockBusinesses.map(({ password, ...business }) => business);
+      setBusinesses(businessesWithoutPasswords);
       setInitialized(true);
     }
   }, [businesses.length, setBusinesses, initialized]);
