@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import LoginPage from './pages/LoginPage';
 import ShiftPage from './pages/ShiftPage';
 import POSPage from './pages/POSPage';
 import DashboardPage from './pages/DashboardPage';
@@ -38,7 +37,8 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LoginPage />} />
+        {/* Redirect root to unified login */}
+        <Route path="/" element={<Navigate to="/admin-login" replace />} />
         <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route path="/role-selection" element={<RoleSelectionPage />} />
 
@@ -110,13 +110,13 @@ function App() {
         <Route
           path="/shift"
           element={
-            currentOperator ? <ShiftPage /> : <Navigate to="/" replace />
+            currentOperator ? <ShiftPage /> : <Navigate to="/admin-login" replace />
           }
         />
         <Route
           path="/pos"
           element={
-            currentOperator ? <POSPage /> : <Navigate to="/" replace />
+            currentOperator ? <POSPage /> : <Navigate to="/admin-login" replace />
           }
         />
         <Route
@@ -155,7 +155,7 @@ function App() {
         <Route
           path="/customers"
           element={
-            currentOperator ? <CustomersPage /> : <Navigate to="/" replace />
+            currentOperator ? <CustomersPage /> : <Navigate to="/admin-login" replace />
           }
         />
         <Route
@@ -213,7 +213,7 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/admin-login" replace />} />
       </Routes>
     </BrowserRouter>
   );
