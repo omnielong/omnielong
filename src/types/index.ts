@@ -44,6 +44,7 @@ export interface Business {
   // Credenziali admin business
   adminEmail: string;
   adminName: string;
+  adminPassword?: string; // Password per login (opzionale per compatibilità con mock)
   // Limiti piano
   maxStores: number; // Max punti vendita
   maxOperatorsPerStore: number; // Max operatori per store

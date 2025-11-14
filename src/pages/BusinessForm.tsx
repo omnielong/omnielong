@@ -37,6 +37,7 @@ const BusinessForm: React.FC = () => {
     businessSector: 'generic' as 'fashion' | 'bar' | 'restaurant' | 'generic',
     adminEmail: '',
     adminName: '',
+    adminPassword: '', // Password per nuovo business
     subscriptionPlan: 'basic' as 'free' | 'basic' | 'professional' | 'enterprise',
     maxStores: 2,
     maxOperatorsPerStore: 5,
@@ -69,6 +70,7 @@ const BusinessForm: React.FC = () => {
           businessSector: business.businessSector || 'generic',
           adminEmail: business.adminEmail,
           adminName: business.adminName,
+          adminPassword: '', // In edit non mostriamo la password per sicurezza
           subscriptionPlan: business.subscriptionPlan,
           maxStores: business.maxStores,
           maxOperatorsPerStore: business.maxOperatorsPerStore,
@@ -146,6 +148,12 @@ const BusinessForm: React.FC = () => {
     if (!formData.adminEmail.trim() || !formData.adminEmail.includes('@')) {
       newErrors.adminEmail = 'Email amministratore valida obbligatoria';
     }
+    // Valida password solo durante la creazione
+    if (!isEditing) {
+      if (!formData.adminPassword.trim() || formData.adminPassword.length < 6) {
+        newErrors.adminPassword = 'Password deve essere di almeno 6 caratteri';
+      }
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -192,6 +200,7 @@ const BusinessForm: React.FC = () => {
       subscriptionEndDate: subscriptionEndDate,
       adminEmail: formData.adminEmail,
       adminName: formData.adminName,
+      adminPassword: !isEditing ? formData.adminPassword : existingBusiness?.adminPassword,
       maxStores: formData.maxStores,
       maxOperatorsPerStore: formData.maxOperatorsPerStore,
       billingEmail: formData.billingEmail || undefined,
@@ -446,6 +455,30 @@ const BusinessForm: React.FC = () => {
                   <p className="text-red-600 text-sm mt-1">{errors.adminEmail}</p>
                 )}
               </div>
+
+              {/* Password solo in creazione, non in edit */}
+              {!isEditing && (
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Password Admin *
+                  </label>
+                  <input
+                    type="password"
+                    value={formData.adminPassword}
+                    onChange={(e) => setFormData({ ...formData, adminPassword: e.target.value })}
+                    className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                      errors.adminPassword ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="Minimo 6 caratteri"
+                  />
+                  {errors.adminPassword && (
+                    <p className="text-red-600 text-sm mt-1">{errors.adminPassword}</p>
+                  )}
+                  <p className="text-sm text-gray-600 mt-1">
+                    L'amministratore potrà cambiarla dopo il primo login
+                  </p>
+                </div>
+              )}
             </div>
           </div>
 

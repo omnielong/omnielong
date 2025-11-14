@@ -31,7 +31,7 @@ const mockResellers: (Reseller & { password: string })[] = [
   },
 ];
 
-const mockBusinesses: (Business & { password: string })[] = [
+const mockBusinesses: Business[] = [
   {
     id: 'bus-1', // Corrisponde agli stores in storeMockData.ts
     resellerId: 'res-1',
@@ -39,7 +39,7 @@ const mockBusinesses: (Business & { password: string })[] = [
     vatNumber: 'IT02891740967',
     fiscalCode: 'EFG02891740967',
     email: 'admin@eleganzafashion.it',
-    password: 'business123',
+    adminPassword: 'business123',
     phone: '+39 02 7601 3456',
     address: 'Via Montenapoleone 8, 20121 Milano',
     website: 'https://www.eleganzafashion.it',
@@ -63,7 +63,7 @@ const mockBusinesses: (Business & { password: string })[] = [
     vatNumber: 'IT03456789012',
     fiscalCode: 'CTD03456789012',
     email: 'admin@caffedavinci.com',
-    password: 'business123',
+    adminPassword: 'business123',
     phone: '+39 06 6854 2190',
     address: 'Piazza Navona 47, 00186 Roma',
     website: 'https://www.caffedavinci.com',
@@ -97,13 +97,17 @@ const AdminLoginPage: React.FC = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { loginUser, login, setOperators, setStores } = useStore();
+  const { loginUser, login, setOperators, setStores, setBusinesses, businesses } = useStore();
 
-  // Initialize operators and stores on first load
+  // Initialize operators, stores, and businesses on first load
   useEffect(() => {
     setOperators(mockOperators);
     setStores(mockStores); // Necessario per trovare lo store dell'operatore al login
-  }, [setOperators, setStores]);
+    // Inizializza businesses solo se vuoto (evita di sovrascrivere businesses creati)
+    if (businesses.length === 0) {
+      setBusinesses(mockBusinesses);
+    }
+  }, [setOperators, setStores, setBusinesses, businesses.length]);
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -122,12 +126,12 @@ const AdminLoginPage: React.FC = () => {
         setError('Email o password non validi');
       }
     } else if (loginType === 'business') {
-      const business = mockBusinesses.find(
-        (b) => b.email === email && b.password === password && b.active
+      const business = businesses.find(
+        (b) => b.email === email && b.adminPassword === password && b.active
       );
 
       if (business) {
-        const { password: _, ...businessData } = business;
+        const { adminPassword: _, ...businessData } = business;
         loginUser(businessData, 'business');
         navigate('/business');
       } else {
