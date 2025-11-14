@@ -5,6 +5,7 @@ import { format, startOfDay, endOfDay, isToday } from 'date-fns';
 import { it } from 'date-fns/locale';
 import useStore from '../store/useStore';
 import type { FiscalClosure } from '../types';
+import AccessDenied from '../components/AccessDenied';
 
 const FiscalClosurePage: React.FC = () => {
   const navigate = useNavigate();
@@ -16,23 +17,7 @@ const FiscalClosurePage: React.FC = () => {
 
   // Only admin can access this page
   if (currentOperator?.role !== 'admin') {
-    return (
-      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-        <div className="bg-white rounded-xl shadow-lg p-8 text-center max-w-md">
-          <FileText className="w-16 h-16 text-red-600 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">Accesso Negato</h2>
-          <p className="text-gray-600 mb-6">
-            Solo gli amministratori possono gestire le chiusure fiscali
-          </p>
-          <button
-            onClick={() => navigate('/pos')}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors"
-          >
-            Torna al POS
-          </button>
-        </div>
-      </div>
-    );
+    return <AccessDenied message="Solo gli amministratori possono gestire le chiusure fiscali" />;
   }
 
   // Calculate today's statistics
