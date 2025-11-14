@@ -12,6 +12,11 @@ import ReturnsPage from './pages/ReturnsPage';
 import OperatorsPage from './pages/OperatorsPage';
 import FiscalClosurePage from './pages/FiscalClosurePage';
 import BackupPage from './pages/BackupPage';
+import ResellerDashboard from './pages/ResellerDashboard';
+import BusinessDashboard from './pages/BusinessDashboard';
+import BusinessForm from './pages/BusinessForm';
+import StoreForm from './pages/StoreForm';
+import RoleSelectionPage from './pages/RoleSelectionPage';
 import useStore from './store/useStore';
 
 function App() {
@@ -32,6 +37,19 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/role-selection" element={<RoleSelectionPage />} />
+
+        {/* Reseller Routes */}
+        <Route path="/reseller" element={<ResellerDashboard />} />
+        <Route path="/reseller/businesses/new" element={<BusinessForm />} />
+        <Route path="/reseller/businesses/:id/edit" element={<BusinessForm />} />
+
+        {/* Business Routes */}
+        <Route path="/business" element={<BusinessDashboard />} />
+        <Route path="/business/stores/new" element={<StoreForm />} />
+        <Route path="/business/stores/:id/edit" element={<StoreForm />} />
+
+        {/* Store/POS Routes */}
         <Route
           path="/shift"
           element={
