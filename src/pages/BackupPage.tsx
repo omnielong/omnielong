@@ -27,7 +27,7 @@ const BackupPage: React.FC = () => {
   const [importError, setImportError] = useState<string | null>(null);
 
   // Only admin can access this page
-  if (currentOperator?.role !== 'admin') {
+  if (currentOperator?.role !== 'store_admin' && currentOperator?.role !== 'business_admin') {
     return <AccessDenied message="Solo gli amministratori possono gestire backup e export" />;
   }
 

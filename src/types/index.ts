@@ -1,14 +1,161 @@
-// Operatore
+// ===== ARCHITETTURA MULTI-TENANT =====
+
+// Rivenditore - Chi vende il sistema POS
+export interface Reseller {
+  id: string;
+  companyName: string;
+  vatNumber: string;
+  email: string;
+  phone: string;
+  address?: string;
+  website?: string;
+  logo?: string;
+  active: boolean;
+  createdAt: Date;
+  // Commissione sulle vendite
+  commissionRate?: number; // Percentuale
+  // Limiti
+  maxBusinesses?: number; // Max clienti
+  // Credenziali admin rivenditore
+  adminEmail: string;
+  adminName: string;
+}
+
+// Cliente/Business - Azienda che usa il POS
+export interface Business {
+  id: string;
+  resellerId: string; // A quale rivenditore appartiene
+  companyName: string;
+  vatNumber?: string;
+  fiscalCode?: string;
+  email: string;
+  phone: string;
+  address?: string;
+  website?: string;
+  logo?: string;
+  active: boolean;
+  createdAt: Date;
+  // Abbonamento
+  subscriptionPlan: 'free' | 'basic' | 'professional' | 'enterprise';
+  subscriptionStartDate: Date;
+  subscriptionEndDate?: Date;
+  // Credenziali admin business
+  adminEmail: string;
+  adminName: string;
+  // Limiti piano
+  maxStores: number; // Max punti vendita
+  maxOperatorsPerStore: number; // Max operatori per store
+  // Fatturazione
+  billingEmail?: string;
+  paymentMethod?: 'credit_card' | 'bank_transfer' | 'paypal';
+}
+
+// Punto Vendita - Negozio fisico
+export interface Store {
+  id: string;
+  businessId: string; // A quale business appartiene
+  name: string;
+  code: string; // Codice univoco (es. "STORE-001")
+  address: string;
+  city: string;
+  province: string;
+  postalCode: string;
+  phone?: string;
+  email?: string;
+  // Configurazione settore
+  sector: BusinessSector;
+  // Stato
+  active: boolean;
+  createdAt: Date;
+  // Orari di apertura
+  openingHours?: {
+    [key: string]: { // 'monday', 'tuesday', etc.
+      open: string; // "09:00"
+      close: string; // "20:00"
+      closed: boolean;
+    };
+  };
+  // Informazioni fiscali specifiche del punto vendita
+  cashRegisterCode?: string; // Codice registratore di cassa
+  fiscalPrinterSerial?: string;
+}
+
+// Operatore (modificato per multi-tenant)
 export interface Operator {
   id: string;
+  storeId: string; // A quale punto vendita appartiene
+  businessId: string; // A quale business appartiene
   name: string;
   email: string;
-  role: 'admin' | 'cashier' | 'manager';
+  role: 'business_admin' | 'store_admin' | 'manager' | 'cashier';
   pin: string;
   avatar?: string;
   active: boolean;
   createdAt: Date;
+  // Permessi specifici
+  permissions?: {
+    canAccessReports: boolean;
+    canManageProducts: boolean;
+    canManageCustomers: boolean;
+    canManagePromotions: boolean;
+    canManageOperators: boolean;
+    canViewSensitiveData: boolean;
+    canProcessRefunds: boolean;
+    canOpenCloseCashRegister: boolean;
+  };
 }
+
+// Ruoli sistema
+export type SystemRole =
+  | 'reseller'         // Rivenditore (super admin)
+  | 'business_admin'   // Admin del business (gestisce tutti i punti vendita)
+  | 'store_admin'      // Admin del punto vendita (può tutto nel suo store)
+  | 'manager'          // Manager (gestione avanzata)
+  | 'cashier';         // Cassiere (solo vendite)
+
+// Piano abbonamento
+export interface SubscriptionPlan {
+  id: string;
+  name: string;
+  level: 'free' | 'basic' | 'professional' | 'enterprise';
+  monthlyPrice: number;
+  yearlyPrice: number;
+  features: {
+    maxStores: number;
+    maxOperatorsPerStore: number;
+    maxProducts: number;
+    advancedReports: boolean;
+    multiCurrency: boolean;
+    apiAccess: boolean;
+    customBranding: boolean;
+    prioritySupport: boolean;
+    onPremise: boolean;
+  };
+}
+
+// Statistiche Rivenditore
+export interface ResellerStats {
+  totalBusinesses: number;
+  activeBusinesses: number;
+  totalStores: number;
+  totalRevenue: number;
+  monthlyRecurringRevenue: number;
+  totalTransactions: number;
+  avgTransactionValue: number;
+}
+
+// Statistiche Business
+export interface BusinessStats {
+  totalStores: number;
+  activeStores: number;
+  totalOperators: number;
+  totalSales: number;
+  totalRevenue: number;
+  totalCustomers: number;
+  topSellingStore?: Store;
+}
+
+// ===== FINE ARCHITETTURA MULTI-TENANT =====
 
 // Prodotto
 export interface Product {

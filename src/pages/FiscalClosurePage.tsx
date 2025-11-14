@@ -16,7 +16,7 @@ const FiscalClosurePage: React.FC = () => {
   const [closureCompleted, setClosureCompleted] = useState(false);
 
   // Only admin can access this page
-  if (currentOperator?.role !== 'admin') {
+  if (currentOperator?.role !== 'store_admin' && currentOperator?.role !== 'business_admin') {
     return <AccessDenied message="Solo gli amministratori possono gestire le chiusure fiscali" />;
   }
 

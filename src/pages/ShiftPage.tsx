@@ -41,7 +41,7 @@ const ShiftPage: React.FC = () => {
             <p className="text-sm text-green-100">Operatore</p>
             <p className="font-bold">{currentOperator?.name}</p>
             <p className="text-xs text-green-100">
-              {currentOperator?.role === 'admin' && 'Amministratore'}
+              {(currentOperator?.role === 'store_admin' || currentOperator?.role === 'business_admin') && 'Amministratore'}
               {currentOperator?.role === 'cashier' && 'Cassiere'}
               {currentOperator?.role === 'manager' && 'Manager'}
             </p>

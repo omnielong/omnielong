@@ -284,6 +284,8 @@ class APIService {
   private mapOperatorsFromExternal(externalOperators: any[]): Operator[] {
     return externalOperators.map((o) => ({
       id: o.id,
+      storeId: o.storeId || 'store-1',
+      businessId: o.businessId || 'bus-1',
       name: o.name || `${o.firstName} ${o.lastName}`,
       email: o.email,
       role: o.role || 'cashier',

@@ -14,13 +14,13 @@ const OperatorsPage: React.FC = () => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    role: 'cashier' as 'admin' | 'cashier' | 'manager',
+    role: 'cashier' as 'business_admin' | 'store_admin' | 'cashier' | 'manager',
     pin: '',
     active: true,
   });
 
   // Only admin can access this page
-  if (currentOperator?.role !== 'admin') {
+  if (currentOperator?.role !== 'store_admin' && currentOperator?.role !== 'business_admin') {
     return <AccessDenied message="Solo gli amministratori possono gestire gli operatori" />;
   }
 
@@ -91,6 +91,8 @@ const OperatorsPage: React.FC = () => {
       // Create new operator
       const newOperator: Operator = {
         id: `op-${Date.now()}`,
+        storeId: currentOperator?.storeId || 'store-1',
+        businessId: currentOperator?.businessId || 'bus-1',
         name: formData.name,
         email: formData.email,
         role: formData.role,
@@ -132,7 +134,8 @@ const OperatorsPage: React.FC = () => {
 
   const getRoleLabel = (role: string) => {
     const labels = {
-      admin: 'Amministratore',
+      store_admin: 'Amministratore',
+      business_admin: 'Admin Business',
       manager: 'Manager',
       cashier: 'Cassiere',
     };
@@ -141,7 +144,8 @@ const OperatorsPage: React.FC = () => {
 
   const getRoleBadgeColor = (role: string) => {
     const colors = {
-      admin: 'bg-purple-100 text-purple-800 border-purple-300',
+      store_admin: 'bg-purple-100 text-purple-800 border-purple-300',
+      business_admin: 'bg-indigo-100 text-indigo-800 border-indigo-300',
       manager: 'bg-blue-100 text-blue-800 border-blue-300',
       cashier: 'bg-green-100 text-green-800 border-green-300',
     };
@@ -189,7 +193,7 @@ const OperatorsPage: React.FC = () => {
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
             <p className="text-purple-100 text-sm mb-1">Amministratori</p>
             <p className="text-3xl font-bold">
-              {operators.filter((op) => op.role === 'admin').length}
+              {operators.filter((op) => op.role === 'store_admin' || op.role === 'business_admin').length}
             </p>
           </div>
         </div>
@@ -208,7 +212,7 @@ const OperatorsPage: React.FC = () => {
               {/* Card Header */}
               <div
                 className={`p-4 ${
-                  operator.role === 'admin'
+                  operator.role === 'store_admin' || operator.role === 'business_admin'
                     ? 'bg-gradient-to-r from-purple-500 to-purple-600'
                     : operator.role === 'manager'
                     ? 'bg-gradient-to-r from-blue-500 to-blue-600'
@@ -218,7 +222,7 @@ const OperatorsPage: React.FC = () => {
                 <div className="flex items-center justify-between text-white">
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
-                      {operator.role === 'admin' ? (
+                      {(operator.role === 'store_admin' || operator.role === 'business_admin') ? (
                         <Shield className="w-6 h-6" />
                       ) : (
                         <User className="w-6 h-6" />
@@ -387,14 +391,14 @@ const OperatorsPage: React.FC = () => {
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      role: e.target.value as 'admin' | 'cashier' | 'manager',
+                      role: e.target.value as 'business_admin' | 'store_admin' | 'cashier' | 'manager',
                     })
                   }
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
                 >
                   <option value="cashier">Cassiere</option>
                   <option value="manager">Manager</option>
-                  <option value="admin">Amministratore</option>
+                  <option value="store_admin">Amministratore Store</option>
                 </select>
                 <p className="text-xs text-gray-500 mt-1">
                   Gli amministratori hanno accesso completo al sistema

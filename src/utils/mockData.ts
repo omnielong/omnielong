@@ -147,15 +147,19 @@ export const mockProducts: Product[] = [
 export const mockOperators: Operator[] = [
   {
     id: 'op-1',
+    storeId: 'store-1',
+    businessId: 'bus-1',
     name: 'Mario Rossi',
     email: 'mario.rossi@shop.it',
-    role: 'admin',
+    role: 'store_admin',
     pin: '1234',
     active: true,
     createdAt: new Date('2024-01-01'),
   },
   {
     id: 'op-2',
+    storeId: 'store-1',
+    businessId: 'bus-1',
     name: 'Laura Bianchi',
     email: 'laura.bianchi@shop.it',
     role: 'cashier',
@@ -165,6 +169,8 @@ export const mockOperators: Operator[] = [
   },
   {
     id: 'op-3',
+    storeId: 'store-1',
+    businessId: 'bus-1',
     name: 'Giuseppe Verdi',
     email: 'giuseppe.verdi@shop.it',
     role: 'manager',
