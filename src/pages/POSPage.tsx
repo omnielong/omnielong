@@ -36,6 +36,7 @@ const POSPage: React.FC = () => {
   const navigate = useNavigate();
   const {
     currentOperator,
+    currentStore,
     currentShift,
     cart,
     sectorConfig,
@@ -196,6 +197,12 @@ const POSPage: React.FC = () => {
                         )}
                       </div>
                       <p className="text-sm text-gray-600">
+                        {currentStore && (
+                          <span className="font-semibold text-blue-600">
+                            {currentStore.name}
+                          </span>
+                        )}
+                        {currentStore && ' • '}
                         {currentOperator?.name} - Turno aperto
                       </p>
                     </div>

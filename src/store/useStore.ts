@@ -29,6 +29,7 @@ export type AuthUser =
 interface AppState {
   // Auth - Operator (Store POS)
   currentOperator: Operator | null;
+  currentStore: Store | null; // Store corrente dell'operatore
   login: (operator: Operator) => void;
   logout: () => void;
 
@@ -134,6 +135,7 @@ const useStore = create<AppState>()(
     (set, get) => ({
       // Initial state
       currentOperator: null,
+      currentStore: null,
       currentUser: null,
       currentShift: null,
       cart: [],
@@ -155,10 +157,16 @@ const useStore = create<AppState>()(
       stores: [],
 
       // Auth actions - Operator
-      login: (operator) => set({ currentOperator: operator }),
+      login: (operator) => {
+        // Trova lo store dell'operatore
+        const { stores } = get();
+        const operatorStore = stores.find((s) => s.id === operator.storeId);
+        set({ currentOperator: operator, currentStore: operatorStore || null });
+      },
       logout: () =>
         set({
           currentOperator: null,
+          currentStore: null,
           cart: [],
           selectedCustomer: null,
           globalDiscount: null,

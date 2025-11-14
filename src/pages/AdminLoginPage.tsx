@@ -4,6 +4,7 @@ import { Lock, Mail, Eye, EyeOff, Building2, Store, User } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { Reseller, Business } from '../types';
 import { mockOperators } from '../utils/mockData';
+import { mockStores } from '../utils/storeMockData';
 
 // Mock data - In produzione verrebbe da API
 const mockResellers: (Reseller & { password: string })[] = [
@@ -63,12 +64,13 @@ const AdminLoginPage: React.FC = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { loginUser, login, setOperators } = useStore();
+  const { loginUser, login, setOperators, setStores } = useStore();
 
-  // Initialize operators on first load
+  // Initialize operators and stores on first load
   useEffect(() => {
     setOperators(mockOperators);
-  }, [setOperators]);
+    setStores(mockStores); // Necessario per trovare lo store dell'operatore al login
+  }, [setOperators, setStores]);
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();

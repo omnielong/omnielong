@@ -201,8 +201,12 @@ const ResellerDashboard: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {filteredBusinesses.map((business) => {
             const planBadge = getPlanBadge(business.subscriptionPlan);
-            const daysUntilExpiry = business.subscriptionEndDate
-              ? Math.ceil((business.subscriptionEndDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
+            // Converti subscriptionEndDate in Date se è stringa (da localStorage)
+            const endDate = business.subscriptionEndDate
+              ? new Date(business.subscriptionEndDate)
+              : null;
+            const daysUntilExpiry = endDate
+              ? Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
               : null;
             const isExpiringSoon = daysUntilExpiry !== null && daysUntilExpiry <= 30 && daysUntilExpiry >= 0;
             const isExpired = daysUntilExpiry !== null && daysUntilExpiry < 0;
@@ -281,7 +285,7 @@ const ResellerDashboard: React.FC = () => {
                   )}
                   <div className="flex items-center text-gray-700">
                     <Calendar className="w-4 h-4 mr-2 text-gray-500" />
-                    Creato: {business.createdAt.toLocaleDateString('it-IT')}
+                    Creato: {new Date(business.createdAt).toLocaleDateString('it-IT')}
                   </div>
                 </div>
 

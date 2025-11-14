@@ -241,7 +241,7 @@ const BusinessDashboard: React.FC = () => {
                 )}
                 <div className="flex items-center text-gray-700">
                   <Calendar className="w-4 h-4 mr-2 text-gray-500" />
-                  Creato: {store.createdAt.toLocaleDateString('it-IT')}
+                  Creato: {new Date(store.createdAt).toLocaleDateString('it-IT')}
                 </div>
               </div>
 
