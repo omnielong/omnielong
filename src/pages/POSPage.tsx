@@ -16,6 +16,7 @@ import {
 import useStore from '../store/useStore';
 import { mockProducts, mockCategories, mockDiscounts, mockLoyaltyCards } from '../utils/mockData';
 import { barProducts, quickButtons as barQuickButtons } from '../utils/barMockData';
+import { fashionProducts } from '../utils/fashionMockData';
 import ProductGrid from '../components/ProductGrid';
 import Cart from '../components/Cart';
 import Checkout from '../components/Checkout';
@@ -55,15 +56,16 @@ const POSPage: React.FC = () => {
     }
 
     // Initialize data based on sector
-    if (sectorConfig?.sector === 'bar') {
-      // Initialize bar products and quick buttons if not already loaded
-      if (products.length === 0) {
+    if (products.length === 0) {
+      if (sectorConfig?.sector === 'bar') {
+        // Initialize bar products and quick buttons
         setProducts([...mockProducts, ...barProducts]);
         setQuickButtons(barQuickButtons);
-      }
-    } else {
-      // Initialize generic products
-      if (products.length === 0) {
+      } else if (sectorConfig?.sector === 'fashion') {
+        // Initialize fashion products with variants
+        setProducts([...mockProducts, ...fashionProducts]);
+      } else {
+        // Initialize generic products
         setProducts(mockProducts);
       }
     }

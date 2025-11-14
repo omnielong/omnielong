@@ -1,10 +1,12 @@
-import React, { useEffect } from 'react';
-import { UtensilsCrossed, Plus, Users, Clock, Euro } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { UtensilsCrossed, Plus, Users, Clock, Euro, X, ShoppingCart, DollarSign, Calendar } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { Table } from '../types';
 
 const RestaurantTables: React.FC = () => {
-  const { tables, setTables } = useStore();
+  const { tables, setTables, updateTable } = useStore();
+  const [selectedTable, setSelectedTable] = useState<Table | null>(null);
+  const [showModal, setShowModal] = useState(false);
 
   // Mock tables - in produzione saranno configurabili
   const mockTables: Table[] = [
@@ -24,11 +26,56 @@ const RestaurantTables: React.FC = () => {
     if (tables.length === 0) {
       setTables(mockTables);
     }
-  }, []);
+  }, [tables.length, setTables]);
 
   const handleTableClick = (table: Table) => {
-    // TODO: Apri comanda tavolo
-    console.log('Open table:', table);
+    setSelectedTable(table);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedTable(null);
+    setShowModal(false);
+  };
+
+  const handleStartOrder = () => {
+    if (selectedTable) {
+      updateTable({ ...selectedTable, status: 'occupied' });
+      // TODO: Navigare alla vista ordine con prodotti
+      alert('Apertura comanda tavolo ' + selectedTable.number + '\n(Funzionalità in sviluppo)');
+      handleCloseModal();
+    }
+  };
+
+  const handleAddItems = () => {
+    if (selectedTable) {
+      // TODO: Aggiungere articoli all'ordine
+      alert('Aggiunta articoli al tavolo ' + selectedTable.number + '\n(Funzionalità in sviluppo)');
+      handleCloseModal();
+    }
+  };
+
+  const handleBill = () => {
+    if (selectedTable) {
+      updateTable({ ...selectedTable, status: 'billed' });
+      alert('Conto chiuso per tavolo ' + selectedTable.number + '\n(Funzionalità in sviluppo)');
+      handleCloseModal();
+    }
+  };
+
+  const handlePay = () => {
+    if (selectedTable) {
+      // TODO: Aprire checkout
+      alert('Incasso tavolo ' + selectedTable.number + '\n(Funzionalità in sviluppo)');
+      handleCloseModal();
+    }
+  };
+
+  const handleFreeTable = () => {
+    if (selectedTable) {
+      updateTable({ ...selectedTable, status: 'free', currentOrder: undefined });
+      handleCloseModal();
+    }
   };
 
   // Raggruppa tavoli per sezione
@@ -225,6 +272,169 @@ const RestaurantTables: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Modal Gestione Tavolo */}
+      {showModal && selectedTable && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-2xl w-full max-w-md overflow-hidden">
+            {/* Header */}
+            <div className={`${getStatusColor(selectedTable.status)} p-6 relative`}>
+              <button
+                onClick={handleCloseModal}
+                className="absolute top-4 right-4 p-1 hover:bg-black hover:bg-opacity-10 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              <div className="flex items-start">
+                <div className="flex-1">
+                  <div className="text-5xl font-bold mb-2">
+                    Tavolo {selectedTable.number}
+                  </div>
+                  <div className="flex items-center text-sm mb-1">
+                    <Users className="w-4 h-4 mr-1" />
+                    {selectedTable.seats} posti
+                  </div>
+                  <div className="text-xs font-semibold uppercase">
+                    {getStatusLabel(selectedTable.status)}
+                  </div>
+                  {selectedTable.section && (
+                    <div className="text-xs mt-2 opacity-75">
+                      📍 {selectedTable.section}
+                    </div>
+                  )}
+                </div>
+                <div className="text-5xl ml-4">
+                  {getStatusIcon(selectedTable.status)}
+                </div>
+              </div>
+            </div>
+
+            {/* Content */}
+            <div className="p-6">
+              {/* Tavolo Libero */}
+              {selectedTable.status === 'free' && (
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600 mb-4">
+                    Il tavolo è libero. Cosa vuoi fare?
+                  </p>
+                  <button
+                    onClick={handleStartOrder}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Apri Comanda
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (selectedTable) {
+                        updateTable({ ...selectedTable, status: 'reserved' });
+                        handleCloseModal();
+                      }
+                    }}
+                    className="w-full bg-yellow-600 hover:bg-yellow-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <Calendar className="w-5 h-5 mr-2" />
+                    Prenota Tavolo
+                  </button>
+                </div>
+              )}
+
+              {/* Tavolo Riservato */}
+              {selectedTable.status === 'reserved' && (
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600 mb-4">
+                    Il tavolo è riservato. Vuoi aprire la comanda?
+                  </p>
+                  <button
+                    onClick={handleStartOrder}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Apri Comanda
+                  </button>
+                  <button
+                    onClick={handleFreeTable}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 rounded-xl transition-colors"
+                  >
+                    Libera Tavolo
+                  </button>
+                </div>
+              )}
+
+              {/* Tavolo Occupato */}
+              {selectedTable.status === 'occupied' && (
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600 mb-4">
+                    Il tavolo è occupato. Gestisci l'ordine:
+                  </p>
+                  <button
+                    onClick={handleAddItems}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Aggiungi Articoli
+                  </button>
+                  <button
+                    onClick={handleBill}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <DollarSign className="w-5 h-5 mr-2" />
+                    Chiudi Conto
+                  </button>
+                  <button
+                    onClick={handleFreeTable}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 rounded-xl transition-colors"
+                  >
+                    Libera Tavolo (Senza Incasso)
+                  </button>
+                </div>
+              )}
+
+              {/* Tavolo Da Incassare */}
+              {selectedTable.status === 'billed' && (
+                <div className="space-y-3">
+                  <p className="text-sm text-gray-600 mb-4">
+                    Il conto è stato chiuso. Procedi con l'incasso:
+                  </p>
+                  <button
+                    onClick={handlePay}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <Euro className="w-5 h-5 mr-2" />
+                    Incassa Conto
+                  </button>
+                  <button
+                    onClick={handleAddItems}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
+                  >
+                    <Plus className="w-5 h-5 mr-2" />
+                    Aggiungi Articoli
+                  </button>
+                  <button
+                    onClick={() => {
+                      if (selectedTable) {
+                        updateTable({ ...selectedTable, status: 'occupied' });
+                        handleCloseModal();
+                      }
+                    }}
+                    className="w-full bg-gray-600 hover:bg-gray-700 text-white font-bold py-4 rounded-xl transition-colors"
+                  >
+                    Riapri Comanda
+                  </button>
+                </div>
+              )}
+
+              <button
+                onClick={handleCloseModal}
+                className="w-full mt-4 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl transition-colors"
+              >
+                Chiudi
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

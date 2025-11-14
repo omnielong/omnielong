@@ -1,21 +1,17 @@
 import React, { useEffect } from 'react';
 import { Coffee, Settings } from 'lucide-react';
 import useStore from '../store/useStore';
-import { barProducts, quickButtons as defaultQuickButtons } from '../utils/barMockData';
+import { quickButtons as defaultQuickButtons } from '../utils/barMockData';
 
 const BarQuickButtons: React.FC = () => {
-  const { products, setProducts, quickButtons, setQuickButtons, addToCart } = useStore();
+  const { products, quickButtons, setQuickButtons, addToCart } = useStore();
 
   useEffect(() => {
-    // Inizializza prodotti bar se vuoti
-    if (products.length === 0) {
-      setProducts(barProducts);
-    }
     // Inizializza pulsanti rapidi se vuoti
     if (quickButtons.length === 0) {
       setQuickButtons(defaultQuickButtons);
     }
-  }, []);
+  }, [quickButtons.length, setQuickButtons]);
 
   const handleQuickAdd = (productId: string) => {
     const product = products.find((p) => p.id === productId);
