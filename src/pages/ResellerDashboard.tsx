@@ -14,8 +14,10 @@ import {
   Mail,
   Phone,
   MapPin,
+  LogOut,
 } from 'lucide-react';
 import type { Business, ResellerStats } from '../types';
+import useStore from '../store/useStore';
 
 // Mock data - in produzione verrebbe da API
 const mockBusinesses: Business[] = [
@@ -82,6 +84,7 @@ const mockBusinesses: Business[] = [
 
 const ResellerDashboard: React.FC = () => {
   const navigate = useNavigate();
+  const { logoutUser } = useStore();
   const [businesses] = useState<Business[]>(mockBusinesses);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPlan, setFilterPlan] = useState<'all' | 'free' | 'basic' | 'professional' | 'enterprise'>('all');
@@ -159,13 +162,25 @@ const ResellerDashboard: React.FC = () => {
             <h1 className="text-2xl font-bold">Dashboard Rivenditore</h1>
             <p className="text-indigo-100">Gestisci i tuoi clienti e monitora le performance</p>
           </div>
-          <button
-            onClick={() => navigate('/reseller/businesses/new')}
-            className="bg-white text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
-          >
-            <Plus className="w-5 h-5 mr-2" />
-            Nuovo Cliente
-          </button>
+          <div className="flex space-x-3">
+            <button
+              onClick={() => navigate('/reseller/businesses/new')}
+              className="bg-white text-indigo-600 hover:bg-indigo-50 font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Nuovo Cliente
+            </button>
+            <button
+              onClick={() => {
+                logoutUser();
+                navigate('/admin-login');
+              }}
+              className="bg-white/20 hover:bg-white/30 text-white font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
+              title="Logout"
+            >
+              <LogOut className="w-5 h-5" />
+            </button>
+          </div>
         </div>
 
         {/* Statistics */}

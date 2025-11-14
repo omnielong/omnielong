@@ -130,6 +130,16 @@ const LoginPage: React.FC = () => {
             </div>
           </div>
         </div>
+
+        {/* Link to Admin Login */}
+        <div className="mt-6 text-center">
+          <button
+            onClick={() => navigate('/admin-login')}
+            className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
+          >
+            Accesso Reseller/Business →
+          </button>
+        </div>
       </div>
     </div>
   );

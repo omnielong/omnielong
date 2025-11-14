@@ -17,10 +17,11 @@ import BusinessDashboard from './pages/BusinessDashboard';
 import BusinessForm from './pages/BusinessForm';
 import StoreForm from './pages/StoreForm';
 import RoleSelectionPage from './pages/RoleSelectionPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 import useStore from './store/useStore';
 
 function App() {
-  const { currentOperator, sectorConfig } = useStore();
+  const { currentOperator, currentUser, sectorConfig } = useStore();
 
   // Se il settore non è configurato, mostra setup
   if (!sectorConfig?.configured) {
@@ -37,17 +38,72 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<LoginPage />} />
+        <Route path="/admin-login" element={<AdminLoginPage />} />
         <Route path="/role-selection" element={<RoleSelectionPage />} />
 
-        {/* Reseller Routes */}
-        <Route path="/reseller" element={<ResellerDashboard />} />
-        <Route path="/reseller/businesses/new" element={<BusinessForm />} />
-        <Route path="/reseller/businesses/:id/edit" element={<BusinessForm />} />
+        {/* Reseller Routes - Protected */}
+        <Route
+          path="/reseller"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <ResellerDashboard />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/new"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <BusinessForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/:id/edit"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <BusinessForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
 
-        {/* Business Routes */}
-        <Route path="/business" element={<BusinessDashboard />} />
-        <Route path="/business/stores/new" element={<StoreForm />} />
-        <Route path="/business/stores/:id/edit" element={<StoreForm />} />
+        {/* Business Routes - Protected */}
+        <Route
+          path="/business"
+          element={
+            currentUser?.type === 'business' ? (
+              <BusinessDashboard />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/business/stores/new"
+          element={
+            currentUser?.type === 'business' ? (
+              <StoreForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/business/stores/:id/edit"
+          element={
+            currentUser?.type === 'business' ? (
+              <StoreForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
 
         {/* Store/POS Routes */}
         <Route

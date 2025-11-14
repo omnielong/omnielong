@@ -11,6 +11,10 @@ import {
   Users,
   Store,
   AlertCircle,
+  ShoppingBag,
+  Coffee,
+  Utensils,
+  Package,
 } from 'lucide-react';
 import type { Business } from '../types';
 
@@ -27,6 +31,7 @@ const BusinessForm: React.FC = () => {
     phone: '',
     address: '',
     website: '',
+    businessSector: 'generic' as 'fashion' | 'bar' | 'restaurant' | 'generic',
     adminEmail: '',
     adminName: '',
     subscriptionPlan: 'basic' as 'free' | 'basic' | 'professional' | 'enterprise',
@@ -287,6 +292,55 @@ const BusinessForm: React.FC = () => {
                   placeholder="https://www.azienda.it"
                 />
               </div>
+            </div>
+          </div>
+
+          {/* Settore Business */}
+          <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
+            <div className="flex items-center mb-6">
+              <Store className="w-6 h-6 text-indigo-600 mr-3" />
+              <h2 className="text-xl font-bold text-gray-900">Settore di Attività</h2>
+            </div>
+            <p className="text-gray-600 mb-4">
+              Seleziona il settore principale dell'attività. Questo configurerà automaticamente
+              l'ambiente POS per il cliente con le funzionalità più adatte.
+            </p>
+
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[
+                { id: 'fashion', name: 'Moda', icon: ShoppingBag, color: 'pink' },
+                { id: 'bar', name: 'Bar & Tabacchi', icon: Coffee, color: 'orange' },
+                { id: 'restaurant', name: 'Ristorante', icon: Utensils, color: 'red' },
+                { id: 'generic', name: 'Generico', icon: Package, color: 'gray' },
+              ].map((sector) => {
+                const Icon = sector.icon;
+                const isSelected = formData.businessSector === sector.id;
+                return (
+                  <button
+                    key={sector.id}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, businessSector: sector.id as any })}
+                    className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center space-y-2 ${
+                      isSelected
+                        ? `border-${sector.color}-500 bg-${sector.color}-50`
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <div
+                      className={`w-16 h-16 rounded-xl flex items-center justify-center ${
+                        isSelected ? `bg-${sector.color}-100` : 'bg-gray-100'
+                      }`}
+                    >
+                      <Icon
+                        className={`w-8 h-8 ${
+                          isSelected ? `text-${sector.color}-600` : 'text-gray-600'
+                        }`}
+                      />
+                    </div>
+                    <span className="text-sm font-semibold text-gray-900">{sector.name}</span>
+                  </button>
+                );
+              })}
             </div>
           </div>
 

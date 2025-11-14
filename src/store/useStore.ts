@@ -14,14 +14,27 @@ import type {
   QuickButton,
   Return,
   FiscalClosure,
+  Reseller,
+  Business,
 } from '../types';
 import type { Customer } from '../utils/customerMockData';
 
+// Tipo per l'utente autenticato (Reseller o Business)
+export type AuthUser =
+  | { type: 'reseller'; data: Reseller }
+  | { type: 'business'; data: Business }
+  | null;
+
 interface AppState {
-  // Auth
+  // Auth - Operator (Store POS)
   currentOperator: Operator | null;
   login: (operator: Operator) => void;
   logout: () => void;
+
+  // Auth - Reseller/Business
+  currentUser: AuthUser;
+  loginUser: (user: Reseller | Business, type: 'reseller' | 'business') => void;
+  logoutUser: () => void;
 
   // Cash Register Shift
   currentShift: CashRegisterShift | null;
@@ -108,6 +121,7 @@ const useStore = create<AppState>()(
     (set, get) => ({
       // Initial state
       currentOperator: null,
+      currentUser: null,
       currentShift: null,
       cart: [],
       selectedCustomer: null,
@@ -125,7 +139,7 @@ const useStore = create<AppState>()(
       quickButtons: [],
       fiscalClosures: [],
 
-      // Auth actions
+      // Auth actions - Operator
       login: (operator) => set({ currentOperator: operator }),
       logout: () =>
         set({
@@ -135,6 +149,11 @@ const useStore = create<AppState>()(
           globalDiscount: null,
           activeLoyaltyCard: null,
         }),
+
+      // Auth actions - Reseller/Business
+      loginUser: (user, type) =>
+        set({ currentUser: { type, data: user } as AuthUser }),
+      logoutUser: () => set({ currentUser: null }),
 
       // Cash Register Shift
       openShift: (operator, openingBalance) => {
@@ -394,6 +413,7 @@ const useStore = create<AppState>()(
     {
       name: 'pos-storage',
       partialize: (state) => ({
+        currentUser: state.currentUser,
         products: state.products,
         categories: state.categories,
         sales: state.sales,

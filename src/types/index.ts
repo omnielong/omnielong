@@ -35,6 +35,8 @@ export interface Business {
   logo?: string;
   active: boolean;
   createdAt: Date;
+  // Settore di attività
+  businessSector?: BusinessSector; // Settore principale dell'attività
   // Abbonamento
   subscriptionPlan: 'free' | 'basic' | 'professional' | 'enterprise';
   subscriptionStartDate: Date;
