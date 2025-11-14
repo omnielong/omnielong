@@ -30,6 +30,7 @@ import MobileMenu from '../components/MobileMenu';
 import Checkout from '../components/Checkout';
 import BarQuickButtons from '../components/BarQuickButtons';
 import RestaurantTables from '../components/RestaurantTables';
+import { getAccessibleMenuItems } from '../utils/permissions';
 
 const POSPage: React.FC = () => {
   const navigate = useNavigate();
@@ -53,6 +54,9 @@ const POSPage: React.FC = () => {
   const [showCartModal, setShowCartModal] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [barViewMode, setBarViewMode] = useState<'quick' | 'all'>('quick');
+
+  // Ottieni i menu accessibili basati sui permessi dell'operatore
+  const accessibleMenuItems = currentOperator ? getAccessibleMenuItems(currentOperator) : [];
 
   useEffect(() => {
     if (!currentOperator) {
@@ -107,46 +111,26 @@ const POSPage: React.FC = () => {
     setShowCheckout(false);
   };
 
+  // Mappa delle icone per la sidebar
+  const iconComponentMap: { [key: string]: React.ReactNode } = {
+    ShoppingCart: <ShoppingCart className="w-6 h-6" />,
+    BarChart3: <BarChart3 className="w-6 h-6" />,
+    Package: <Package className="w-6 h-6" />,
+    Users: <CustomersIcon className="w-6 h-6" />,
+    Tag: <Tag className="w-6 h-6" />,
+    RotateCcw: <RotateCcw className="w-6 h-6" />,
+    UserCog: <UserCog className="w-6 h-6" />,
+    FileText: <ClipboardCheck className="w-6 h-6" />,
+    Settings: <Settings className="w-6 h-6" />,
+    Database: <Database className="w-6 h-6" />,
+  };
+
   return (
     <div className="flex h-screen bg-gray-50 overflow-hidden">
-      {/* Sidebar */}
+      {/* Sidebar - Dinamica basata sui permessi */}
       <div className="hidden lg:flex lg:flex-col w-20 bg-gradient-to-b from-blue-600 to-blue-700 text-white">
         <div className="flex-1 flex flex-col items-center py-3 space-y-2 overflow-y-auto">
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/products')}
-            title="Gestione Prodotti"
-          >
-            <Package className="w-6 h-6" />
-          </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/customers')}
-            title="Clienti"
-          >
-            <CustomersIcon className="w-6 h-6" />
-          </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/promotions')}
-            title="Promozioni"
-          >
-            <Tag className="w-6 h-6" />
-          </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/returns')}
-            title="Resi e Rimborsi"
-          >
-            <RotateCcw className="w-6 h-6" />
-          </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/dashboard')}
-            title="Dashboard"
-          >
-            <BarChart3 className="w-6 h-6" />
-          </button>
+          {/* Sempre mostra Turno */}
           <button
             className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
             onClick={() => navigate('/shift')}
@@ -154,34 +138,18 @@ const POSPage: React.FC = () => {
           >
             <Clock className="w-6 h-6" />
           </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/operators')}
-            title="Gestione Operatori"
-          >
-            <UserCog className="w-6 h-6" />
-          </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/fiscal-closure')}
-            title="Chiusura Fiscale"
-          >
-            <ClipboardCheck className="w-6 h-6" />
-          </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/backup')}
-            title="Backup e Export"
-          >
-            <Database className="w-6 h-6" />
-          </button>
-          <button
-            className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
-            onClick={() => navigate('/settings')}
-            title="Impostazioni"
-          >
-            <Settings className="w-6 h-6" />
-          </button>
+
+          {/* Menu items basati sui permessi */}
+          {accessibleMenuItems.map((item) => (
+            <button
+              key={item.path}
+              className="p-2 hover:bg-blue-500 rounded-lg transition-colors flex-shrink-0"
+              onClick={() => navigate(item.path)}
+              title={item.label}
+            >
+              {iconComponentMap[item.icon]}
+            </button>
+          ))}
         </div>
         <div className="pb-8 flex flex-col items-center space-y-4">
           <div className="p-3 bg-blue-500 rounded-lg" title={currentOperator?.name}>

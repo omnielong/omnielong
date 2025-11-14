@@ -1,12 +1,14 @@
 import React from 'react';
-import { X, Package, Users, Tag, BarChart3, Clock, Settings, LogOut, RotateCcw, UserCog, ClipboardCheck, Database } from 'lucide-react';
+import { X, Package, Users, Tag, BarChart3, Clock, Settings, LogOut, RotateCcw, UserCog, ClipboardCheck, Database, ShoppingCart } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import type { Operator } from '../types';
+import { getAccessibleMenuItems, ROLE_LABELS } from '../utils/permissions';
 
 interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
   onLogout: () => void;
-  currentOperator?: { name: string } | null;
+  currentOperator?: Operator | null;
 }
 
 const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, currentOperator }) => {
@@ -15,6 +17,23 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, curr
   const handleNavigate = (path: string) => {
     navigate(path);
     onClose();
+  };
+
+  // Ottieni i menu items accessibili in base ai permessi
+  const accessibleMenuItems = currentOperator ? getAccessibleMenuItems(currentOperator) : [];
+
+  // Mappa delle icone
+  const iconMap: { [key: string]: React.ReactNode } = {
+    ShoppingCart: <ShoppingCart className="w-6 h-6 mr-4" />,
+    BarChart3: <BarChart3 className="w-6 h-6 mr-4" />,
+    Package: <Package className="w-6 h-6 mr-4" />,
+    Users: <Users className="w-6 h-6 mr-4" />,
+    Tag: <Tag className="w-6 h-6 mr-4" />,
+    RotateCcw: <RotateCcw className="w-6 h-6 mr-4" />,
+    UserCog: <UserCog className="w-6 h-6 mr-4" />,
+    FileText: <ClipboardCheck className="w-6 h-6 mr-4" />,
+    Settings: <Settings className="w-6 h-6 mr-4" />,
+    Database: <Database className="w-6 h-6 mr-4" />,
   };
 
   if (!isOpen) return null;
@@ -42,62 +61,20 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, curr
           </div>
           {currentOperator && (
             <div className="bg-blue-500 rounded-lg p-3">
-              <p className="text-xs text-blue-200">Operatore</p>
+              <p className="text-xs text-blue-200">
+                {ROLE_LABELS[currentOperator.role].label}
+              </p>
               <p className="text-white font-semibold">{currentOperator.name}</p>
+              <p className="text-xs text-blue-200 mt-1">
+                {ROLE_LABELS[currentOperator.role].description}
+              </p>
             </div>
           )}
         </div>
 
-        {/* Menu Items */}
+        {/* Menu Items - Dinamici basati sui permessi */}
         <div className="flex-1 overflow-y-auto p-4 space-y-2">
-          <button
-            onClick={() => handleNavigate('/pos')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <Package className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Punto Vendita</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/products')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <Package className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Gestione Prodotti</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/customers')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <Users className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Clienti</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/promotions')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <Tag className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Promozioni</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/returns')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <RotateCcw className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Resi e Rimborsi</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/dashboard')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <BarChart3 className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Dashboard</span>
-          </button>
-
+          {/* Sempre mostra Gestione Turno */}
           <button
             onClick={() => handleNavigate('/shift')}
             className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
@@ -106,37 +83,17 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, curr
             <span className="font-semibold">Gestione Turno</span>
           </button>
 
-          <button
-            onClick={() => handleNavigate('/operators')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <UserCog className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Gestione Operatori</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/fiscal-closure')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <ClipboardCheck className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Chiusura Fiscale</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/backup')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <Database className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Backup e Export</span>
-          </button>
-
-          <button
-            onClick={() => handleNavigate('/settings')}
-            className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
-          >
-            <Settings className="w-6 h-6 mr-4" />
-            <span className="font-semibold">Impostazioni</span>
-          </button>
+          {/* Menu items basati sui permessi */}
+          {accessibleMenuItems.map((item) => (
+            <button
+              key={item.path}
+              onClick={() => handleNavigate(item.path)}
+              className="w-full flex items-center p-4 hover:bg-blue-500 rounded-lg transition-colors text-white"
+            >
+              {iconMap[item.icon]}
+              <span className="font-semibold">{item.label}</span>
+            </button>
+          ))}
         </div>
 
         {/* Footer */}

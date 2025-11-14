@@ -18,6 +18,7 @@ import BusinessForm from './pages/BusinessForm';
 import StoreForm from './pages/StoreForm';
 import RoleSelectionPage from './pages/RoleSelectionPage';
 import AdminLoginPage from './pages/AdminLoginPage';
+import ProtectedRoute from './components/ProtectedRoute';
 import useStore from './store/useStore';
 
 function App() {
@@ -121,19 +122,34 @@ function App() {
         <Route
           path="/dashboard"
           element={
-            currentOperator ? <DashboardPage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canAccessReports"
+            >
+              <DashboardPage />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/settings"
           element={
-            currentOperator ? <SettingsPage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canAccessSettings"
+            >
+              <SettingsPage />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/products"
           element={
-            currentOperator ? <ProductsPage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canManageProducts"
+            >
+              <ProductsPage />
+            </ProtectedRoute>
           }
         />
         <Route
@@ -145,31 +161,56 @@ function App() {
         <Route
           path="/promotions"
           element={
-            currentOperator ? <PromotionsPage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canManagePromotions"
+            >
+              <PromotionsPage />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/returns"
           element={
-            currentOperator ? <ReturnsPage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canProcessRefunds"
+            >
+              <ReturnsPage />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/operators"
           element={
-            currentOperator ? <OperatorsPage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canManageOperators"
+            >
+              <OperatorsPage />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/fiscal-closure"
           element={
-            currentOperator ? <FiscalClosurePage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canAccessFiscalClosure"
+            >
+              <FiscalClosurePage />
+            </ProtectedRoute>
           }
         />
         <Route
           path="/backup"
           element={
-            currentOperator ? <BackupPage /> : <Navigate to="/" replace />
+            <ProtectedRoute
+              currentOperator={currentOperator}
+              requiredPermission="canAccessBackup"
+            >
+              <BackupPage />
+            </ProtectedRoute>
           }
         />
         <Route path="*" element={<Navigate to="/" replace />} />
