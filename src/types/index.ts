@@ -43,15 +43,21 @@ export interface CartItem {
 // Sconto
 export interface Discount {
   id: string;
+  name: string;
   type: 'percentage' | 'fixed' | 'coupon';
   value: number; // percentuale o importo fisso
-  code?: string;
-  description: string;
-  minAmount?: number;
+  description?: string;
+  code?: string; // Alias per couponCode (deprecated)
+  couponCode?: string;
+  minAmount?: number; // Alias per minPurchase (deprecated)
+  minPurchase?: number;
   maxAmount?: number;
   validFrom?: Date;
-  validTo?: Date;
-  active: boolean;
+  validTo?: Date; // Alias per validUntil (deprecated)
+  validUntil?: Date;
+  maxUses?: number;
+  usedCount?: number;
+  active?: boolean;
 }
 
 // Carta fedeltà

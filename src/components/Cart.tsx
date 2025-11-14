@@ -9,6 +9,8 @@ import {
   Percent,
 } from 'lucide-react';
 import useStore from '../store/useStore';
+import CustomerSearch from './CustomerSearch';
+import { mockCustomers, type Customer } from '../utils/customerMockData';
 
 interface CartProps {
   onCheckout: () => void;
@@ -36,6 +38,7 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
   const [showDiscountMenu, setShowDiscountMenu] = useState(false);
   const [showLoyaltyMenu, setShowLoyaltyMenu] = useState(false);
   const [selectedItemForDiscount, setSelectedItemForDiscount] = useState<string | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
 
   const subtotal = getCartSubtotal();
   const totalDiscount = getTotalDiscount();
@@ -69,11 +72,17 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
   if (cart.length === 0) {
     return (
       <div className="h-full flex flex-col">
-        <div className="p-6 border-b border-gray-200">
+        <div className="p-4 border-b border-gray-200 space-y-3">
           <h2 className="text-xl font-bold text-gray-900 flex items-center">
             <ShoppingCart className="w-6 h-6 mr-2" />
             Carrello
           </h2>
+          {/* Ricerca Cliente */}
+          <CustomerSearch
+            customers={mockCustomers}
+            selectedCustomer={selectedCustomer}
+            onSelectCustomer={setSelectedCustomer}
+          />
         </div>
         <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-6">
           <ShoppingCart className="w-16 h-16 mb-4" />
@@ -89,7 +98,7 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="p-6 border-b border-gray-200">
+      <div className="p-4 border-b border-gray-200 space-y-3">
         <h2 className="text-xl font-bold text-gray-900 flex items-center justify-between">
           <span className="flex items-center">
             <ShoppingCart className="w-6 h-6 mr-2" />
@@ -99,6 +108,12 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
             {cart.length} {cart.length === 1 ? 'articolo' : 'articoli'}
           </span>
         </h2>
+        {/* Ricerca Cliente */}
+        <CustomerSearch
+          customers={mockCustomers}
+          selectedCustomer={selectedCustomer}
+          onSelectCustomer={setSelectedCustomer}
+        />
       </div>
 
       {/* Cart Items */}

@@ -1,0 +1,145 @@
+export interface Customer {
+  id: string;
+  name: string;
+  email?: string;
+  phone?: string;
+  address?: string;
+  notes?: string;
+  loyaltyCardId?: string;
+  createdAt: Date;
+  totalSpent: number;
+  visitCount: number;
+  points?: number;
+}
+
+export const mockCustomers: Customer[] = [
+  {
+    id: 'cust-1',
+    name: 'Mario Rossi',
+    email: 'mario.rossi@email.it',
+    phone: '+39 333 1234567',
+    address: 'Via Roma 123, Milano',
+    loyaltyCardId: 'CARD-001',
+    createdAt: new Date('2024-01-15'),
+    totalSpent: 1250.50,
+    visitCount: 28,
+    points: 125,
+  },
+  {
+    id: 'cust-2',
+    name: 'Laura Bianchi',
+    email: 'laura.bianchi@gmail.com',
+    phone: '+39 340 9876543',
+    address: 'Corso Italia 45, Roma',
+    loyaltyCardId: 'CARD-002',
+    createdAt: new Date('2024-02-20'),
+    totalSpent: 850.00,
+    visitCount: 15,
+    points: 85,
+  },
+  {
+    id: 'cust-3',
+    name: 'Giuseppe Verdi',
+    email: 'g.verdi@outlook.it',
+    phone: '+39 348 5551234',
+    address: 'Piazza Duomo 7, Firenze',
+    createdAt: new Date('2024-03-10'),
+    totalSpent: 320.75,
+    visitCount: 8,
+  },
+  {
+    id: 'cust-4',
+    name: 'Anna Ferrari',
+    email: 'anna.ferrari@yahoo.it',
+    phone: '+39 349 7778888',
+    address: 'Via Garibaldi 89, Torino',
+    loyaltyCardId: 'CARD-003',
+    createdAt: new Date('2023-11-05'),
+    totalSpent: 2150.30,
+    visitCount: 42,
+    points: 215,
+  },
+  {
+    id: 'cust-5',
+    name: 'Francesco Colombo',
+    phone: '+39 335 4445566',
+    createdAt: new Date('2024-04-12'),
+    totalSpent: 125.00,
+    visitCount: 3,
+  },
+  {
+    id: 'cust-6',
+    name: 'Giulia Marino',
+    email: 'giulia.marino@libero.it',
+    phone: '+39 347 2223344',
+    address: 'Via Veneto 56, Napoli',
+    loyaltyCardId: 'CARD-004',
+    createdAt: new Date('2023-09-18'),
+    totalSpent: 3420.60,
+    visitCount: 67,
+    points: 342,
+  },
+  {
+    id: 'cust-7',
+    name: 'Marco Ricci',
+    email: 'marco.ricci@fastmail.com',
+    phone: '+39 338 9990011',
+    createdAt: new Date('2024-05-03'),
+    totalSpent: 89.90,
+    visitCount: 2,
+  },
+  {
+    id: 'cust-8',
+    name: 'Chiara Romano',
+    email: 'chiara.romano@gmail.com',
+    phone: '+39 346 1112233',
+    address: 'Via Toledo 234, Palermo',
+    loyaltyCardId: 'CARD-005',
+    createdAt: new Date('2023-12-20'),
+    totalSpent: 1680.45,
+    visitCount: 35,
+    points: 168,
+  },
+  {
+    id: 'cust-9',
+    name: 'Alessandro Gallo',
+    email: 'a.gallo@proton.me',
+    phone: '+39 339 5556677',
+    address: 'Corso Buenos Aires 112, Genova',
+    createdAt: new Date('2024-01-28'),
+    totalSpent: 540.20,
+    visitCount: 12,
+  },
+  {
+    id: 'cust-10',
+    name: 'Federica Costa',
+    email: 'fede.costa@icloud.com',
+    phone: '+39 342 8889900',
+    address: 'Via Mazzini 78, Bologna',
+    loyaltyCardId: 'CARD-006',
+    createdAt: new Date('2023-10-15'),
+    totalSpent: 4250.80,
+    visitCount: 89,
+    points: 425,
+  },
+  {
+    id: 'cust-11',
+    name: 'Roberto Mancini',
+    phone: '+39 334 6667788',
+    createdAt: new Date('2024-06-01'),
+    totalSpent: 45.50,
+    visitCount: 1,
+  },
+  {
+    id: 'cust-12',
+    name: 'Valentina Esposito',
+    email: 'vale.esposito@tin.it',
+    phone: '+39 345 3334455',
+    address: 'Via XX Settembre 90, Verona',
+    loyaltyCardId: 'CARD-007',
+    createdAt: new Date('2024-02-14'),
+    totalSpent: 975.30,
+    visitCount: 19,
+    points: 97,
+  },
+];

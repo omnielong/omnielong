@@ -12,6 +12,7 @@ import {
   Users as CustomersIcon,
   Coffee,
   Grid3x3,
+  Tag,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import { mockProducts, mockCategories, mockDiscounts, mockLoyaltyCards } from '../utils/mockData';
@@ -115,6 +116,13 @@ const POSPage: React.FC = () => {
             title="Clienti"
           >
             <CustomersIcon className="w-6 h-6" />
+          </button>
+          <button
+            className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
+            onClick={() => navigate('/promotions')}
+            title="Promozioni"
+          >
+            <Tag className="w-6 h-6" />
           </button>
           <button
             className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
