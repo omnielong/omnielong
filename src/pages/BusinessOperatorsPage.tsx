@@ -17,7 +17,7 @@ import type { Operator } from '../types';
 
 const BusinessOperatorsPage: React.FC = () => {
   const navigate = useNavigate();
-  const { operators, stores, currentUser } = useStore();
+  const { operators, stores, currentUser, setOperators } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStore, setFilterStore] = useState<string>('all');
   const [filterRole, setFilterRole] = useState<string>('all');
@@ -83,9 +83,16 @@ const BusinessOperatorsPage: React.FC = () => {
   };
 
   const handleDelete = (operatorId: string) => {
-    if (confirm('Sei sicuro di voler eliminare questo operatore?')) {
-      // TODO: Implement delete logic
-      console.log('Delete operator:', operatorId);
+    const operator = businessOperators.find((o) => o.id === operatorId);
+    if (!operator) {
+      alert('Operatore non trovato');
+      return;
+    }
+
+    if (confirm(`Sei sicuro di voler eliminare l'operatore "${operator.name}"?\n\nQuesta azione non può essere annullata.`)) {
+      const updatedOperators = operators.filter((o) => o.id !== operatorId);
+      setOperators(updatedOperators);
+      alert(`Operatore "${operator.name}" eliminato con successo`);
     }
   };
 

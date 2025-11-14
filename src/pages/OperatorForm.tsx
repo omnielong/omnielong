@@ -9,6 +9,7 @@ import {
   Store as StoreIcon,
   Shield,
   AlertCircle,
+  CheckCircle,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { Operator } from '../types';
@@ -29,6 +30,9 @@ const OperatorForm: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
+  const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
   // Filtra gli store del business corrente
   const businessStores = currentUser?.type === 'business'
@@ -76,6 +80,47 @@ const OperatorForm: React.FC = () => {
     },
   ];
 
+  const validateField = (name: string, value: any) => {
+    let error = '';
+
+    switch (name) {
+      case 'name':
+        if (!value.trim()) {
+          error = 'Nome obbligatorio';
+        }
+        break;
+      case 'email':
+        if (!value.trim()) {
+          error = 'Email obbligatoria';
+        } else if (!value.includes('@')) {
+          error = 'Email non valida';
+        }
+        break;
+      case 'pin':
+        if (!value.trim()) {
+          error = 'PIN obbligatorio';
+        } else if (value.length !== 4 || !/^\d{4}$/.test(value)) {
+          error = 'Il PIN deve essere di 4 cifre';
+        } else {
+          const duplicatePin = operators.find(
+            (o) => o.pin === value && (!isEditing || o.id !== id)
+          );
+          if (duplicatePin) {
+            error = 'PIN già utilizzato da un altro operatore';
+          }
+        }
+        break;
+      case 'storeId':
+        if (!value) {
+          error = 'Seleziona un punto vendita';
+        }
+        break;
+    }
+
+    setErrors((prev) => ({ ...prev, [name]: error }));
+    return error === '';
+  };
+
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
 
@@ -108,8 +153,18 @@ const OperatorForm: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    setSuccessMessage('');
+
+    // Mark all fields as touched on submit
+    setTouched({
+      name: true,
+      email: true,
+      pin: true,
+      storeId: true,
+    });
 
     if (!validate()) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
 
@@ -118,33 +173,45 @@ const OperatorForm: React.FC = () => {
       return;
     }
 
-    const existingOperator = isEditing && id ? operators.find((o) => o.id === id) : null;
+    setSubmitting(true);
 
-    const operatorData: Operator = {
-      id: isEditing ? id! : `op-${Date.now()}`,
-      businessId: currentUser.data.id,
-      storeId: formData.storeId,
-      name: formData.name,
-      email: formData.email,
-      pin: formData.pin,
-      role: formData.role,
-      active: formData.active,
-      createdAt: existingOperator?.createdAt || new Date(),
-    };
+    // Simulate async operation
+    setTimeout(() => {
+      const existingOperator = isEditing && id ? operators.find((o) => o.id === id) : null;
 
-    if (isEditing) {
-      // Update existing operator
-      const updatedOperators = operators.map((o) =>
-        o.id === id ? operatorData : o
+      const operatorData: Operator = {
+        id: isEditing ? id! : `op-${Date.now()}`,
+        businessId: currentUser.data.id,
+        storeId: formData.storeId,
+        name: formData.name,
+        email: formData.email,
+        pin: formData.pin,
+        role: formData.role,
+        active: formData.active,
+        createdAt: existingOperator?.createdAt || new Date(),
+      };
+
+      if (isEditing) {
+        // Update existing operator
+        const updatedOperators = operators.map((o) =>
+          o.id === id ? operatorData : o
+        );
+        setOperators(updatedOperators);
+      } else {
+        // Add new operator
+        setOperators([...operators, operatorData]);
+      }
+
+      setSubmitting(false);
+      setSuccessMessage(
+        `Operatore "${formData.name}" ${isEditing ? 'aggiornato' : 'creato'} con successo!`
       );
-      setOperators(updatedOperators);
-    } else {
-      // Add new operator
-      setOperators([...operators, operatorData]);
-    }
 
-    alert(`Operatore ${isEditing ? 'aggiornato' : 'creato'} con successo!`);
-    navigate('/business/operators');
+      // Navigate after showing success message
+      setTimeout(() => {
+        navigate('/business/operators');
+      }, 1500);
+    }, 500);
   };
 
   const generateRandomPin = () => {
@@ -153,6 +220,8 @@ const OperatorForm: React.FC = () => {
       pin = Math.floor(1000 + Math.random() * 9000).toString();
     } while (operators.some((o) => o.pin === pin && (!isEditing || o.id !== id)));
     setFormData({ ...formData, pin });
+    setTouched((prev) => ({ ...prev, pin: true }));
+    validateField('pin', pin);
   };
 
   return (
@@ -178,6 +247,14 @@ const OperatorForm: React.FC = () => {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 py-8">
+        {/* Success Message */}
+        {successMessage && (
+          <div className="bg-green-50 border-2 border-green-500 rounded-xl p-4 mb-6 flex items-center animate-pulse">
+            <CheckCircle className="w-6 h-6 text-green-600 mr-3 flex-shrink-0" />
+            <p className="text-green-800 font-semibold">{successMessage}</p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
           {/* Dati Personali */}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
@@ -194,13 +271,24 @@ const OperatorForm: React.FC = () => {
                 <input
                   type="text"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, name: e.target.value });
+                    if (touched.name) {
+                      validateField('name', e.target.value);
+                    }
+                  }}
+                  onBlur={(e) => {
+                    setTouched((prev) => ({ ...prev, name: true }));
+                    validateField('name', e.target.value);
+                  }}
                   className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
+                    touched.name && errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="es. Mario Rossi"
                 />
-                {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+                {touched.name && errors.name && (
+                  <p className="text-red-600 text-sm mt-1">{errors.name}</p>
+                )}
               </div>
 
               <div>
@@ -212,14 +300,25 @@ const OperatorForm: React.FC = () => {
                   <input
                     type="email"
                     value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, email: e.target.value });
+                      if (touched.email) {
+                        validateField('email', e.target.value);
+                      }
+                    }}
+                    onBlur={(e) => {
+                      setTouched((prev) => ({ ...prev, email: true }));
+                      validateField('email', e.target.value);
+                    }}
                     className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                      errors.email ? 'border-red-500' : 'border-gray-300'
+                      touched.email && errors.email ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="mario.rossi@store.it"
                   />
                 </div>
-                {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
+                {touched.email && errors.email && (
+                  <p className="text-red-600 text-sm mt-1">{errors.email}</p>
+                )}
               </div>
 
               <div>
@@ -235,10 +334,17 @@ const OperatorForm: React.FC = () => {
                       onChange={(e) => {
                         const value = e.target.value.replace(/\D/g, '').slice(0, 4);
                         setFormData({ ...formData, pin: value });
+                        if (touched.pin) {
+                          validateField('pin', value);
+                        }
+                      }}
+                      onBlur={(e) => {
+                        setTouched((prev) => ({ ...prev, pin: true }));
+                        validateField('pin', e.target.value);
                       }}
                       maxLength={4}
                       className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 font-mono text-lg ${
-                        errors.pin ? 'border-red-500' : 'border-gray-300'
+                        touched.pin && errors.pin ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="1234"
                     />
@@ -251,7 +357,9 @@ const OperatorForm: React.FC = () => {
                     Genera PIN
                   </button>
                 </div>
-                {errors.pin && <p className="text-red-600 text-sm mt-1">{errors.pin}</p>}
+                {touched.pin && errors.pin && (
+                  <p className="text-red-600 text-sm mt-1">{errors.pin}</p>
+                )}
               </div>
             </div>
           </div>
@@ -269,9 +377,13 @@ const OperatorForm: React.FC = () => {
               </label>
               <select
                 value={formData.storeId}
-                onChange={(e) => setFormData({ ...formData, storeId: e.target.value })}
+                onChange={(e) => {
+                  setFormData({ ...formData, storeId: e.target.value });
+                  setTouched((prev) => ({ ...prev, storeId: true }));
+                  validateField('storeId', e.target.value);
+                }}
                 className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-                  errors.storeId ? 'border-red-500' : 'border-gray-300'
+                  touched.storeId && errors.storeId ? 'border-red-500' : 'border-gray-300'
                 }`}
               >
                 <option value="">Seleziona un punto vendita</option>
@@ -281,7 +393,9 @@ const OperatorForm: React.FC = () => {
                   </option>
                 ))}
               </select>
-              {errors.storeId && <p className="text-red-600 text-sm mt-1">{errors.storeId}</p>}
+              {touched.storeId && errors.storeId && (
+                <p className="text-red-600 text-sm mt-1">{errors.storeId}</p>
+              )}
               {businessStores.length === 0 && (
                 <p className="text-amber-600 text-sm mt-2 flex items-center">
                   <AlertCircle className="w-4 h-4 mr-1" />
@@ -358,11 +472,20 @@ const OperatorForm: React.FC = () => {
             </button>
             <button
               type="submit"
-              disabled={businessStores.length === 0}
+              disabled={businessStores.length === 0 || submitting}
               className="flex-1 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold py-4 px-6 rounded-lg transition-all shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Save className="w-5 h-5 mr-2" />
-              {isEditing ? 'Salva Modifiche' : 'Crea Operatore'}
+              {submitting ? (
+                <>
+                  <div className="w-5 h-5 mr-2 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  Salvataggio...
+                </>
+              ) : (
+                <>
+                  <Save className="w-5 h-5 mr-2" />
+                  {isEditing ? 'Salva Modifiche' : 'Crea Operatore'}
+                </>
+              )}
             </button>
           </div>
         </form>
