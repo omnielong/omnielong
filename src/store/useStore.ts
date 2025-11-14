@@ -13,6 +13,7 @@ import type {
   Table,
   QuickButton,
   Return,
+  FiscalClosure,
 } from '../types';
 import type { Customer } from '../utils/customerMockData';
 
@@ -91,6 +92,10 @@ interface AppState {
   quickButtons: QuickButton[];
   setQuickButtons: (buttons: QuickButton[]) => void;
 
+  // Fiscal Closures
+  fiscalClosures: FiscalClosure[];
+  addFiscalClosure: (closure: FiscalClosure) => void;
+
   // Calculations
   getCartSubtotal: () => number;
   getCartTotal: () => number;
@@ -118,6 +123,7 @@ const useStore = create<AppState>()(
       sectorConfig: null,
       tables: [],
       quickButtons: [],
+      fiscalClosures: [],
 
       // Auth actions
       login: (operator) => set({ currentOperator: operator }),
@@ -311,6 +317,12 @@ const useStore = create<AppState>()(
       // Bar - Quick Buttons
       setQuickButtons: (buttons) => set({ quickButtons: buttons }),
 
+      // Fiscal Closures
+      addFiscalClosure: (closure) =>
+        set((state) => ({
+          fiscalClosures: [...state.fiscalClosures, closure],
+        })),
+
       // Calculations
       getCartSubtotal: () => {
         const { cart } = get();
@@ -392,6 +404,7 @@ const useStore = create<AppState>()(
         sectorConfig: state.sectorConfig,
         tables: state.tables,
         quickButtons: state.quickButtons,
+        fiscalClosures: state.fiscalClosures,
       }),
     }
   )

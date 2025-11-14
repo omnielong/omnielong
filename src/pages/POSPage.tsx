@@ -16,6 +16,7 @@ import {
   Menu,
   RotateCcw,
   UserCog,
+  ClipboardCheck,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import { mockProducts, mockCategories, mockDiscounts, mockLoyaltyCards } from '../utils/mockData';
@@ -158,6 +159,13 @@ const POSPage: React.FC = () => {
             title="Gestione Operatori"
           >
             <UserCog className="w-6 h-6" />
+          </button>
+          <button
+            className="p-3 hover:bg-blue-500 rounded-lg transition-colors"
+            onClick={() => navigate('/fiscal-closure')}
+            title="Chiusura Fiscale"
+          >
+            <ClipboardCheck className="w-6 h-6" />
           </button>
           <button
             className="p-3 hover:bg-blue-500 rounded-lg transition-colors"

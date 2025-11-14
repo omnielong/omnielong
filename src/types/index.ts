@@ -243,3 +243,49 @@ export interface Return {
   notes?: string;
   status: 'completed' | 'partial' | 'cancelled';
 }
+
+// ===== CHIUSURA FISCALE =====
+
+export interface FiscalClosure {
+  id: string;
+  date: Date;
+  startDate: Date; // Inizio periodo (es. 00:00 del giorno)
+  endDate: Date; // Fine periodo (es. 23:59 del giorno)
+  operator: Operator;
+
+  // Vendite
+  totalSales: number;
+  salesCount: number;
+  salesAmount: number;
+
+  // Resi
+  returnsCount: number;
+  returnsAmount: number;
+
+  // Pagamenti
+  paymentBreakdown: {
+    cash: number;
+    card: number;
+    digital: number;
+    voucher: number;
+  };
+
+  // Sconti
+  totalDiscounts: number;
+
+  // IVA
+  totalTax: number;
+
+  // Netto
+  netAmount: number;
+
+  // Top prodotti
+  topProducts: Array<{
+    productId: string;
+    productName: string;
+    quantity: number;
+    revenue: number;
+  }>;
+
+  notes?: string;
+}
