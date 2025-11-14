@@ -22,7 +22,7 @@ import { mockStores } from '../utils/storeMockData';
 
 const BusinessDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { stores, setStores, logoutUser } = useStore();
+  const { stores, setStores, logoutUser, currentUser } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
@@ -35,19 +35,25 @@ const BusinessDashboard: React.FC = () => {
     }
   }, [stores.length, setStores, initialized]);
 
+  // Filtra gli stores per il business corrente
+  const businessStores = useMemo(() => {
+    if (!currentUser || currentUser.type !== 'business') return [];
+    return stores.filter(store => store.businessId === currentUser.data.id);
+  }, [stores, currentUser]);
+
   const stats: BusinessStats = useMemo(() => {
     return {
-      totalStores: stores.length,
-      activeStores: stores.filter(s => s.active).length,
+      totalStores: businessStores.length,
+      activeStores: businessStores.filter(s => s.active).length,
       totalOperators: 25, // Mock
       totalSales: 1534,
       totalRevenue: 125340.50,
       totalCustomers: 856,
     };
-  }, [stores]);
+  }, [businessStores]);
 
   const filteredStores = useMemo(() => {
-    return stores.filter((store) => {
+    return businessStores.filter((store) => {
       // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
@@ -67,7 +73,7 @@ const BusinessDashboard: React.FC = () => {
 
       return true;
     });
-  }, [stores, searchQuery, filterStatus]);
+  }, [businessStores, searchQuery, filterStatus]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('it-IT', {

@@ -11,6 +11,7 @@ import {
   Phone,
   Mail,
   Calendar,
+  Eye,
 } from 'lucide-react';
 import type { Store } from '../types';
 import useStore from '../store/useStore';
@@ -236,7 +237,7 @@ const ResellerBusinessStoresPage: React.FC = () => {
 
               {/* Opening Hours */}
               {store.openingHours && (
-                <div className="bg-indigo-50 rounded-lg p-3">
+                <div className="bg-indigo-50 rounded-lg p-3 mb-4">
                   <div className="flex items-center text-xs text-indigo-800 mb-2">
                     <Clock className="w-3 h-3 mr-1" />
                     <span className="font-semibold">Orari</span>
@@ -253,6 +254,17 @@ const ResellerBusinessStoresPage: React.FC = () => {
                   </div>
                 </div>
               )}
+
+              {/* Actions */}
+              <div className="pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => navigate(`/business/stores/${store.id}`)}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Visualizza Dettagli
+                </button>
+              </div>
             </div>
           ))}
         </div>

@@ -20,10 +20,20 @@ import useStore from '../store/useStore';
 const StoreDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
-  const { stores } = useStore();
+  const { stores, currentUser } = useStore();
 
   // Trova lo store corrente
   const store = stores.find(s => s.id === id);
+
+  // Determina il percorso di ritorno in base al tipo di utente
+  const getBackPath = () => {
+    if (currentUser?.type === 'reseller' && store) {
+      return `/reseller/businesses/${store.businessId}/stores`;
+    }
+    return '/business';
+  };
+
+  const isReseller = currentUser?.type === 'reseller';
 
   const getSectorLabel = (sector: Store['sector']) => {
     const labels = {
@@ -64,11 +74,11 @@ const StoreDetailsPage: React.FC = () => {
         <div className="text-center">
           <h2 className="text-2xl font-bold text-gray-900 mb-4">Punto vendita non trovato</h2>
           <button
-            onClick={() => navigate('/business')}
+            onClick={() => navigate(currentUser?.type === 'reseller' ? '/reseller' : '/business')}
             className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-6 py-3 rounded-lg inline-flex items-center transition-colors"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            Torna alla Dashboard
+            Torna Indietro
           </button>
         </div>
       </div>
@@ -82,7 +92,7 @@ const StoreDetailsPage: React.FC = () => {
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center">
             <button
-              onClick={() => navigate('/business')}
+              onClick={() => navigate(getBackPath())}
               className="bg-white/20 hover:bg-white/30 p-2 rounded-lg mr-4 transition-colors"
             >
               <ArrowLeft className="w-5 h-5" />
@@ -97,13 +107,15 @@ const StoreDetailsPage: React.FC = () => {
               </div>
             </div>
           </div>
-          <button
-            onClick={() => navigate(`/business/stores/${store.id}/edit`)}
-            className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
-          >
-            <Edit2 className="w-5 h-5 mr-2" />
-            Modifica
-          </button>
+          {!isReseller && (
+            <button
+              onClick={() => navigate(`/business/stores/${store.id}/edit`)}
+              className="bg-white text-blue-600 hover:bg-blue-50 font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
+            >
+              <Edit2 className="w-5 h-5 mr-2" />
+              Modifica
+            </button>
+          )}
         </div>
       </div>
 

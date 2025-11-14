@@ -137,7 +137,7 @@ function App() {
         <Route
           path="/business/stores/:id"
           element={
-            currentUser?.type === 'business' ? (
+            currentUser?.type === 'business' || currentUser?.type === 'reseller' ? (
               <StoreDetailsPage />
             ) : (
               <Navigate to="/admin-login" replace />
