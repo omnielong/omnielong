@@ -1,0 +1,46 @@
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './pages/LoginPage';
+import ShiftPage from './pages/ShiftPage';
+import POSPage from './pages/POSPage';
+import DashboardPage from './pages/DashboardPage';
+import SettingsPage from './pages/SettingsPage';
+import useStore from './store/useStore';
+
+function App() {
+  const { currentOperator } = useStore();
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LoginPage />} />
+        <Route
+          path="/shift"
+          element={
+            currentOperator ? <ShiftPage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/pos"
+          element={
+            currentOperator ? <POSPage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/dashboard"
+          element={
+            currentOperator ? <DashboardPage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            currentOperator ? <SettingsPage /> : <Navigate to="/" replace />
+          }
+        />
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;
