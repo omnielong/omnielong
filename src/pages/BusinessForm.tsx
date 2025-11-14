@@ -17,12 +17,13 @@ import {
   Package,
 } from 'lucide-react';
 import type { Business } from '../types';
-import { getBusinessById } from '../utils/businessMockData';
+import useStore from '../store/useStore';
 
 const BusinessForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditing = !!id;
+  const { businesses, addBusiness, updateBusiness } = useStore();
 
   const [formData, setFormData] = useState({
     companyName: '',
@@ -48,7 +49,7 @@ const BusinessForm: React.FC = () => {
   // Carica i dati del business in modalità edit
   useEffect(() => {
     if (isEditing && id) {
-      const business = getBusinessById(id);
+      const business = businesses.find((b) => b.id === id);
       if (business) {
         setFormData({
           companyName: business.companyName,
@@ -70,7 +71,7 @@ const BusinessForm: React.FC = () => {
         });
       }
     }
-  }, [id, isEditing]);
+  }, [id, isEditing, businesses]);
 
   const plans = [
     {
@@ -149,10 +150,12 @@ const BusinessForm: React.FC = () => {
       return;
     }
 
-    // In produzione: chiamata API per salvare
-    const newBusiness: Business = {
+    // Trova il business esistente per preservare date
+    const existingBusiness = isEditing && id ? businesses.find((b) => b.id === id) : null;
+
+    const businessData: Business = {
       id: isEditing ? id! : `bus-${Date.now()}`,
-      resellerId: 'res-1', // Mock - verrebbe dal contesto
+      resellerId: existingBusiness?.resellerId || 'res-1', // Mock - verrebbe dal contesto
       companyName: formData.companyName,
       vatNumber: formData.vatNumber || undefined,
       fiscalCode: formData.fiscalCode || undefined,
@@ -160,11 +163,14 @@ const BusinessForm: React.FC = () => {
       phone: formData.phone,
       address: formData.address || undefined,
       website: formData.website || undefined,
+      businessSector: formData.businessSector,
       active: formData.active,
-      createdAt: new Date(),
+      createdAt: existingBusiness?.createdAt || new Date(),
       subscriptionPlan: formData.subscriptionPlan,
-      subscriptionStartDate: new Date(),
-      subscriptionEndDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // +1 anno
+      subscriptionStartDate: existingBusiness?.subscriptionStartDate || new Date(),
+      subscriptionEndDate:
+        existingBusiness?.subscriptionEndDate ||
+        new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // +1 anno
       adminEmail: formData.adminEmail,
       adminName: formData.adminName,
       maxStores: formData.maxStores,
@@ -173,7 +179,13 @@ const BusinessForm: React.FC = () => {
       paymentMethod: formData.paymentMethod,
     };
 
-    console.log('Saving business:', newBusiness);
+    // Salva nel store
+    if (isEditing) {
+      updateBusiness(businessData);
+    } else {
+      addBusiness(businessData);
+    }
+
     alert(`Cliente ${isEditing ? 'aggiornato' : 'creato'} con successo!`);
     navigate('/reseller');
   };

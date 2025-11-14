@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Building2,
@@ -22,11 +22,17 @@ import { mockBusinesses } from '../utils/businessMockData';
 
 const ResellerDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { logoutUser } = useStore();
-  const [businesses] = useState<Business[]>(mockBusinesses);
+  const { businesses, setBusinesses, logoutUser } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPlan, setFilterPlan] = useState<'all' | 'free' | 'basic' | 'professional' | 'enterprise'>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+
+  // Inizializza lo store con i mock data se vuoto
+  useEffect(() => {
+    if (businesses.length === 0) {
+      setBusinesses(mockBusinesses);
+    }
+  }, []);
 
   const stats: ResellerStats = useMemo(() => {
     return {

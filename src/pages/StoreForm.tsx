@@ -14,12 +14,13 @@ import {
   Package,
 } from 'lucide-react';
 import type { Store, BusinessSector } from '../types';
-import { getStoreById } from '../utils/storeMockData';
+import useStore from '../store/useStore';
 
 const StoreForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditing = !!id;
+  const { stores, addStore, updateStore } = useStore();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -63,7 +64,7 @@ const StoreForm: React.FC = () => {
   // Carica i dati dello store in modalità edit
   useEffect(() => {
     if (isEditing && id) {
-      const store = getStoreById(id);
+      const store = stores.find((s) => s.id === id);
       if (store) {
         setFormData({
           name: store.name,
@@ -103,7 +104,7 @@ const StoreForm: React.FC = () => {
         });
       }
     }
-  }, [id, isEditing]);
+  }, [id, isEditing, stores]);
 
   const sectors = [
     {
@@ -180,10 +181,12 @@ const StoreForm: React.FC = () => {
       return;
     }
 
-    // In produzione: chiamata API per salvare
-    const newStore: Store = {
+    // Trova lo store esistente per preservare date
+    const existingStore = isEditing && id ? stores.find((s) => s.id === id) : null;
+
+    const storeData: Store = {
       id: isEditing ? id! : `store-${Date.now()}`,
-      businessId: 'bus-1', // Mock - verrebbe dal contesto
+      businessId: existingStore?.businessId || 'bus-1', // Mock - verrebbe dal contesto
       name: formData.name,
       code: formData.code,
       address: formData.address,
@@ -194,7 +197,7 @@ const StoreForm: React.FC = () => {
       email: formData.email || undefined,
       sector: formData.sector,
       active: formData.active,
-      createdAt: new Date(),
+      createdAt: existingStore?.createdAt || new Date(),
       openingHours: {
         monday: { open: formData.mondayOpen, close: formData.mondayClose, closed: formData.mondayClosed },
         tuesday: { open: formData.tuesdayOpen, close: formData.tuesdayClose, closed: formData.tuesdayClosed },
@@ -208,7 +211,13 @@ const StoreForm: React.FC = () => {
       fiscalPrinterSerial: formData.fiscalPrinterSerial || undefined,
     };
 
-    console.log('Saving store:', newStore);
+    // Salva nel store
+    if (isEditing) {
+      updateStore(storeData);
+    } else {
+      addStore(storeData);
+    }
+
     alert(`Punto vendita ${isEditing ? 'aggiornato' : 'creato'} con successo!`);
     navigate('/business');
   };

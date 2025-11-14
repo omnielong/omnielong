@@ -16,6 +16,7 @@ import type {
   FiscalClosure,
   Reseller,
   Business,
+  Store,
 } from '../types';
 import type { Customer } from '../utils/customerMockData';
 
@@ -109,6 +110,18 @@ interface AppState {
   fiscalClosures: FiscalClosure[];
   addFiscalClosure: (closure: FiscalClosure) => void;
 
+  // Businesses (Multi-tenant)
+  businesses: Business[];
+  setBusinesses: (businesses: Business[]) => void;
+  addBusiness: (business: Business) => void;
+  updateBusiness: (business: Business) => void;
+
+  // Stores (Multi-tenant)
+  stores: Store[];
+  setStores: (stores: Store[]) => void;
+  addStore: (store: Store) => void;
+  updateStore: (store: Store) => void;
+
   // Calculations
   getCartSubtotal: () => number;
   getCartTotal: () => number;
@@ -138,6 +151,8 @@ const useStore = create<AppState>()(
       tables: [],
       quickButtons: [],
       fiscalClosures: [],
+      businesses: [],
+      stores: [],
 
       // Auth actions - Operator
       login: (operator) => set({ currentOperator: operator }),
@@ -342,6 +357,30 @@ const useStore = create<AppState>()(
           fiscalClosures: [...state.fiscalClosures, closure],
         })),
 
+      // Businesses
+      setBusinesses: (businesses) => set({ businesses }),
+      addBusiness: (business) =>
+        set((state) => ({
+          businesses: [...state.businesses, business],
+        })),
+      updateBusiness: (business) =>
+        set((state) => ({
+          businesses: state.businesses.map((b) =>
+            b.id === business.id ? business : b
+          ),
+        })),
+
+      // Stores
+      setStores: (stores) => set({ stores }),
+      addStore: (store) =>
+        set((state) => ({
+          stores: [...state.stores, store],
+        })),
+      updateStore: (store) =>
+        set((state) => ({
+          stores: state.stores.map((s) => (s.id === store.id ? store : s)),
+        })),
+
       // Calculations
       getCartSubtotal: () => {
         const { cart } = get();
@@ -425,6 +464,8 @@ const useStore = create<AppState>()(
         tables: state.tables,
         quickButtons: state.quickButtons,
         fiscalClosures: state.fiscalClosures,
+        businesses: state.businesses,
+        stores: state.stores,
       }),
     }
   )

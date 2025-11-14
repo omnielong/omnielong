@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Store as StoreIcon,
@@ -22,10 +22,16 @@ import { mockStores } from '../utils/storeMockData';
 
 const BusinessDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { logoutUser } = useStore();
-  const [stores] = useState<Store[]>(mockStores);
+  const { stores, setStores, logoutUser } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+
+  // Inizializza lo store con i mock data se vuoto
+  useEffect(() => {
+    if (stores.length === 0) {
+      setStores(mockStores);
+    }
+  }, []);
 
   const stats: BusinessStats = useMemo(() => {
     return {
