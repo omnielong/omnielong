@@ -28,6 +28,10 @@ import useStore from './store/useStore';
 function App() {
   const { currentOperator, currentUser, sectorConfig } = useStore();
 
+  // Debug log per verificare lo stato
+  console.log('[App] currentUser:', currentUser);
+  console.log('[App] currentUser type:', currentUser?.type);
+
   // Se il settore non è configurato, mostra setup
   if (!sectorConfig?.configured) {
     return (
@@ -69,20 +73,20 @@ function App() {
           }
         />
         <Route
-          path="/reseller/businesses/:id/edit"
+          path="/reseller/businesses/:id/stores"
           element={
             currentUser?.type === 'reseller' ? (
-              <BusinessForm />
+              <ResellerBusinessStoresPage />
             ) : (
               <Navigate to="/admin-login" replace />
             )
           }
         />
         <Route
-          path="/reseller/businesses/:id/stores"
+          path="/reseller/businesses/:id/edit"
           element={
             currentUser?.type === 'reseller' ? (
-              <ResellerBusinessStoresPage />
+              <BusinessForm />
             ) : (
               <Navigate to="/admin-login" replace />
             )
