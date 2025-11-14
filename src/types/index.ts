@@ -116,3 +116,93 @@ export interface DashboardStats {
   salesByHour: Array<{ hour: number; amount: number }>;
   paymentMethodsBreakdown: Array<{ method: string; amount: number; count: number }>;
 }
+
+// ===== CONFIGURAZIONE SETTORE MERCEOLOGICO =====
+
+export type BusinessSector = 'fashion' | 'bar' | 'restaurant' | 'generic';
+
+export interface SectorConfig {
+  sector: BusinessSector;
+  storeName: string;
+  vatNumber?: string;
+  address?: string;
+  phone?: string;
+  email?: string;
+  configured: boolean;
+}
+
+// ===== MODA - Varianti Prodotto =====
+
+export interface ProductVariant {
+  id: string;
+  size?: string; // XS, S, M, L, XL, XXL, 38, 40, 42, etc.
+  color?: string; // Rosso, Blu, Verde, etc.
+  barcode?: string; // Codice EAN specifico per variante
+  sku?: string; // Codice SKU
+  stock: number;
+  priceAdjustment?: number; // +/- rispetto al prezzo base
+  image?: string; // Immagine specifica per colore
+}
+
+export interface FashionProduct extends Product {
+  variants?: ProductVariant[];
+  season?: 'PE' | 'AI'; // Primavera/Estate, Autunno/Inverno
+  brand?: string;
+  gender?: 'uomo' | 'donna' | 'unisex' | 'bambino';
+  composition?: string; // es. "100% cotone"
+}
+
+// ===== RISTORANTE - Tavoli e Comande =====
+
+export interface Table {
+  id: string;
+  number: number;
+  seats: number;
+  status: 'free' | 'occupied' | 'reserved' | 'billed';
+  currentOrder?: RestaurantOrder;
+  section?: string; // Sala, Giardino, Veranda, etc.
+}
+
+export interface OrderModifier {
+  id: string;
+  name: string;
+  type: 'add' | 'remove' | 'note';
+  price?: number; // Costo aggiuntivo se type = 'add'
+  description: string;
+}
+
+export interface RestaurantOrderItem extends CartItem {
+  modifiers?: OrderModifier[];
+  notes?: string; // Note cucina
+  destination?: 'kitchen' | 'bar'; // Dove va la comanda
+  status?: 'pending' | 'preparing' | 'ready' | 'served';
+}
+
+export interface RestaurantOrder {
+  id: string;
+  tableId: string;
+  covers: number; // Numero coperti
+  items: RestaurantOrderItem[];
+  openedAt: Date;
+  status: 'open' | 'closed';
+}
+
+// ===== BAR - Pulsanti Rapidi =====
+
+export interface QuickButton {
+  id: string;
+  productId: string;
+  label: string;
+  color: string;
+  position: number; // Per ordinamento
+  category?: string;
+}
+
+// ===== ITEM CARRELLO ESTESO =====
+
+// Estende CartItem per supportare varianti e modificatori
+export interface ExtendedCartItem extends CartItem {
+  variant?: ProductVariant; // Per Moda
+  modifiers?: OrderModifier[]; // Per Ristorante
+  itemNotes?: string; // Note specifiche item
+}

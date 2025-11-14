@@ -9,6 +9,9 @@ import type {
   Sale,
   CashRegisterShift,
   Category,
+  SectorConfig,
+  Table,
+  QuickButton,
 } from '../types';
 
 interface AppState {
@@ -64,6 +67,19 @@ interface AppState {
   operators: Operator[];
   setOperators: (operators: Operator[]) => void;
 
+  // Sector Configuration
+  sectorConfig: SectorConfig | null;
+  setSectorConfig: (config: SectorConfig) => void;
+
+  // Restaurant - Tables
+  tables: Table[];
+  setTables: (tables: Table[]) => void;
+  updateTable: (table: Table) => void;
+
+  // Bar - Quick Buttons
+  quickButtons: QuickButton[];
+  setQuickButtons: (buttons: QuickButton[]) => void;
+
   // Calculations
   getCartSubtotal: () => number;
   getCartTotal: () => number;
@@ -86,6 +102,9 @@ const useStore = create<AppState>()(
       discounts: [],
       loyaltyCards: [],
       operators: [],
+      sectorConfig: null,
+      tables: [],
+      quickButtons: [],
 
       // Auth actions
       login: (operator) => set({ currentOperator: operator }),
@@ -250,6 +269,19 @@ const useStore = create<AppState>()(
       // Operators
       setOperators: (operators) => set({ operators }),
 
+      // Sector Configuration
+      setSectorConfig: (config) => set({ sectorConfig: config }),
+
+      // Restaurant - Tables
+      setTables: (tables) => set({ tables }),
+      updateTable: (table) =>
+        set((state) => ({
+          tables: state.tables.map((t) => (t.id === table.id ? table : t)),
+        })),
+
+      // Bar - Quick Buttons
+      setQuickButtons: (buttons) => set({ quickButtons: buttons }),
+
       // Calculations
       getCartSubtotal: () => {
         const { cart } = get();
@@ -327,6 +359,9 @@ const useStore = create<AppState>()(
         discounts: state.discounts,
         loyaltyCards: state.loyaltyCards,
         operators: state.operators,
+        sectorConfig: state.sectorConfig,
+        tables: state.tables,
+        quickButtons: state.quickButtons,
       }),
     }
   )

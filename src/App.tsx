@@ -4,10 +4,22 @@ import ShiftPage from './pages/ShiftPage';
 import POSPage from './pages/POSPage';
 import DashboardPage from './pages/DashboardPage';
 import SettingsPage from './pages/SettingsPage';
+import SetupPage from './pages/SetupPage';
 import useStore from './store/useStore';
 
 function App() {
-  const { currentOperator } = useStore();
+  const { currentOperator, sectorConfig } = useStore();
+
+  // Se il settore non è configurato, mostra setup
+  if (!sectorConfig?.configured) {
+    return (
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<SetupPage />} />
+        </Routes>
+      </BrowserRouter>
+    );
+  }
 
   return (
     <BrowserRouter>
