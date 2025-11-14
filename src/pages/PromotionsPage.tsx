@@ -170,40 +170,53 @@ const PromotionsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-orange-50 pb-20">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <button
-                onClick={() => navigate('/pos')}
-                className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-6 h-6" />
-              </button>
-              <div className="flex items-center">
-                <Tag className="w-6 h-6 mr-3 text-blue-600" />
-                <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Promozioni e Sconti</h1>
-                  <p className="text-sm text-gray-600">
-                    Gestisci sconti, coupon e promozioni
-                  </p>
-                </div>
-              </div>
-            </div>
+      <div className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white p-6 shadow-lg">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
             <button
-              onClick={() => handleOpenModal()}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg flex items-center transition-colors"
+              onClick={() => navigate('/pos')}
+              className="mr-4 p-2 hover:bg-white/20 rounded-lg transition-colors"
             >
-              <Plus className="w-5 h-5 mr-2" />
-              Nuova Promozione
+              <ArrowLeft className="w-6 h-6" />
             </button>
+            <div>
+              <h1 className="text-2xl font-bold">Promozioni e Sconti</h1>
+              <p className="text-yellow-100">Gestisci sconti, coupon e promozioni</p>
+            </div>
+          </div>
+          <button
+            onClick={() => handleOpenModal()}
+            className="bg-white text-yellow-600 hover:bg-yellow-50 font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
+          >
+            <Plus className="w-5 h-5 mr-2" />
+            Nuova Promozione
+          </button>
+        </div>
+
+        {/* Statistics */}
+        <div className="grid grid-cols-3 gap-4 mt-6">
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-yellow-100 text-sm mb-1">Totale Promozioni</p>
+            <p className="text-3xl font-bold">{discounts.length}</p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-yellow-100 text-sm mb-1">Attive</p>
+            <p className="text-3xl font-bold">
+              {discounts.filter(d => d.active && !isExpired(d)).length}
+            </p>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
+            <p className="text-yellow-100 text-sm mb-1">Scadute</p>
+            <p className="text-3xl font-bold">
+              {discounts.filter(d => isExpired(d)).length}
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
         {/* Search */}
         <div className="mb-6">
           <div className="relative">

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   ArrowLeft,
-  Settings,
   Database,
   RefreshCw,
   CheckCircle,
@@ -84,26 +83,21 @@ const SettingsPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-gray-50 pb-20">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-4xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center">
-            <button
-              onClick={() => navigate('/pos')}
-              className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-            >
-              <ArrowLeft className="w-6 h-6" />
-            </button>
-            <div className="flex items-center">
-              <Settings className="w-6 h-6 mr-3 text-blue-600" />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Impostazioni</h1>
-                <p className="text-sm text-gray-600">
-                  Configura l'integrazione con sistemi esterni
-                </p>
-              </div>
-            </div>
+      <div className="bg-gradient-to-r from-slate-700 to-gray-700 text-white p-6 shadow-lg">
+        <div className="flex items-center">
+          <button
+            onClick={() => navigate('/pos')}
+            className="mr-4 p-2 hover:bg-white/20 rounded-lg transition-colors"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </button>
+          <div>
+            <h1 className="text-2xl font-bold">Impostazioni</h1>
+            <p className="text-slate-100">
+              Configura l'integrazione con sistemi esterni
+            </p>
           </div>
         </div>
       </div>

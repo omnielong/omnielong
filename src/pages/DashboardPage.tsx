@@ -72,34 +72,32 @@ const DashboardPage: React.FC = () => {
     .slice(0, 5);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-teal-50 to-blue-50 pb-20">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <button
-                onClick={() => navigate('/pos')}
-                className="mr-4 p-2 hover:bg-gray-100 rounded-lg transition-colors"
-              >
-                <ArrowLeft className="w-6 h-6" />
-              </button>
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-                <p className="text-sm text-gray-600">
-                  {format(new Date(), 'EEEE, d MMMM yyyy', { locale: it })}
-                </p>
-              </div>
+      <div className="bg-gradient-to-r from-teal-600 to-blue-600 text-white p-6 shadow-lg">
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center">
+            <button
+              onClick={() => navigate('/pos')}
+              className="mr-4 p-2 hover:bg-white/20 rounded-lg transition-colors"
+            >
+              <ArrowLeft className="w-6 h-6" />
+            </button>
+            <div>
+              <h1 className="text-2xl font-bold">Dashboard</h1>
+              <p className="text-teal-100">
+                {format(new Date(), 'EEEE, d MMMM yyyy', { locale: it })}
+              </p>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Operatore</p>
-              <p className="font-semibold text-gray-900">{currentOperator?.name}</p>
-            </div>
+          </div>
+          <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2">
+            <p className="text-sm text-teal-100">Operatore</p>
+            <p className="font-bold">{currentOperator?.name}</p>
           </div>
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
         {/* Stats Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
