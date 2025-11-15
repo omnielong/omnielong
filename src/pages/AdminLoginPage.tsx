@@ -26,11 +26,8 @@ const mockResellers: (Reseller & { password: string })[] = [
   },
 ];
 
-// Aggiungi password ai business esistenti per il login
-const mockBusinesses: (Business & { password: string })[] = importedMockBusinesses.map((business) => ({
-  ...business,
-  password: 'business123', // Password uguale per tutti i business mock
-}));
+// Usa direttamente i business importati (hanno già la password)
+const mockBusinesses = importedMockBusinesses;
 
 type LoginType = 'business' | 'reseller' | 'operator';
 
@@ -77,8 +74,8 @@ const AdminLoginPage: React.FC = () => {
       );
 
       if (business) {
-        const { password: _, ...businessData } = business;
-        loginUser(businessData, 'business');
+        // Mantieni la password nel business per poterla modificare
+        loginUser(business, 'business');
         navigate('/business');
       } else {
         setError('Email o password non validi');

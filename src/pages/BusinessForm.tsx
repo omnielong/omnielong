@@ -37,6 +37,7 @@ const BusinessForm: React.FC = () => {
     businessSector: 'generic' as 'fashion' | 'bar' | 'restaurant' | 'generic',
     adminEmail: '',
     adminName: '',
+    password: '',
     subscriptionPlan: 'basic' as 'free' | 'basic' | 'professional' | 'enterprise',
     maxStores: 2,
     maxOperatorsPerStore: 5,
@@ -69,6 +70,7 @@ const BusinessForm: React.FC = () => {
           businessSector: business.businessSector || 'generic',
           adminEmail: business.adminEmail,
           adminName: business.adminName,
+          password: business.password || 'business123',
           subscriptionPlan: business.subscriptionPlan,
           maxStores: business.maxStores,
           maxOperatorsPerStore: business.maxOperatorsPerStore,
@@ -146,6 +148,12 @@ const BusinessForm: React.FC = () => {
     if (!formData.adminEmail.trim() || !formData.adminEmail.includes('@')) {
       newErrors.adminEmail = 'Email amministratore valida obbligatoria';
     }
+    if (!isEditing && !formData.password.trim()) {
+      newErrors.password = 'Password obbligatoria per nuovi clienti';
+    }
+    if (formData.password.trim() && formData.password.length < 6) {
+      newErrors.password = 'La password deve avere almeno 6 caratteri';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -174,6 +182,12 @@ const BusinessForm: React.FC = () => {
       subscriptionEndDate = new Date(Date.now() + 365 * 24 * 60 * 60 * 1000);
     }
 
+    // Gestisci password: se in edit mode e password è vuota, mantieni quella esistente
+    let password = formData.password || 'business123';
+    if (isEditing && !formData.password.trim() && existingBusiness?.password) {
+      password = existingBusiness.password;
+    }
+
     const businessData: Business = {
       id: isEditing ? id! : `bus-${Date.now()}`,
       resellerId: existingBusiness?.resellerId || 'res-1', // Mock - verrebbe dal contesto
@@ -192,6 +206,7 @@ const BusinessForm: React.FC = () => {
       subscriptionEndDate: subscriptionEndDate,
       adminEmail: formData.adminEmail,
       adminName: formData.adminName,
+      password, // Password gestita sopra
       maxStores: formData.maxStores,
       maxOperatorsPerStore: formData.maxOperatorsPerStore,
       billingEmail: formData.billingEmail || undefined,
@@ -444,6 +459,27 @@ const BusinessForm: React.FC = () => {
                 />
                 {errors.adminEmail && (
                   <p className="text-red-600 text-sm mt-1">{errors.adminEmail}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Password {!isEditing && '*'}
+                </label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder={isEditing ? 'Lascia vuoto per mantenere quella attuale' : 'Minimo 6 caratteri'}
+                />
+                {errors.password && (
+                  <p className="text-red-600 text-sm mt-1">{errors.password}</p>
+                )}
+                {isEditing && !errors.password && (
+                  <p className="text-gray-500 text-xs mt-1">Lascia vuoto per mantenere la password attuale</p>
                 )}
               </div>
             </div>
