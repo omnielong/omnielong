@@ -64,13 +64,17 @@ const AdminLoginPage: React.FC = () => {
 
   const [error, setError] = useState('');
   const navigate = useNavigate();
-  const { loginUser, login, setOperators, setStores } = useStore();
+  const { loginUser, login, setOperators, setStores, businesses, setBusinesses } = useStore();
 
-  // Initialize operators and stores on first load
+  // Initialize operators, stores and businesses on first load
   useEffect(() => {
     setOperators(mockOperators);
     setStores(mockStores); // Necessario per trovare lo store dell'operatore al login
-  }, [setOperators, setStores]);
+    // Inizializza businesses con password dai mock locali se lo store è vuoto
+    if (businesses.length === 0) {
+      setBusinesses(mockBusinesses);
+    }
+  }, [setOperators, setStores, setBusinesses, businesses.length]);
 
   const handleAdminLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,11 +93,13 @@ const AdminLoginPage: React.FC = () => {
         setError('Email o password non validi');
       }
     } else if (loginType === 'business') {
-      const business = mockBusinesses.find(
-        (b) => b.email === email && b.password === password && b.active
+      // Usa i business salvati nello store invece dei mock locali
+      const business = businesses.find(
+        (b) => b.adminEmail === email && b.password === password && b.active
       );
 
       if (business) {
+        // Rimuovi la password prima di salvare nello state
         const { password: _, ...businessData } = business;
         loginUser(businessData, 'business');
         navigate('/business');

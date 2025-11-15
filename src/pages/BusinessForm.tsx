@@ -16,6 +16,8 @@ import {
   Utensils,
   Package,
   Calendar,
+  Lock,
+  Key,
 } from 'lucide-react';
 import type { Business } from '../types';
 import useStore from '../store/useStore';
@@ -37,6 +39,7 @@ const BusinessForm: React.FC = () => {
     businessSector: 'generic' as 'fashion' | 'bar' | 'restaurant' | 'generic',
     adminEmail: '',
     adminName: '',
+    password: '',
     subscriptionPlan: 'basic' as 'free' | 'basic' | 'professional' | 'enterprise',
     maxStores: 2,
     maxOperatorsPerStore: 5,
@@ -69,6 +72,7 @@ const BusinessForm: React.FC = () => {
           businessSector: business.businessSector || 'generic',
           adminEmail: business.adminEmail,
           adminName: business.adminName,
+          password: business.password || '',
           subscriptionPlan: business.subscriptionPlan,
           maxStores: business.maxStores,
           maxOperatorsPerStore: business.maxOperatorsPerStore,
@@ -146,6 +150,12 @@ const BusinessForm: React.FC = () => {
     if (!formData.adminEmail.trim() || !formData.adminEmail.includes('@')) {
       newErrors.adminEmail = 'Email amministratore valida obbligatoria';
     }
+    if (!isEditing && !formData.password.trim()) {
+      newErrors.password = 'Password obbligatoria per nuovo business';
+    }
+    if (formData.password && formData.password.length < 6) {
+      newErrors.password = 'Password deve essere di almeno 6 caratteri';
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -192,6 +202,7 @@ const BusinessForm: React.FC = () => {
       subscriptionEndDate: subscriptionEndDate,
       adminEmail: formData.adminEmail,
       adminName: formData.adminName,
+      password: formData.password || existingBusiness?.password || undefined,
       maxStores: formData.maxStores,
       maxOperatorsPerStore: formData.maxOperatorsPerStore,
       billingEmail: formData.billingEmail || undefined,
@@ -403,7 +414,7 @@ const BusinessForm: React.FC = () => {
             </div>
           </div>
 
-          {/* Amministratore */}
+          {/* Amministratore e Credenziali */}
           <div className="bg-white rounded-xl shadow-lg p-6 mb-6">
             <div className="flex items-center mb-6">
               <Users className="w-6 h-6 text-indigo-600 mr-3" />
@@ -433,18 +444,64 @@ const BusinessForm: React.FC = () => {
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
                   Email Admin *
                 </label>
-                <input
-                  type="email"
-                  value={formData.adminEmail}
-                  onChange={(e) => setFormData({ ...formData, adminEmail: e.target.value })}
-                  className={`w-full px-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
-                    errors.adminEmail ? 'border-red-500' : 'border-gray-300'
-                  }`}
-                  placeholder="admin@azienda.it"
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <input
+                    type="email"
+                    value={formData.adminEmail}
+                    onChange={(e) => setFormData({ ...formData, adminEmail: e.target.value })}
+                    className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                      errors.adminEmail ? 'border-red-500' : 'border-gray-300'
+                    }`}
+                    placeholder="admin@azienda.it"
+                  />
+                </div>
                 {errors.adminEmail && (
                   <p className="text-red-600 text-sm mt-1">{errors.adminEmail}</p>
                 )}
+              </div>
+
+              <div className="md:col-span-2">
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
+                  <div className="flex items-start">
+                    <Key className="w-5 h-5 text-blue-600 mr-2 mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h3 className="font-semibold text-blue-900 text-sm mb-1">
+                        Credenziali di Accesso Dashboard
+                      </h3>
+                      <p className="text-xs text-blue-700">
+                        L'amministratore userà l'email e la password qui impostata per accedere alla dashboard business.
+                        {isEditing && ' Lascia vuoto per mantenere la password attuale.'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    Password {!isEditing && '*'}
+                  </label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                    <input
+                      type="password"
+                      value={formData.password}
+                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                      className={`w-full pl-10 pr-4 py-3 border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 ${
+                        errors.password ? 'border-red-500' : 'border-gray-300'
+                      }`}
+                      placeholder={isEditing ? 'Lascia vuoto per non modificare' : 'Minimo 6 caratteri'}
+                    />
+                  </div>
+                  {errors.password && (
+                    <p className="text-red-600 text-sm mt-1">{errors.password}</p>
+                  )}
+                  {!isEditing && (
+                    <p className="text-xs text-gray-500 mt-1">
+                      La password deve essere di almeno 6 caratteri
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
