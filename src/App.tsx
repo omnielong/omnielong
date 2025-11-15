@@ -86,6 +86,16 @@ function App() {
             )
           }
         />
+        <Route
+          path="/reseller/businesses/:businessId/stores/:id/edit"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <StoreForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
 
         {/* Business Routes - Protected */}
         <Route

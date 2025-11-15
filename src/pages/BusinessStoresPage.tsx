@@ -245,6 +245,17 @@ const BusinessStoresPage: React.FC = () => {
                   </div>
                 </div>
               )}
+
+              {/* Actions */}
+              <div className="flex gap-2 pt-4 border-gray-200">
+                <button
+                  onClick={() => navigate(`/reseller/businesses/${businessId}/stores/${store.id}/edit`)}
+                  className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
+                >
+                  <Edit2 className="w-4 h-4 mr-2" />
+                  Modifica Negozio
+                </button>
+              </div>
             </div>
           ))}
         </div>
