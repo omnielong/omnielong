@@ -174,9 +174,17 @@ const useStore = create<AppState>()(
         }),
 
       // Auth actions - Reseller/Business
-      loginUser: (user, type) =>
-        set({ currentUser: { type, data: user } as AuthUser }),
-      logoutUser: () => set({ currentUser: null }),
+      loginUser: (user, type) => {
+        const authUser: AuthUser = type === 'reseller'
+          ? { type: 'reseller', data: user as Reseller }
+          : { type: 'business', data: user as Business };
+        set({ currentUser: authUser });
+        console.log('[Auth] User logged in:', { type, userId: user.id });
+      },
+      logoutUser: () => {
+        set({ currentUser: null });
+        console.log('[Auth] User logged out');
+      },
 
       // Cash Register Shift
       openShift: (operator, openingBalance) => {

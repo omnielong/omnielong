@@ -26,6 +26,9 @@ import useStore from './store/useStore';
 function App() {
   const { currentOperator, currentUser, sectorConfig } = useStore();
 
+  console.log('[App] Current user:', currentUser);
+  console.log('[App] Sector config:', sectorConfig);
+
   // Se il settore non è configurato E non c'è un admin (reseller/business) loggato, mostra setup
   // La configurazione del settore serve solo per gli operatori POS, non per reseller/business
   if (!sectorConfig?.configured && !currentUser) {
