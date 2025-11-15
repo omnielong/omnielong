@@ -15,6 +15,7 @@ import ResellerDashboard from './pages/ResellerDashboard';
 import BusinessDashboard from './pages/BusinessDashboard';
 import BusinessForm from './pages/BusinessForm';
 import StoreForm from './pages/StoreForm';
+import BusinessStoresPage from './pages/BusinessStoresPage';
 import BusinessOperatorsPage from './pages/BusinessOperatorsPage';
 import OperatorForm from './pages/OperatorForm';
 import RoleSelectionPage from './pages/RoleSelectionPage';
@@ -70,6 +71,16 @@ function App() {
           element={
             currentUser?.type === 'reseller' ? (
               <BusinessForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/:id/stores"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <BusinessStoresPage />
             ) : (
               <Navigate to="/admin-login" replace />
             )
