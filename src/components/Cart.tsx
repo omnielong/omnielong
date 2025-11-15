@@ -14,9 +14,10 @@ import { mockCustomers } from '../utils/customerMockData';
 
 interface CartProps {
   onCheckout: () => void;
+  readOnly?: boolean;
 }
 
-const Cart: React.FC<CartProps> = ({ onCheckout }) => {
+const Cart: React.FC<CartProps> = ({ onCheckout, readOnly = false }) => {
   const {
     cart,
     selectedCustomer,
@@ -135,7 +136,12 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
               </div>
               <button
                 onClick={() => removeFromCart(item.product.id)}
-                className="text-red-500 hover:text-red-700 p-1 touch-manipulation"
+                disabled={readOnly}
+                className={`p-1 touch-manipulation ${
+                  readOnly
+                    ? 'text-gray-300 cursor-not-allowed'
+                    : 'text-red-500 hover:text-red-700'
+                }`}
               >
                 <Trash2 className="w-5 h-5" />
               </button>
@@ -147,7 +153,12 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
                   onClick={() =>
                     updateQuantity(item.product.id, item.quantity - 1)
                   }
-                  className="p-2 hover:bg-gray-100 rounded-l-lg touch-manipulation"
+                  disabled={readOnly}
+                  className={`p-2 rounded-l-lg touch-manipulation ${
+                    readOnly
+                      ? 'cursor-not-allowed text-gray-300'
+                      : 'hover:bg-gray-100'
+                  }`}
                 >
                   <Minus className="w-4 h-4" />
                 </button>
@@ -158,7 +169,12 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
                   onClick={() =>
                     updateQuantity(item.product.id, item.quantity + 1)
                   }
-                  className="p-2 hover:bg-gray-100 rounded-r-lg touch-manipulation"
+                  disabled={readOnly}
+                  className={`p-2 rounded-r-lg touch-manipulation ${
+                    readOnly
+                      ? 'cursor-not-allowed text-gray-300'
+                      : 'hover:bg-gray-100'
+                  }`}
                 >
                   <Plus className="w-4 h-4" />
                 </button>
@@ -191,16 +207,18 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
               </div>
             )}
 
-            <button
-              onClick={() => {
-                setSelectedItemForDiscount(item.product.id);
-                setShowDiscountMenu(true);
-              }}
-              className="mt-2 w-full text-xs text-blue-600 hover:text-blue-700 font-semibold py-1 touch-manipulation"
-            >
-              <Tag className="w-3 h-3 inline mr-1" />
-              Applica sconto
-            </button>
+            {!readOnly && (
+              <button
+                onClick={() => {
+                  setSelectedItemForDiscount(item.product.id);
+                  setShowDiscountMenu(true);
+                }}
+                className="mt-2 w-full text-xs text-blue-600 hover:text-blue-700 font-semibold py-1 touch-manipulation"
+              >
+                <Tag className="w-3 h-3 inline mr-1" />
+                Applica sconto
+              </button>
+            )}
           </div>
         ))}
       </div>
@@ -231,7 +249,7 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
               </button>
             </div>
           </div>
-        ) : (
+        ) : !readOnly && (
           <button
             onClick={() => setShowLoyaltyMenu(true)}
             className="w-full bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-700 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center touch-manipulation"
@@ -266,7 +284,7 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
               </button>
             </div>
           </div>
-        ) : (
+        ) : !readOnly && (
           <button
             onClick={() => {
               setSelectedItemForDiscount(null);
@@ -300,9 +318,14 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
         {/* Checkout Button */}
         <button
           onClick={onCheckout}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors shadow-lg hover:shadow-xl touch-manipulation active:scale-98"
+          disabled={readOnly}
+          className={`w-full font-bold py-4 rounded-xl transition-colors shadow-lg touch-manipulation ${
+            readOnly
+              ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              : 'bg-blue-600 hover:bg-blue-700 text-white hover:shadow-xl active:scale-98'
+          }`}
         >
-          Procedi al Pagamento
+          {readOnly ? 'Modalità Solo Lettura' : 'Procedi al Pagamento'}
         </button>
       </div>
 

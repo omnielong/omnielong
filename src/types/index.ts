@@ -89,7 +89,7 @@ export interface Operator {
   businessId: string; // A quale business appartiene
   name: string;
   email: string;
-  role: 'business_admin' | 'store_admin' | 'manager' | 'cashier';
+  role: 'business_admin' | 'store_admin' | 'manager' | 'cashier' | 'reseller_viewer' | 'business_viewer';
   pin: string;
   avatar?: string;
   active: boolean;
@@ -104,6 +104,7 @@ export interface Operator {
     canViewSensitiveData: boolean;
     canProcessRefunds: boolean;
     canOpenCloseCashRegister: boolean;
+    canSell: boolean; // Permesso di vendere (false per viewer)
   };
 }
 
@@ -113,7 +114,9 @@ export type SystemRole =
   | 'business_admin'   // Admin del business (gestisce tutti i punti vendita)
   | 'store_admin'      // Admin del punto vendita (può tutto nel suo store)
   | 'manager'          // Manager (gestione avanzata)
-  | 'cashier';         // Cassiere (solo vendite)
+  | 'cashier'          // Cassiere (solo vendite)
+  | 'reseller_viewer'  // Reseller in modalità visualizzazione negozio (no vendite)
+  | 'business_viewer'; // Business admin in modalità visualizzazione negozio (no vendite)
 
 // Piano abbonamento
 export interface SubscriptionPlan {
