@@ -20,7 +20,7 @@ const StoreForm: React.FC = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const isEditing = !!id;
-  const { stores, addStore, updateStore } = useStore();
+  const { stores, addStore, updateStore, currentUser } = useStore();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -184,9 +184,14 @@ const StoreForm: React.FC = () => {
     // Trova lo store esistente per preservare date
     const existingStore = isEditing && id ? stores.find((s) => s.id === id) : null;
 
+    // Ottieni il businessId dal currentUser (business admin)
+    const businessId = currentUser?.type === 'business'
+      ? currentUser.data.id
+      : existingStore?.businessId || 'bus-1'; // Fallback per sicurezza
+
     const storeData: Store = {
       id: isEditing ? id! : `store-${Date.now()}`,
-      businessId: existingStore?.businessId || 'bus-1', // Mock - verrebbe dal contesto
+      businessId,
       name: formData.name,
       code: formData.code,
       address: formData.address,

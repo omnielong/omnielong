@@ -5,11 +5,12 @@ import useStore from '../store/useStore';
 import type { Reseller, Business } from '../types';
 import { mockOperators } from '../utils/mockData';
 import { mockStores } from '../utils/storeMockData';
+import { mockBusinesses as importedMockBusinesses } from '../utils/businessMockData';
 
 // Mock data - In produzione verrebbe da API
 const mockResellers: (Reseller & { password: string })[] = [
   {
-    id: 'reseller-1',
+    id: 'res-1',
     companyName: 'TechPOS Solutions',
     vatNumber: 'IT12345678901',
     email: 'admin@techpos.it',
@@ -25,29 +26,11 @@ const mockResellers: (Reseller & { password: string })[] = [
   },
 ];
 
-const mockBusinesses: (Business & { password: string })[] = [
-  {
-    id: 'business-1',
-    resellerId: 'reseller-1',
-    companyName: 'Fashion Store SRL',
-    vatNumber: 'IT98765432109',
-    fiscalCode: 'FSTSRL98765432',
-    email: 'admin@fashionstore.it',
-    password: 'business123',
-    phone: '+39 06 9876543',
-    address: 'Via Condotti 45, Roma',
-    active: true,
-    subscriptionPlan: 'professional',
-    subscriptionStartDate: new Date('2024-01-15'),
-    adminEmail: 'admin@fashionstore.it',
-    adminName: 'Laura Bianchi',
-    maxStores: 5,
-    maxOperatorsPerStore: 10,
-    billingEmail: 'billing@fashionstore.it',
-    paymentMethod: 'credit_card',
-    createdAt: new Date('2024-01-15'),
-  },
-];
+// Aggiungi password ai business esistenti per il login
+const mockBusinesses: (Business & { password: string })[] = importedMockBusinesses.map((business) => ({
+  ...business,
+  password: 'business123', // Password uguale per tutti i business mock
+}));
 
 type LoginType = 'business' | 'reseller' | 'operator';
 
@@ -362,9 +345,10 @@ const AdminLoginPage: React.FC = () => {
                   <p>Password: <span className="font-mono">reseller123</span></p>
                 </div>
               ) : (
-                <div className="text-sm text-blue-800 space-y-1">
-                  <p>Email: <span className="font-mono">admin@fashionstore.it</span></p>
+                <div className="text-sm text-blue-800 space-y-2">
+                  <p>Email: <span className="font-mono">info@eleganzafashion.it</span></p>
                   <p>Password: <span className="font-mono">business123</span></p>
+                  <p className="text-xs text-blue-600 mt-2">Questo business ha 2 negozi (Milano e Roma)</p>
                 </div>
               )}
             </div>
