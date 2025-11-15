@@ -14,6 +14,7 @@ import {
   Calendar,
   LogOut,
   Users,
+  Eye,
 } from 'lucide-react';
 import type { Store, BusinessStats } from '../types';
 import useStore from '../store/useStore';
@@ -21,7 +22,7 @@ import { mockStores } from '../utils/storeMockData';
 
 const BusinessDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { stores, setStores, logoutUser } = useStore();
+  const { stores, setStores, logoutUser, currentUser, login } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
@@ -93,6 +94,26 @@ const BusinessDashboard: React.FC = () => {
       generic: 'bg-gray-100 text-gray-800',
     };
     return colors[sector];
+  };
+
+  // Handler per entrare come business_viewer
+  const handleViewStore = (store: Store) => {
+    // Crea un operatore temporaneo con ruolo business_viewer
+    const viewerOperator = {
+      id: `viewer-${currentUser?.data.id}-${store.id}`,
+      storeId: store.id,
+      businessId: store.businessId,
+      name: currentUser?.data.adminName || 'Business Admin',
+      email: currentUser?.data.email || '',
+      role: 'business_viewer' as const,
+      pin: '0000',
+      active: true,
+      createdAt: new Date(),
+    };
+
+    // Login come viewer
+    login(viewerOperator);
+    navigate('/shift');
   };
 
   return (
@@ -295,7 +316,19 @@ const BusinessDashboard: React.FC = () => {
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
-                  Modifica Store
+                  Modifica
+                </button>
+                <button
+                  onClick={() => handleViewStore(store)}
+                  disabled={!store.active}
+                  className={`flex-1 font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm ${
+                    store.active
+                      ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                      : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  }`}
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Visualizza
                 </button>
               </div>
             </div>

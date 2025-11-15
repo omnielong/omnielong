@@ -6,9 +6,10 @@ interface CartModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCheckout: () => void;
+  readOnly?: boolean;
 }
 
-const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, onCheckout }) => {
+const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, onCheckout, readOnly = false }) => {
   if (!isOpen) return null;
 
   return (
@@ -34,10 +35,13 @@ const CartModal: React.FC<CartModalProps> = ({ isOpen, onClose, onCheckout }) =>
 
         {/* Cart Content */}
         <div className="flex-1 overflow-hidden">
-          <Cart onCheckout={() => {
-            onClose();
-            onCheckout();
-          }} />
+          <Cart
+            onCheckout={() => {
+              onClose();
+              onCheckout();
+            }}
+            readOnly={readOnly}
+          />
         </div>
       </div>
     </div>

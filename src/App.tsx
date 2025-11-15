@@ -12,6 +12,7 @@ import OperatorsPage from './pages/OperatorsPage';
 import FiscalClosurePage from './pages/FiscalClosurePage';
 import BackupPage from './pages/BackupPage';
 import ResellerDashboard from './pages/ResellerDashboard';
+import ResellerBusinessStoresPage from './pages/ResellerBusinessStoresPage';
 import BusinessDashboard from './pages/BusinessDashboard';
 import BusinessForm from './pages/BusinessForm';
 import StoreForm from './pages/StoreForm';
@@ -25,8 +26,9 @@ import useStore from './store/useStore';
 function App() {
   const { currentOperator, currentUser, sectorConfig } = useStore();
 
-  // Se il settore non è configurato, mostra setup
-  if (!sectorConfig?.configured) {
+  // Se il settore non è configurato E non c'è un admin (reseller/business) loggato, mostra setup
+  // La configurazione del settore serve solo per gli operatori POS, non per reseller/business
+  if (!sectorConfig?.configured && !currentUser) {
     return (
       <BrowserRouter>
         <Routes>
@@ -70,6 +72,16 @@ function App() {
           element={
             currentUser?.type === 'reseller' ? (
               <BusinessForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/:businessId/stores"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <ResellerBusinessStoresPage />
             ) : (
               <Navigate to="/admin-login" replace />
             )

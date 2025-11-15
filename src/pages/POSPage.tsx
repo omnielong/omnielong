@@ -18,6 +18,8 @@ import {
   UserCog,
   ClipboardCheck,
   Database,
+  Eye,
+  AlertCircle,
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import { mockProducts, mockCategories, mockDiscounts, mockLoyaltyCards } from '../utils/mockData';
@@ -30,7 +32,7 @@ import MobileMenu from '../components/MobileMenu';
 import Checkout from '../components/Checkout';
 import BarQuickButtons from '../components/BarQuickButtons';
 import RestaurantTables from '../components/RestaurantTables';
-import { getAccessibleMenuItems } from '../utils/permissions';
+import { getAccessibleMenuItems, hasPermission } from '../utils/permissions';
 
 const POSPage: React.FC = () => {
   const navigate = useNavigate();
@@ -58,6 +60,10 @@ const POSPage: React.FC = () => {
 
   // Ottieni i menu accessibili basati sui permessi dell'operatore
   const accessibleMenuItems = currentOperator ? getAccessibleMenuItems(currentOperator) : [];
+
+  // Verifica se l'operatore può vendere (non è un viewer)
+  const canSell = currentOperator ? hasPermission(currentOperator, 'canSell') : false;
+  const isViewer = currentOperator && (currentOperator.role === 'reseller_viewer' || currentOperator.role === 'business_viewer');
 
   useEffect(() => {
     if (!currentOperator) {
@@ -101,6 +107,10 @@ const POSPage: React.FC = () => {
   };
 
   const handleCheckout = () => {
+    if (!canSell) {
+      alert('Non hai i permessi per effettuare vendite. Stai visualizzando il negozio in modalità sola lettura.');
+      return;
+    }
     if (cart.length === 0) {
       alert('Il carrello è vuoto');
       return;
@@ -238,6 +248,26 @@ const POSPage: React.FC = () => {
                 </div>
               </div>
 
+              {/* Read-Only Banner for Viewers */}
+              {isViewer && (
+                <div className="bg-orange-50 border-b-2 border-orange-200 px-4 py-3">
+                  <div className="flex items-center">
+                    <AlertCircle className="w-5 h-5 text-orange-600 mr-3 flex-shrink-0" />
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-orange-900 text-sm">
+                        {currentOperator.role === 'reseller_viewer'
+                          ? 'Modalità Visualizzazione Reseller'
+                          : 'Modalità Visualizzazione Business Admin'}
+                      </h3>
+                      <p className="text-xs text-orange-700">
+                        Puoi visualizzare prodotti, clienti e impostazioni, ma non puoi effettuare vendite.
+                      </p>
+                    </div>
+                    <Eye className="w-5 h-5 text-orange-600 ml-3 flex-shrink-0" />
+                  </div>
+                </div>
+              )}
+
               {/* Bar: Toggle between Quick Buttons and All Products */}
               {sectorConfig?.sector === 'bar' && (
                 <div className="bg-white border-b border-gray-200 px-4 py-3">
@@ -329,7 +359,7 @@ const POSPage: React.FC = () => {
         {/* Cart Section - Desktop (hidden for restaurant) */}
         {sectorConfig?.sector !== 'restaurant' && (
           <div className="hidden lg:flex lg:flex-col w-96 xl:w-[450px] bg-white border-l border-gray-200">
-            <Cart onCheckout={handleCheckout} />
+            <Cart onCheckout={handleCheckout} readOnly={!canSell} />
           </div>
         )}
       </div>
@@ -347,6 +377,7 @@ const POSPage: React.FC = () => {
         isOpen={showCartModal}
         onClose={() => setShowCartModal(false)}
         onCheckout={handleCheckout}
+        readOnly={!canSell}
       />
 
       {/* Checkout Modal */}

@@ -15,6 +15,7 @@ export const ROLE_PERMISSIONS = {
     canAccessSettings: true,
     canAccessBackup: true,
     canAccessFiscalClosure: true,
+    canSell: true, // Può vendere
   },
   store_admin: {
     canAccessReports: true,
@@ -29,6 +30,7 @@ export const ROLE_PERMISSIONS = {
     canAccessSettings: true,
     canAccessBackup: true,
     canAccessFiscalClosure: true,
+    canSell: true, // Può vendere
   },
   manager: {
     canAccessReports: true,
@@ -43,6 +45,7 @@ export const ROLE_PERMISSIONS = {
     canAccessSettings: false,
     canAccessBackup: false,
     canAccessFiscalClosure: true,
+    canSell: true, // Può vendere
   },
   cashier: {
     canAccessReports: false,
@@ -57,6 +60,37 @@ export const ROLE_PERMISSIONS = {
     canAccessSettings: false,
     canAccessBackup: false,
     canAccessFiscalClosure: false,
+    canSell: true, // Può vendere
+  },
+  reseller_viewer: {
+    canAccessReports: true, // Può vedere report
+    canManageProducts: false, // NO modifica prodotti
+    canManageCustomers: false, // NO modifica clienti
+    canManagePromotions: false, // NO modifica promozioni
+    canManageOperators: false, // NO gestione operatori
+    canViewSensitiveData: true, // Può vedere dati
+    canProcessRefunds: false, // NO resi
+    canOpenCloseCashRegister: false, // NO apertura/chiusura cassa
+    canAccessAllStores: true, // Vede tutti i negozi (reseller)
+    canAccessSettings: false, // NO impostazioni
+    canAccessBackup: false, // NO backup
+    canAccessFiscalClosure: true, // Può vedere chiusure fiscali
+    canSell: false, // NON può vendere
+  },
+  business_viewer: {
+    canAccessReports: true, // Può vedere report
+    canManageProducts: false, // NO modifica prodotti
+    canManageCustomers: false, // NO modifica clienti
+    canManagePromotions: false, // NO modifica promozioni
+    canManageOperators: false, // NO gestione operatori
+    canViewSensitiveData: true, // Può vedere dati
+    canProcessRefunds: false, // NO resi
+    canOpenCloseCashRegister: false, // NO apertura/chiusura cassa
+    canAccessAllStores: true, // Vede tutti i negozi del business
+    canAccessSettings: false, // NO impostazioni
+    canAccessBackup: false, // NO backup
+    canAccessFiscalClosure: true, // Può vedere chiusure fiscali
+    canSell: false, // NON può vendere
   },
 };
 
@@ -191,5 +225,15 @@ export const ROLE_LABELS = {
     label: 'Cassiere',
     description: 'Operazioni di cassa e vendita',
     color: 'gray',
+  },
+  reseller_viewer: {
+    label: 'Reseller (Visualizzazione)',
+    description: 'Accesso in sola lettura per verificare impostazioni e dati del negozio',
+    color: 'orange',
+  },
+  business_viewer: {
+    label: 'Business Admin (Visualizzazione)',
+    description: 'Accesso in sola lettura per verificare impostazioni e dati del negozio',
+    color: 'indigo',
   },
 };
