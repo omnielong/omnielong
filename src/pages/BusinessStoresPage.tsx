@@ -14,6 +14,7 @@ import {
   Mail,
   Calendar,
   Building2,
+  ShoppingCart,
 } from 'lucide-react';
 import type { Store } from '../types';
 import useStore from '../store/useStore';
@@ -22,7 +23,7 @@ import { mockStores } from '../utils/storeMockData';
 const BusinessStoresPage: React.FC = () => {
   const navigate = useNavigate();
   const { id: businessId } = useParams<{ id: string }>();
-  const { stores, setStores, businesses } = useStore();
+  const { stores, setStores, businesses, login, operators, setOperators } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
@@ -84,6 +85,44 @@ const BusinessStoresPage: React.FC = () => {
       generic: 'bg-gray-100 text-gray-800',
     };
     return colors[sector];
+  };
+
+  const handleAccessPOS = (store: Store) => {
+    // Cerca un operatore per questo negozio o crea un operatore demo
+    let operator = operators.find((op) => op.storeId === store.id && op.active);
+
+    if (!operator) {
+      // Crea un operatore demo per questo negozio
+      operator = {
+        id: `demo-op-${store.id}`,
+        storeId: store.id,
+        name: 'Demo Admin',
+        pin: '0000',
+        role: 'admin',
+        active: true,
+        permissions: {
+          canOpenCloseCashRegister: true,
+          canProcessSales: true,
+          canProcessRefunds: true,
+          canManageProducts: true,
+          canManagePromotions: true,
+          canAccessReports: true,
+          canManageOperators: true,
+          canAccessSettings: true,
+          canAccessFiscalClosure: true,
+          canAccessBackup: true,
+        },
+      };
+
+      // Aggiungi l'operatore alla lista
+      setOperators([...operators, operator]);
+    }
+
+    // Effettua il login come questo operatore
+    login(operator);
+
+    // Naviga alla pagina shift
+    navigate('/shift');
   };
 
   return (
@@ -247,13 +286,21 @@ const BusinessStoresPage: React.FC = () => {
               )}
 
               {/* Actions */}
-              <div className="flex gap-2 pt-4 border-gray-200">
+              <div className="flex gap-2 pt-4 border-t border-gray-200">
+                <button
+                  onClick={() => handleAccessPOS(store)}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
+                  disabled={!store.active}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Accedi al POS
+                </button>
                 <button
                   onClick={() => navigate(`/reseller/businesses/${businessId}/stores/${store.id}/edit`)}
                   className="flex-1 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
-                  Modifica Negozio
+                  Modifica
                 </button>
               </div>
             </div>
