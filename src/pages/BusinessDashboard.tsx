@@ -14,6 +14,7 @@ import {
   Calendar,
   LogOut,
   Users,
+  RefreshCw,
 } from 'lucide-react';
 import type { Store, BusinessStats } from '../types';
 import useStore from '../store/useStore';
@@ -26,13 +27,20 @@ const BusinessDashboard: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
 
-  // Inizializza lo store con i mock data se vuoto
+  // Inizializza lo store con i mock data - forza ricaricamento se diversi
   useEffect(() => {
-    if (!initialized && stores.length === 0) {
-      setStores(mockStores);
+    if (!initialized) {
+      if (stores.length === 0 || stores.length !== mockStores.length) {
+        setStores(mockStores);
+      }
       setInitialized(true);
     }
   }, [stores.length, setStores, initialized]);
+
+  const handleReloadData = () => {
+    setStores(mockStores);
+    alert('Dati negozi ricaricati con successo!');
+  };
 
   // Filtra gli store per il business corrente
   const businessStores = useMemo(() => {
@@ -127,6 +135,13 @@ const BusinessDashboard: React.FC = () => {
             >
               <Plus className="w-5 h-5 mr-2" />
               Nuovo Punto Vendita
+            </button>
+            <button
+              onClick={handleReloadData}
+              className="bg-white/20 hover:bg-white/30 text-white font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
+              title="Ricarica Dati"
+            >
+              <RefreshCw className="w-5 h-5" />
             </button>
             <button
               onClick={() => {
