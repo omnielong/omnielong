@@ -1,12 +1,5 @@
 import React, { useState } from 'react';
-import {
-  X,
-  CreditCard,
-  Banknote,
-  Smartphone,
-  Check,
-  Receipt as ReceiptIcon,
-} from 'lucide-react';
+import { X, CreditCard, Banknote, Smartphone, Check, Receipt as ReceiptIcon } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { PaymentMethod, Sale } from '../types';
 import Receipt from './Receipt';
@@ -116,31 +109,22 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
           <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
             <Check className="w-12 h-12 text-green-600" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-900 mb-2">
-            Vendita Completata!
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Transazione registrata con successo
-          </p>
+          <h2 className="text-2xl font-bold text-gray-900 mb-2">Vendita Completata!</h2>
+          <p className="text-gray-600 mb-6">Transazione registrata con successo</p>
           <div className="bg-gray-50 rounded-lg p-4 mb-4">
             <p className="text-sm text-gray-600 mb-1">Totale</p>
-            <p className="text-3xl font-bold text-green-600">
-              €{total.toFixed(2)}
-            </p>
+            <p className="text-3xl font-bold text-green-600">€{total.toFixed(2)}</p>
             {change > 0 && (
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <p className="text-sm text-gray-600 mb-1">Resto</p>
-                <p className="text-2xl font-bold text-blue-600">
-                  €{change.toFixed(2)}
-                </p>
+                <p className="text-2xl font-bold text-blue-600">€{change.toFixed(2)}</p>
               </div>
             )}
           </div>
           {activeLoyaltyCard && (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 text-sm mb-4">
               <p className="text-yellow-800">
-                <strong>{Math.floor(total / 10)} punti</strong> aggiunti alla
-                carta fedeltà
+                <strong>{Math.floor(total / 10)} punti</strong> aggiunti alla carta fedeltà
               </p>
             </div>
           )}
@@ -174,14 +158,9 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-center justify-between">
           <div>
             <h2 className="text-2xl font-bold text-gray-900">Pagamento</h2>
-            <p className="text-sm text-gray-600">
-              Completa la transazione
-            </p>
+            <p className="text-sm text-gray-600">Completa la transazione</p>
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -191,18 +170,14 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
           <div className="bg-gradient-to-br from-blue-50 to-blue-100 border border-blue-200 rounded-xl p-6">
             <div className="flex items-center justify-between mb-4">
               <span className="text-gray-700 font-semibold">Totale da pagare</span>
-              <span className="text-4xl font-bold text-blue-600">
-                €{total.toFixed(2)}
-              </span>
+              <span className="text-4xl font-bold text-blue-600">€{total.toFixed(2)}</span>
             </div>
 
             {paidAmount > 0 && (
               <div className="space-y-2 pt-4 border-t border-blue-300">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-700">Pagato</span>
-                  <span className="font-semibold text-green-600">
-                    €{paidAmount.toFixed(2)}
-                  </span>
+                  <span className="font-semibold text-green-600">€{paidAmount.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-700">Rimanente</span>
@@ -213,9 +188,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
                 {change > 0 && (
                   <div className="flex justify-between text-lg pt-2 border-t border-blue-300">
                     <span className="font-bold text-gray-900">Resto</span>
-                    <span className="font-bold text-blue-600">
-                      €{change.toFixed(2)}
-                    </span>
+                    <span className="font-bold text-blue-600">€{change.toFixed(2)}</span>
                   </div>
                 )}
               </div>
@@ -225,9 +198,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
           {/* Payments Made */}
           {payments.length > 0 && (
             <div className="space-y-2">
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Pagamenti Registrati
-              </h3>
+              <h3 className="font-semibold text-gray-900 mb-3">Pagamenti Registrati</h3>
               {payments.map((payment, index) => (
                 <div
                   key={index}
@@ -252,9 +223,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
-                    <span className="font-bold text-gray-900">
-                      €{payment.amount.toFixed(2)}
-                    </span>
+                    <span className="font-bold text-gray-900">€{payment.amount.toFixed(2)}</span>
                     <button
                       onClick={() => handleRemovePayment(index)}
                       className="text-red-500 hover:text-red-700 p-1 touch-manipulation"
@@ -270,9 +239,7 @@ const Checkout: React.FC<CheckoutProps> = ({ onClose }) => {
           {/* Payment Methods */}
           {remainingAmount > 0 && (
             <div>
-              <h3 className="font-semibold text-gray-900 mb-3">
-                Metodo di Pagamento
-              </h3>
+              <h3 className="font-semibold text-gray-900 mb-3">Metodo di Pagamento</h3>
 
               {!selectedPaymentType ? (
                 <div className="grid grid-cols-3 gap-3">

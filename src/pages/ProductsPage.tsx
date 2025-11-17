@@ -1,15 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  ArrowLeft,
-  Plus,
-  Search,
-  Edit2,
-  Trash2,
-  Package,
-  Save,
-  X,
-} from 'lucide-react';
+import { ArrowLeft, Plus, Search, Edit2, Trash2, Package, Save, X } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { Product, ProductVariant, FashionProduct } from '../types';
 
@@ -40,10 +31,11 @@ const ProductsPage: React.FC = () => {
 
   const [variants, setVariants] = useState<ProductVariant[]>([]);
 
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.barcode?.includes(searchQuery) ||
-    p.category.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredProducts = products.filter(
+    (p) =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.barcode?.includes(searchQuery) ||
+      p.category.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
   const handleOpenAdd = () => {
@@ -166,11 +158,7 @@ const ProductsPage: React.FC = () => {
   };
 
   const handleUpdateVariant = (index: number, field: keyof ProductVariant, value: any) => {
-    setVariants(
-      variants.map((v, i) =>
-        i === index ? { ...v, [field]: value } : v
-      )
-    );
+    setVariants(variants.map((v, i) => (i === index ? { ...v, [field]: value } : v)));
   };
 
   return (
@@ -211,9 +199,7 @@ const ProductsPage: React.FC = () => {
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
             <p className="text-blue-100 text-sm mb-1">Attivi</p>
-            <p className="text-3xl font-bold">
-              {products.filter(p => p.active).length}
-            </p>
+            <p className="text-3xl font-bold">{products.filter((p) => p.active).length}</p>
           </div>
         </div>
       </div>
@@ -276,9 +262,7 @@ const ProductsPage: React.FC = () => {
                           )}
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-gray-900">
-                            {product.name}
-                          </div>
+                          <div className="text-sm font-medium text-gray-900">{product.name}</div>
                           <div className="text-sm text-gray-500">
                             {product.description.substring(0, 40)}...
                           </div>
@@ -287,7 +271,8 @@ const ProductsPage: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-blue-100 text-blue-800">
-                        {categories.find((c) => c.id === product.category)?.name || product.category}
+                        {categories.find((c) => c.id === product.category)?.name ||
+                          product.category}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
@@ -299,8 +284,8 @@ const ProductsPage: React.FC = () => {
                           product.stock > 10
                             ? 'text-green-600'
                             : product.stock > 0
-                            ? 'text-orange-600'
-                            : 'text-red-600'
+                              ? 'text-orange-600'
+                              : 'text-red-600'
                         }`}
                       >
                         {product.stock}
@@ -428,9 +413,7 @@ const ProductsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Stock
-                  </label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Stock</label>
                   <input
                     type="number"
                     value={formData.stock}
@@ -441,9 +424,7 @@ const ProductsPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    IVA (%)
-                  </label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">IVA (%)</label>
                   <input
                     type="number"
                     value={formData.taxRate}
@@ -470,9 +451,7 @@ const ProductsPage: React.FC = () => {
               {/* Fashion Specific Fields */}
               {sectorConfig?.sector === 'fashion' && (
                 <div className="border-t border-gray-200 pt-6">
-                  <h3 className="text-lg font-bold text-gray-900 mb-4">
-                    Informazioni Moda
-                  </h3>
+                  <h3 className="text-lg font-bold text-gray-900 mb-4">Informazioni Moda</h3>
                   <div className="grid grid-cols-2 gap-4 mb-6">
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -493,7 +472,9 @@ const ProductsPage: React.FC = () => {
                       </label>
                       <select
                         value={formData.season}
-                        onChange={(e) => setFormData({ ...formData, season: e.target.value as 'PE' | 'AI' })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, season: e.target.value as 'PE' | 'AI' })
+                        }
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="PE">Primavera/Estate</option>
@@ -507,7 +488,9 @@ const ProductsPage: React.FC = () => {
                       </label>
                       <select
                         value={formData.gender}
-                        onChange={(e) => setFormData({ ...formData, gender: e.target.value as any })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, gender: e.target.value as any })
+                        }
                         className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       >
                         <option value="uomo">Uomo</option>
@@ -534,9 +517,7 @@ const ProductsPage: React.FC = () => {
                   {/* Variants */}
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <h4 className="text-md font-bold text-gray-900">
-                        Varianti (Taglia/Colore)
-                      </h4>
+                      <h4 className="text-md font-bold text-gray-900">Varianti (Taglia/Colore)</h4>
                       <button
                         onClick={handleAddVariant}
                         className="text-blue-600 hover:text-blue-700 font-semibold text-sm flex items-center"
@@ -581,7 +562,9 @@ const ProductsPage: React.FC = () => {
                           <input
                             type="number"
                             value={variant.stock}
-                            onChange={(e) => handleUpdateVariant(index, 'stock', parseInt(e.target.value) || 0)}
+                            onChange={(e) =>
+                              handleUpdateVariant(index, 'stock', parseInt(e.target.value) || 0)
+                            }
                             placeholder="Stock"
                             className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />
@@ -603,7 +586,13 @@ const ProductsPage: React.FC = () => {
                             type="number"
                             step="0.01"
                             value={variant.priceAdjustment || ''}
-                            onChange={(e) => handleUpdateVariant(index, 'priceAdjustment', parseFloat(e.target.value) || 0)}
+                            onChange={(e) =>
+                              handleUpdateVariant(
+                                index,
+                                'priceAdjustment',
+                                parseFloat(e.target.value) || 0
+                              )
+                            }
                             placeholder="± Prezzo"
                             className="px-3 py-2 bg-white border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                           />

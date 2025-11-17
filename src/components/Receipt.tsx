@@ -44,10 +44,7 @@ const Receipt: React.FC<ReceiptProps> = ({ sale, onClose }) => {
               <Download className="w-4 h-4 mr-2" />
               PDF
             </button>
-            <button
-              onClick={onClose}
-              className="p-2 hover:bg-gray-100 rounded-lg"
-            >
+            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg">
               <X className="w-6 h-6" />
             </button>
           </div>
@@ -114,10 +111,10 @@ const Receipt: React.FC<ReceiptProps> = ({ sale, onClose }) => {
                           Sconto: {item.discount.description}
                         </td>
                         <td className="text-right text-xs text-green-600">
-                          -€{(
-                            item.discount.type === 'percentage'
-                              ? (item.subtotal * item.discount.value) / 100
-                              : item.discount.value
+                          -€
+                          {(item.discount.type === 'percentage'
+                            ? (item.subtotal * item.discount.value) / 100
+                            : item.discount.value
                           ).toFixed(2)}
                         </td>
                       </tr>
@@ -145,9 +142,7 @@ const Receipt: React.FC<ReceiptProps> = ({ sale, onClose }) => {
                   <div key={index} className="flex justify-between text-xs text-gray-600 pl-4">
                     <span>{discount.description}</span>
                     <span>
-                      {discount.type === 'percentage'
-                        ? `${discount.value}%`
-                        : `€${discount.value}`}
+                      {discount.type === 'percentage' ? `${discount.value}%` : `€${discount.value}`}
                     </span>
                   </div>
                 ))}
@@ -217,9 +212,7 @@ const Receipt: React.FC<ReceiptProps> = ({ sale, onClose }) => {
             <p className="font-bold mb-2">Grazie per il tuo acquisto!</p>
             <p>Conservare lo scontrino per eventuali resi</p>
             <p className="mt-2">Documento non fiscale</p>
-            <p className="mt-4">
-              {format(new Date(), 'dd/MM/yyyy HH:mm:ss', { locale: it })}
-            </p>
+            <p className="mt-4">{format(new Date(), 'dd/MM/yyyy HH:mm:ss', { locale: it })}</p>
           </div>
         </div>
       </div>
@@ -230,7 +223,9 @@ const Receipt: React.FC<ReceiptProps> = ({ sale, onClose }) => {
           body * {
             visibility: hidden;
           }
-          ${receiptRef.current ? `
+          ${
+            receiptRef.current
+              ? `
             [ref="receiptRef"], [ref="receiptRef"] * {
               visibility: visible;
             }
@@ -240,7 +235,9 @@ const Receipt: React.FC<ReceiptProps> = ({ sale, onClose }) => {
               top: 0;
               width: 100%;
             }
-          ` : ''}
+          `
+              : ''
+          }
         }
       `}</style>
     </div>

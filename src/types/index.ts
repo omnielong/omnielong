@@ -44,6 +44,7 @@ export interface Business {
   // Credenziali admin business
   adminEmail: string;
   adminName: string;
+  password?: string; // Password per login (opzionale, se non specificata usa quella di default)
   // Limiti piano
   maxStores: number; // Max punti vendita
   maxOperatorsPerStore: number; // Max operatori per store
@@ -71,7 +72,8 @@ export interface Store {
   createdAt: Date;
   // Orari di apertura
   openingHours?: {
-    [key: string]: { // 'monday', 'tuesday', etc.
+    [key: string]: {
+      // 'monday', 'tuesday', etc.
       open: string; // "09:00"
       close: string; // "20:00"
       closed: boolean;
@@ -89,31 +91,33 @@ export interface Operator {
   businessId: string; // A quale business appartiene
   name: string;
   email: string;
-  role: 'business_admin' | 'store_admin' | 'manager' | 'cashier';
+  // Permettiamo anche varianti legacy/nomi usati in codice (pos_operator, pos_manager, admin)
+  role:
+    | 'business_admin'
+    | 'store_admin'
+    | 'manager'
+    | 'cashier'
+    | 'pos_operator'
+    | 'pos_manager'
+    | 'admin';
   pin: string;
   avatar?: string;
   active: boolean;
   createdAt: Date;
-  // Permessi specifici
-  permissions?: {
-    canAccessReports: boolean;
-    canManageProducts: boolean;
-    canManageCustomers: boolean;
-    canManagePromotions: boolean;
-    canManageOperators: boolean;
-    canViewSensitiveData: boolean;
-    canProcessRefunds: boolean;
-    canOpenCloseCashRegister: boolean;
-  };
+  // Permessi specifici - usare una mappa flessibile per supportare nomi diversi
+  permissions?: Record<string, boolean>;
 }
 
 // Ruoli sistema
 export type SystemRole =
-  | 'reseller'         // Rivenditore (super admin)
-  | 'business_admin'   // Admin del business (gestisce tutti i punti vendita)
-  | 'store_admin'      // Admin del punto vendita (può tutto nel suo store)
-  | 'manager'          // Manager (gestione avanzata)
-  | 'cashier';         // Cassiere (solo vendite)
+  | 'reseller' // Rivenditore (super admin)
+  | 'business_admin' // Admin del business (gestisce tutti i punti vendita)
+  | 'store_admin' // Admin del punto vendita (può tutto nel suo store)
+  | 'manager' // Manager (gestione avanzata)
+  | 'cashier' // Cassiere (solo vendite)
+  | 'pos_operator'
+  | 'pos_manager'
+  | 'admin';
 
 // Piano abbonamento
 export interface SubscriptionPlan {
@@ -191,16 +195,16 @@ export interface CartItem {
 
 // Tipi di promozione avanzati
 export type DiscountType =
-  | 'percentage'        // Sconto percentuale semplice
-  | 'fixed'             // Sconto fisso in euro
-  | 'coupon'            // Codice coupon
-  | 'buy_x_get_y'       // 3x2, compra N prendi M gratis
-  | 'bundle'            // Bundle di prodotti
-  | 'progressive'       // Sconti progressivi per fasce di spesa
-  | 'second_item'       // Seconda unità scontata
-  | 'category'          // Sconto per categoria
-  | 'happy_hour'        // Sconto per fascia oraria
-  | 'quantity';         // Sconto per quantità minima
+  | 'percentage' // Sconto percentuale semplice
+  | 'fixed' // Sconto fisso in euro
+  | 'coupon' // Codice coupon
+  | 'buy_x_get_y' // 3x2, compra N prendi M gratis
+  | 'bundle' // Bundle di prodotti
+  | 'progressive' // Sconti progressivi per fasce di spesa
+  | 'second_item' // Seconda unità scontata
+  | 'category' // Sconto per categoria
+  | 'happy_hour' // Sconto per fascia oraria
+  | 'quantity'; // Sconto per quantità minima
 
 // Sconto
 export interface Discount {
@@ -224,51 +228,51 @@ export interface Discount {
   // ===== NUOVI CAMPI PER PROMOZIONI AVANZATE =====
 
   // 3x2, NxM - compra N prendi M gratis
-  buyQuantity?: number;      // Es. compra 3
-  getQuantity?: number;      // Es. prendi 1 gratis (totale 4 prodotti)
+  buyQuantity?: number; // Es. compra 3
+  getQuantity?: number; // Es. prendi 1 gratis (totale 4 prodotti)
 
   // Bundle - pacchetti di prodotti
-  bundleProductIds?: string[];  // Lista IDs prodotti nel bundle
-  bundlePrice?: number;         // Prezzo speciale del bundle
+  bundleProductIds?: string[]; // Lista IDs prodotti nel bundle
+  bundlePrice?: number; // Prezzo speciale del bundle
 
   // Sconti progressivi per fasce di spesa
   progressiveTiers?: Array<{
-    minSpend: number;      // Soglia minima di spesa
-    discount: number;      // Sconto (percentuale o fisso a seconda del type)
+    minSpend: number; // Soglia minima di spesa
+    discount: number; // Sconto (percentuale o fisso a seconda del type)
   }>;
 
   // Seconda unità scontata
-  secondItemDiscount?: number;  // Percentuale sconto sulla seconda unità
+  secondItemDiscount?: number; // Percentuale sconto sulla seconda unità
 
   // Sconto per categoria
-  categoryIds?: string[];       // IDs categorie a cui si applica
+  categoryIds?: string[]; // IDs categorie a cui si applica
 
   // Happy Hour - fasce orarie
   timeRanges?: Array<{
-    startTime: string;    // Es. "17:00"
-    endTime: string;      // Es. "19:00"
+    startTime: string; // Es. "17:00"
+    endTime: string; // Es. "19:00"
   }>;
 
   // Giorni della settimana (0=Domenica, 1=Lunedì, ..., 6=Sabato)
-  validDays?: number[];   // Es. [1, 2, 3] = Lun, Mar, Mer
+  validDays?: number[]; // Es. [1, 2, 3] = Lun, Mar, Mer
 
   // Quantità minima richiesta
-  minQuantity?: number;   // Es. compra almeno 3 articoli
+  minQuantity?: number; // Es. compra almeno 3 articoli
 
   // Applicazione specifica
-  productIds?: string[];  // IDs prodotti specifici (se vuoto = tutti)
+  productIds?: string[]; // IDs prodotti specifici (se vuoto = tutti)
 
   // Esclusioni
-  excludeProductIds?: string[];     // Prodotti esclusi
-  excludeCategoryIds?: string[];    // Categorie escluse
+  excludeProductIds?: string[]; // Prodotti esclusi
+  excludeCategoryIds?: string[]; // Categorie escluse
 
   // Solo per clienti con carta fedeltà
   loyaltyOnly?: boolean;
   minLoyaltyLevel?: 'bronze' | 'silver' | 'gold' | 'platinum';
 
   // Combinabilità con altre promozioni
-  combinable?: boolean;   // Default false = non combinabile
-  priority?: number;      // Priorità applicazione (più alto = prima)
+  combinable?: boolean; // Default false = non combinabile
+  priority?: number; // Priorità applicazione (più alto = prima)
 }
 
 // Carta fedeltà
