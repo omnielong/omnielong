@@ -37,12 +37,15 @@ const BarQuickButtons: React.FC = () => {
   }
 
   // Raggruppa pulsanti per categoria per layout migliore
-  const buttonsByCategory = quickButtons.reduce((acc, btn) => {
-    const cat = btn.category || 'default';
-    if (!acc[cat]) acc[cat] = [];
-    acc[cat].push(btn);
-    return acc;
-  }, {} as Record<string, typeof quickButtons>);
+  const buttonsByCategory = quickButtons.reduce(
+    (acc, btn) => {
+      const cat = btn.category || 'default';
+      if (!acc[cat]) acc[cat] = [];
+      acc[cat].push(btn);
+      return acc;
+    },
+    {} as Record<string, typeof quickButtons>
+  );
 
   return (
     <div className="p-4 space-y-4 h-full overflow-y-auto">
@@ -72,12 +75,8 @@ const BarQuickButtons: React.FC = () => {
                 onClick={() => handleQuickAdd(button.productId)}
                 className={`${button.color} text-white font-bold rounded-xl p-4 h-24 flex flex-col items-center justify-center shadow-lg hover:shadow-xl transform hover:scale-105 transition-all active:scale-95 touch-manipulation`}
               >
-                <span className="text-sm text-center leading-tight mb-1">
-                  {button.label}
-                </span>
-                <span className="text-lg font-bold">
-                  €{product.price.toFixed(2)}
-                </span>
+                <span className="text-sm text-center leading-tight mb-1">{button.label}</span>
+                <span className="text-lg font-bold">€{product.price.toFixed(2)}</span>
               </button>
             );
           })}
@@ -106,9 +105,7 @@ const BarQuickButtons: React.FC = () => {
                     onClick={() => handleQuickAdd(button.productId)}
                     className="bg-gray-50 hover:bg-gray-100 border border-gray-300 rounded-lg p-2 text-center transition-colors touch-manipulation active:scale-95"
                   >
-                    <p className="text-xs font-semibold text-gray-900 truncate">
-                      {button.label}
-                    </p>
+                    <p className="text-xs font-semibold text-gray-900 truncate">{button.label}</p>
                     <p className="text-sm font-bold text-blue-600 mt-1">
                       €{product.price.toFixed(2)}
                     </p>
@@ -123,8 +120,8 @@ const BarQuickButtons: React.FC = () => {
       {/* Info Box */}
       <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mt-4">
         <p className="text-xs text-blue-800">
-          💡 <strong>Suggerimento:</strong> Tap veloce sui pulsanti colorati per vendita express.
-          I pulsanti sono personalizzabili in base alle tue esigenze.
+          💡 <strong>Suggerimento:</strong> Tap veloce sui pulsanti colorati per vendita express. I
+          pulsanti sono personalizzabili in base alle tue esigenze.
         </p>
       </div>
     </div>

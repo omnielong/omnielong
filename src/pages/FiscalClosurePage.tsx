@@ -1,5 +1,13 @@
 import React, { useState, useMemo } from 'react';
-import { ArrowLeft, FileText, Download, CheckCircle, TrendingUp, CreditCard, Package } from 'lucide-react';
+import {
+  ArrowLeft,
+  FileText,
+  Download,
+  CheckCircle,
+  TrendingUp,
+  CreditCard,
+  Package,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format, startOfDay, endOfDay, isToday } from 'date-fns';
 import { it } from 'date-fns/locale';
@@ -103,9 +111,7 @@ const FiscalClosurePage: React.FC = () => {
   }, [sales, returns]);
 
   // Check if today already has a closure
-  const todayHasClosure = fiscalClosures.some((closure) =>
-    isToday(new Date(closure.date))
-  );
+  const todayHasClosure = fiscalClosures.some((closure) => isToday(new Date(closure.date)));
 
   const handleCreateClosure = () => {
     if (todayHasClosure) {
@@ -401,9 +407,7 @@ const FiscalClosurePage: React.FC = () => {
                 <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-4">
                   <CheckCircle className="w-12 h-12 text-green-600" />
                 </div>
-                <h2 className="text-2xl font-bold text-gray-900 mb-2">
-                  Chiusura Completata!
-                </h2>
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Chiusura Completata!</h2>
                 <p className="text-gray-600">La chiusura fiscale è stata registrata con successo</p>
               </div>
             ) : (
@@ -423,12 +427,18 @@ const FiscalClosurePage: React.FC = () => {
                       <div>
                         <p className="text-sm text-gray-600">Vendite</p>
                         <p className="text-2xl font-bold text-gray-900">{todayStats.salesCount}</p>
-                        <p className="text-sm text-green-600">€{todayStats.salesAmount.toFixed(2)}</p>
+                        <p className="text-sm text-green-600">
+                          €{todayStats.salesAmount.toFixed(2)}
+                        </p>
                       </div>
                       <div>
                         <p className="text-sm text-gray-600">Resi</p>
-                        <p className="text-2xl font-bold text-gray-900">{todayStats.returnsCount}</p>
-                        <p className="text-sm text-red-600">€{todayStats.returnsAmount.toFixed(2)}</p>
+                        <p className="text-2xl font-bold text-gray-900">
+                          {todayStats.returnsCount}
+                        </p>
+                        <p className="text-sm text-red-600">
+                          €{todayStats.returnsAmount.toFixed(2)}
+                        </p>
                       </div>
                       <div className="col-span-2 pt-4 border-t-2 border-blue-300">
                         <p className="text-sm text-gray-600">Incasso Netto</p>
@@ -456,8 +466,8 @@ const FiscalClosurePage: React.FC = () => {
                   {/* Warning */}
                   <div className="bg-yellow-50 border-2 border-yellow-300 rounded-lg p-4">
                     <p className="text-sm text-yellow-800">
-                      <strong>Attenzione:</strong> La chiusura fiscale è un'operazione irreversibile.
-                      Verifica attentamente i dati prima di procedere.
+                      <strong>Attenzione:</strong> La chiusura fiscale è un'operazione
+                      irreversibile. Verifica attentamente i dati prima di procedere.
                     </p>
                   </div>
 

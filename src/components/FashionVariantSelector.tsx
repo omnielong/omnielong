@@ -28,22 +28,26 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
 
   // Filtra colori disponibili per la taglia selezionata
   const availableColors = selectedSize
-    ? [...new Set(
-        product.variants
-          ?.filter((v) => v.size === selectedSize)
-          .map((v) => v.color)
-          .filter(Boolean)
-      )]
+    ? [
+        ...new Set(
+          product.variants
+            ?.filter((v) => v.size === selectedSize)
+            .map((v) => v.color)
+            .filter(Boolean)
+        ),
+      ]
     : colors;
 
   // Filtra taglie disponibili per il colore selezionato
   const availableSizes = selectedColor
-    ? [...new Set(
-        product.variants
-          ?.filter((v) => v.color === selectedColor)
-          .map((v) => v.size)
-          .filter(Boolean)
-      )]
+    ? [
+        ...new Set(
+          product.variants
+            ?.filter((v) => v.color === selectedColor)
+            .map((v) => v.size)
+            .filter(Boolean)
+        ),
+      ]
     : sizes;
 
   const handleAddToCart = () => {
@@ -71,9 +75,7 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-6 flex items-start justify-between">
           <div className="flex-1">
-            <h2 className="text-2xl font-bold text-gray-900 mb-1">
-              {product.name}
-            </h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-1">{product.name}</h2>
             <p className="text-gray-600">{product.description}</p>
             {product.brand && (
               <p className="text-sm text-gray-500 mt-1">
@@ -81,10 +83,7 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
               </p>
             )}
           </div>
-          <button
-            onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg ml-4"
-          >
+          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg ml-4">
             <X className="w-6 h-6" />
           </button>
         </div>
@@ -95,13 +94,11 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
             <div className="flex items-center justify-between">
               <div>
                 <p className="text-sm text-gray-700 mb-1">Prezzo base</p>
-                <p className="text-4xl font-bold text-blue-600">
-                  €{finalPrice.toFixed(2)}
-                </p>
+                <p className="text-4xl font-bold text-blue-600">€{finalPrice.toFixed(2)}</p>
                 {selectedVariant?.priceAdjustment && (
                   <p className="text-sm text-gray-600 mt-1">
-                    {selectedVariant.priceAdjustment > 0 ? '+' : ''}
-                    €{selectedVariant.priceAdjustment.toFixed(2)} rispetto al prezzo base
+                    {selectedVariant.priceAdjustment > 0 ? '+' : ''}€
+                    {selectedVariant.priceAdjustment.toFixed(2)} rispetto al prezzo base
                   </p>
                 )}
               </div>
@@ -113,8 +110,8 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
                       selectedVariant.stock > 10
                         ? 'text-green-600'
                         : selectedVariant.stock > 0
-                        ? 'text-orange-600'
-                        : 'text-red-600'
+                          ? 'text-orange-600'
+                          : 'text-red-600'
                     }`}
                   >
                     {selectedVariant.stock} pz
@@ -127,9 +124,7 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
           {/* Size Selection */}
           {sizes.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Seleziona Taglia
-              </h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Seleziona Taglia</h3>
               <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
                 {availableSizes.map((size) => {
                   const isAvailable = product.variants?.some(
@@ -147,8 +142,8 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
                         selectedSize === size
                           ? 'bg-blue-600 text-white ring-2 ring-blue-600 ring-offset-2'
                           : isAvailable
-                          ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                          : 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
+                            ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                            : 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
                       }`}
                     >
                       {size}
@@ -165,16 +160,12 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
           {/* Color Selection */}
           {colors.length > 0 && (
             <div className="mb-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-3">
-                Seleziona Colore
-              </h3>
+              <h3 className="text-lg font-bold text-gray-900 mb-3">Seleziona Colore</h3>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {availableColors.map((color) => {
                   const isAvailable = product.variants?.some(
                     (v) =>
-                      v.color === color &&
-                      (!selectedSize || v.size === selectedSize) &&
-                      v.stock > 0
+                      v.color === color && (!selectedSize || v.size === selectedSize) && v.stock > 0
                   );
                   return (
                     <button
@@ -185,8 +176,8 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
                         selectedColor === color
                           ? 'bg-blue-600 text-white ring-2 ring-blue-600 ring-offset-2'
                           : isAvailable
-                          ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
-                          : 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
+                            ? 'bg-gray-100 text-gray-900 hover:bg-gray-200'
+                            : 'bg-gray-50 text-gray-400 cursor-not-allowed opacity-50'
                       }`}
                     >
                       {color}
@@ -205,9 +196,7 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-green-700 font-semibold mb-1">
-                    Variante selezionata
-                  </p>
+                  <p className="text-sm text-green-700 font-semibold mb-1">Variante selezionata</p>
                   <p className="text-gray-900">
                     {selectedVariant.size && <span>Taglia {selectedVariant.size}</span>}
                     {selectedVariant.size && selectedVariant.color && <span> • </span>}
@@ -218,9 +207,7 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
                   )}
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold text-gray-900">
-                    €{finalPrice.toFixed(2)}
-                  </p>
+                  <p className="text-2xl font-bold text-gray-900">€{finalPrice.toFixed(2)}</p>
                 </div>
               </div>
             </div>
@@ -245,11 +232,7 @@ const FashionVariantSelector: React.FC<FashionVariantSelectorProps> = ({
                 className="w-20 text-center text-2xl font-bold py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
-                onClick={() =>
-                  setQuantity(
-                    Math.min(selectedVariant?.stock || 999, quantity + 1)
-                  )
-                }
+                onClick={() => setQuantity(Math.min(selectedVariant?.stock || 999, quantity + 1))}
                 className="w-12 h-12 bg-gray-100 hover:bg-gray-200 rounded-lg font-bold text-xl transition-colors touch-manipulation"
               >
                 +

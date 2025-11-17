@@ -68,7 +68,7 @@ const OperatorsPage: React.FC = () => {
       return;
     }
     if (!formData.email.trim() || !formData.email.includes('@')) {
-      alert('Inserisci un\'email valida');
+      alert("Inserisci un'email valida");
       return;
     }
     if (!formData.pin.trim() || formData.pin.length < 4) {
@@ -186,14 +186,15 @@ const OperatorsPage: React.FC = () => {
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
             <p className="text-purple-100 text-sm mb-1">Attivi</p>
-            <p className="text-3xl font-bold">
-              {operators.filter((op) => op.active).length}
-            </p>
+            <p className="text-3xl font-bold">{operators.filter((op) => op.active).length}</p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
             <p className="text-purple-100 text-sm mb-1">Amministratori</p>
             <p className="text-3xl font-bold">
-              {operators.filter((op) => op.role === 'store_admin' || op.role === 'business_admin').length}
+              {
+                operators.filter((op) => op.role === 'store_admin' || op.role === 'business_admin')
+                  .length
+              }
             </p>
           </div>
         </div>
@@ -215,14 +216,14 @@ const OperatorsPage: React.FC = () => {
                   operator.role === 'store_admin' || operator.role === 'business_admin'
                     ? 'bg-gradient-to-r from-purple-500 to-purple-600'
                     : operator.role === 'manager'
-                    ? 'bg-gradient-to-r from-blue-500 to-blue-600'
-                    : 'bg-gradient-to-r from-green-500 to-green-600'
+                      ? 'bg-gradient-to-r from-blue-500 to-blue-600'
+                      : 'bg-gradient-to-r from-green-500 to-green-600'
                 }`}
               >
                 <div className="flex items-center justify-between text-white">
                   <div className="flex items-center space-x-3">
                     <div className="w-12 h-12 bg-white/30 rounded-full flex items-center justify-center">
-                      {(operator.role === 'store_admin' || operator.role === 'business_admin') ? (
+                      {operator.role === 'store_admin' || operator.role === 'business_admin' ? (
                         <Shield className="w-6 h-6" />
                       ) : (
                         <User className="w-6 h-6" />
@@ -262,9 +263,7 @@ const OperatorsPage: React.FC = () => {
                     <span className="font-semibold mr-2">Stato:</span>
                     <span
                       className={`inline-flex items-center px-2 py-1 rounded text-xs font-semibold ${
-                        operator.active
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-red-100 text-red-800'
+                        operator.active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
                       }`}
                     >
                       {operator.active ? (
@@ -315,9 +314,7 @@ const OperatorsPage: React.FC = () => {
         {operators.length === 0 && (
           <div className="bg-white rounded-xl shadow-lg p-12 text-center">
             <User className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              Nessun Operatore
-            </h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">Nessun Operatore</h3>
             <p className="text-gray-600 mb-6">
               Inizia creando il primo operatore per il tuo sistema
             </p>
@@ -368,9 +365,7 @@ const OperatorsPage: React.FC = () => {
 
               {/* Email */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email *
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                 <input
                   type="email"
                   value={formData.email}
@@ -383,15 +378,17 @@ const OperatorsPage: React.FC = () => {
 
               {/* Role */}
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Ruolo *
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Ruolo *</label>
                 <select
                   value={formData.role}
                   onChange={(e) =>
                     setFormData({
                       ...formData,
-                      role: e.target.value as 'business_admin' | 'store_admin' | 'cashier' | 'manager',
+                      role: e.target.value as
+                        | 'business_admin'
+                        | 'store_admin'
+                        | 'cashier'
+                        | 'manager',
                     })
                   }
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"

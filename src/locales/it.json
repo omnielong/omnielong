@@ -1,0 +1,91 @@
+{
+  "common": {
+    "save": "Salva",
+    "cancel": "Annulla",
+    "delete": "Elimina",
+    "edit": "Modifica",
+    "add": "Aggiungi",
+    "search": "Cerca",
+    "back": "Indietro",
+    "confirm": "Conferma",
+    "close": "Chiudi",
+    "loading": "Caricamento...",
+    "error": "Errore",
+    "success": "Successo",
+    "warning": "Attenzione",
+    "yes": "Sì",
+    "no": "No"
+  },
+  "login": {
+    "title": "Accesso",
+    "pin": "PIN",
+    "enterPin": "Inserisci PIN",
+    "login": "Accedi",
+    "invalidPin": "PIN non valido",
+    "welcome": "Benvenuto"
+  },
+  "pos": {
+    "title": "Punto Vendita",
+    "cart": "Carrello",
+    "total": "Totale",
+    "subtotal": "Subtotale",
+    "discount": "Sconto",
+    "checkout": "Cassa",
+    "addToCart": "Aggiungi al carrello",
+    "removeFromCart": "Rimuovi dal carrello",
+    "quantity": "Quantità",
+    "price": "Prezzo",
+    "products": "Prodotti",
+    "categories": "Categorie",
+    "payment": "Pagamento",
+    "cash": "Contanti",
+    "card": "Carta",
+    "digital": "Digitale"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "sales": "Vendite",
+    "revenue": "Ricavi",
+    "transactions": "Transazioni",
+    "customers": "Clienti",
+    "todaySales": "Vendite Oggi",
+    "totalRevenue": "Ricavi Totali",
+    "averageTransaction": "Transazione Media",
+    "topProducts": "Prodotti Più Venduti"
+  },
+  "operators": {
+    "title": "Operatori",
+    "addOperator": "Aggiungi Operatore",
+    "editOperator": "Modifica Operatore",
+    "name": "Nome",
+    "role": "Ruolo",
+    "pin": "PIN",
+    "active": "Attivo",
+    "inactive": "Inattivo"
+  },
+  "settings": {
+    "title": "Impostazioni",
+    "general": "Generali",
+    "api": "API",
+    "security": "Sicurezza",
+    "language": "Lingua",
+    "theme": "Tema",
+    "backup": "Backup",
+    "restore": "Ripristina"
+  },
+  "errors": {
+    "generic": "Si è verificato un errore",
+    "notFound": "Non trovato",
+    "unauthorized": "Non autorizzato",
+    "networkError": "Errore di rete",
+    "validationError": "Errore di validazione"
+  },
+  "validation": {
+    "required": "Campo obbligatorio",
+    "minLength": "Lunghezza minima: {{min}} caratteri",
+    "maxLength": "Lunghezza massima: {{max}} caratteri",
+    "invalidEmail": "Email non valida",
+    "invalidPhone": "Numero di telefono non valido",
+    "invalidFormat": "Formato non valido"
+  }
+}

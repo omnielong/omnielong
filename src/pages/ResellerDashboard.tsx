@@ -24,7 +24,9 @@ const ResellerDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { businesses, setBusinesses, logoutUser } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterPlan, setFilterPlan] = useState<'all' | 'free' | 'basic' | 'professional' | 'enterprise'>('all');
+  const [filterPlan, setFilterPlan] = useState<
+    'all' | 'free' | 'basic' | 'professional' | 'enterprise'
+  >('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
 
@@ -39,12 +41,12 @@ const ResellerDashboard: React.FC = () => {
   const stats: ResellerStats = useMemo(() => {
     return {
       totalBusinesses: businesses.length,
-      activeBusinesses: businesses.filter(b => b.active).length,
+      activeBusinesses: businesses.filter((b) => b.active).length,
       totalStores: businesses.reduce((sum, b) => sum + (b.maxStores > 0 ? 1 : 0), 0), // Mock
-      totalRevenue: 125340.50,
-      monthlyRecurringRevenue: 8450.00,
+      totalRevenue: 125340.5,
+      monthlyRecurringRevenue: 8450.0,
       totalTransactions: 15234,
-      avgTransactionValue: 45.80,
+      avgTransactionValue: 45.8,
     };
   }, [businesses]);
 
@@ -208,7 +210,8 @@ const ResellerDashboard: React.FC = () => {
             const daysUntilExpiry = endDate
               ? Math.ceil((endDate.getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24))
               : null;
-            const isExpiringSoon = daysUntilExpiry !== null && daysUntilExpiry <= 30 && daysUntilExpiry >= 0;
+            const isExpiringSoon =
+              daysUntilExpiry !== null && daysUntilExpiry <= 30 && daysUntilExpiry >= 0;
             const isExpired = daysUntilExpiry !== null && daysUntilExpiry < 0;
 
             return (
@@ -297,7 +300,9 @@ const ResellerDashboard: React.FC = () => {
                   </div>
                   <div className="bg-purple-50 rounded-lg p-3 text-center">
                     <p className="text-xs text-purple-600 mb-1">Max Operatori</p>
-                    <p className="text-lg font-bold text-purple-900">{business.maxOperatorsPerStore}</p>
+                    <p className="text-lg font-bold text-purple-900">
+                      {business.maxOperatorsPerStore}
+                    </p>
                   </div>
                   <div className="bg-blue-50 rounded-lg p-3 text-center">
                     <p className="text-xs text-blue-600 mb-1">Pagamento</p>
