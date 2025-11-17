@@ -9,16 +9,12 @@ interface ProductGridProps {
   searchQuery: string;
 }
 
-const ProductGrid: React.FC<ProductGridProps> = ({
-  categoryFilter,
-  searchQuery,
-}) => {
+const ProductGrid: React.FC<ProductGridProps> = ({ categoryFilter, searchQuery }) => {
   const { products, addToCart, sectorConfig } = useStore();
   const [selectedFashionProduct, setSelectedFashionProduct] = useState<FashionProduct | null>(null);
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory =
-      !categoryFilter || product.category === categoryFilter;
+    const matchesCategory = !categoryFilter || product.category === categoryFilter;
     const matchesSearch =
       !searchQuery ||
       product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -108,9 +104,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({
 
               {/* Info settore specifiche */}
               {sectorConfig?.sector === 'fashion' && fashionProduct.brand && (
-                <p className="text-xs text-gray-500 mb-1">
-                  {fashionProduct.brand}
-                </p>
+                <p className="text-xs text-gray-500 mb-1">{fashionProduct.brand}</p>
               )}
 
               <div className="flex items-center justify-between">
@@ -118,21 +112,21 @@ const ProductGrid: React.FC<ProductGridProps> = ({
                   €{product.price.toFixed(2)}
                   {hasVariants && <span className="text-xs text-gray-500 ml-1">+</span>}
                 </span>
-                <span className={`text-xs font-semibold px-2 py-1 rounded ${
-                  product.stock > 10
-                    ? 'bg-green-100 text-green-700'
-                    : product.stock > 0
-                    ? 'bg-orange-100 text-orange-700'
-                    : 'bg-red-100 text-red-700'
-                }`}>
+                <span
+                  className={`text-xs font-semibold px-2 py-1 rounded ${
+                    product.stock > 10
+                      ? 'bg-green-100 text-green-700'
+                      : product.stock > 0
+                        ? 'bg-orange-100 text-orange-700'
+                        : 'bg-red-100 text-red-700'
+                  }`}
+                >
                   {product.stock}
                 </span>
               </div>
 
               {hasVariants && (
-                <p className="text-xs text-purple-600 font-semibold mt-2">
-                  Tap per varianti
-                </p>
+                <p className="text-xs text-purple-600 font-semibold mt-2">Tap per varianti</p>
               )}
             </button>
           );

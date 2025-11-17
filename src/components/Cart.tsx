@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  ShoppingCart,
-  Trash2,
-  Plus,
-  Minus,
-  Tag,
-  CreditCard,
-  Percent,
-} from 'lucide-react';
+import { ShoppingCart, Trash2, Plus, Minus, Tag, CreditCard, Percent } from 'lucide-react';
 import useStore from '../store/useStore';
 import CustomerSearch from './CustomerSearch';
 import { mockCustomers } from '../utils/customerMockData';
@@ -88,9 +80,7 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
         <div className="flex-1 flex flex-col items-center justify-center text-gray-400 p-6">
           <ShoppingCart className="w-16 h-16 mb-4" />
           <p className="text-lg font-semibold">Carrello vuoto</p>
-          <p className="text-sm text-center">
-            Aggiungi prodotti per iniziare una vendita
-          </p>
+          <p className="text-sm text-center">Aggiungi prodotti per iniziare una vendita</p>
         </div>
       </div>
     );
@@ -120,18 +110,11 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
       {/* Cart Items */}
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
         {cart.map((item) => (
-          <div
-            key={item.product.id}
-            className="bg-gray-50 rounded-lg p-4 border border-gray-200"
-          >
+          <div key={item.product.id} className="bg-gray-50 rounded-lg p-4 border border-gray-200">
             <div className="flex items-start justify-between mb-3">
               <div className="flex-1">
-                <h3 className="font-semibold text-gray-900 text-sm mb-1">
-                  {item.product.name}
-                </h3>
-                <p className="text-sm text-gray-600">
-                  €{item.product.price.toFixed(2)} cad.
-                </p>
+                <h3 className="font-semibold text-gray-900 text-sm mb-1">{item.product.name}</h3>
+                <p className="text-sm text-gray-600">€{item.product.price.toFixed(2)} cad.</p>
               </div>
               <button
                 onClick={() => removeFromCart(item.product.id)}
@@ -144,20 +127,14 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2 bg-white rounded-lg border border-gray-300">
                 <button
-                  onClick={() =>
-                    updateQuantity(item.product.id, item.quantity - 1)
-                  }
+                  onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
                   className="p-2 hover:bg-gray-100 rounded-l-lg touch-manipulation"
                 >
                   <Minus className="w-4 h-4" />
                 </button>
-                <span className="w-12 text-center font-semibold">
-                  {item.quantity}
-                </span>
+                <span className="w-12 text-center font-semibold">{item.quantity}</span>
                 <button
-                  onClick={() =>
-                    updateQuantity(item.product.id, item.quantity + 1)
-                  }
+                  onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
                   className="p-2 hover:bg-gray-100 rounded-r-lg touch-manipulation"
                 >
                   <Plus className="w-4 h-4" />
@@ -166,9 +143,7 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
 
               <div className="text-right">
                 {item.discount && (
-                  <p className="text-xs text-green-600 line-through">
-                    €{item.subtotal.toFixed(2)}
-                  </p>
+                  <p className="text-xs text-green-600 line-through">€{item.subtotal.toFixed(2)}</p>
                 )}
                 <p className="text-lg font-bold text-gray-900">
                   €
@@ -218,8 +193,7 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
                     {activeLoyaltyCard.customerName}
                   </p>
                   <p className="text-xs text-yellow-700">
-                    {activeLoyaltyCard.cardNumber} - Sconto{' '}
-                    {activeLoyaltyCard.discount}%
+                    {activeLoyaltyCard.cardNumber} - Sconto {activeLoyaltyCard.discount}%
                   </p>
                 </div>
               </div>
@@ -323,17 +297,12 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
                     key={discount.id}
                     onClick={() =>
                       selectedItemForDiscount
-                        ? handleApplyItemDiscount(
-                            selectedItemForDiscount,
-                            discount.id
-                          )
+                        ? handleApplyItemDiscount(selectedItemForDiscount, discount.id)
                         : handleApplyGlobalDiscount(discount.id)
                     }
                     className="w-full bg-gray-50 hover:bg-gray-100 border border-gray-200 rounded-lg p-4 text-left transition-colors touch-manipulation"
                   >
-                    <p className="font-semibold text-gray-900">
-                      {discount.description}
-                    </p>
+                    <p className="font-semibold text-gray-900">{discount.description}</p>
                     <p className="text-sm text-gray-600">
                       {discount.type === 'percentage'
                         ? `${discount.value}% di sconto`
@@ -372,23 +341,15 @@ const Cart: React.FC<CartProps> = ({ onCheckout }) => {
                   className="w-full bg-gradient-to-r from-yellow-50 to-yellow-100 hover:from-yellow-100 hover:to-yellow-200 border border-yellow-300 rounded-lg p-4 text-left transition-colors touch-manipulation"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <p className="font-semibold text-gray-900">
-                      {card.customerName}
-                    </p>
+                    <p className="font-semibold text-gray-900">{card.customerName}</p>
                     <span className="text-xs bg-yellow-200 text-yellow-800 px-2 py-1 rounded font-semibold">
                       {card.level.toUpperCase()}
                     </span>
                   </div>
-                  <p className="text-sm text-gray-600 mb-1">
-                    {card.cardNumber}
-                  </p>
+                  <p className="text-sm text-gray-600 mb-1">{card.cardNumber}</p>
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">
-                      Punti: {card.points}
-                    </span>
-                    <span className="text-green-600 font-semibold">
-                      Sconto {card.discount}%
-                    </span>
+                    <span className="text-gray-600">Punti: {card.points}</span>
+                    <span className="text-green-600 font-semibold">Sconto {card.discount}%</span>
                   </div>
                 </button>
               ))}

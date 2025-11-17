@@ -151,7 +151,8 @@ const CustomerSearch: React.FC<CustomerSearchProps> = ({
               {filteredCustomers.length > 0 ? (
                 <div className="py-2">
                   <div className="px-3 py-2 text-xs font-semibold text-gray-500 uppercase">
-                    {filteredCustomers.length} {filteredCustomers.length === 1 ? 'risultato' : 'risultati'}
+                    {filteredCustomers.length}{' '}
+                    {filteredCustomers.length === 1 ? 'risultato' : 'risultati'}
                   </div>
                   {filteredCustomers.map((customer) => (
                     <button
@@ -195,12 +196,8 @@ const CustomerSearch: React.FC<CustomerSearchProps> = ({
                             )}
                           </div>
                           <div className="mt-2 flex items-center text-xs text-gray-500">
-                            <span className="mr-3">
-                              💰 €{customer.totalSpent.toFixed(2)}
-                            </span>
-                            <span>
-                              🛍️ {customer.visitCount} visite
-                            </span>
+                            <span className="mr-3">💰 €{customer.totalSpent.toFixed(2)}</span>
+                            <span>🛍️ {customer.visitCount} visite</span>
                           </div>
                         </div>
                       </div>
@@ -210,12 +207,8 @@ const CustomerSearch: React.FC<CustomerSearchProps> = ({
               ) : (
                 <div className="py-8 text-center">
                   <User className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                  <p className="text-sm font-semibold text-gray-600 mb-1">
-                    Nessun cliente trovato
-                  </p>
-                  <p className="text-xs text-gray-500">
-                    Prova con un altro termine di ricerca
-                  </p>
+                  <p className="text-sm font-semibold text-gray-600 mb-1">Nessun cliente trovato</p>
+                  <p className="text-xs text-gray-500">Prova con un altro termine di ricerca</p>
                 </div>
               )}
             </div>

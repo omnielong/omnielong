@@ -89,7 +89,11 @@ const BusinessOperatorsPage: React.FC = () => {
       return;
     }
 
-    if (confirm(`Sei sicuro di voler eliminare l'operatore "${operator.name}"?\n\nQuesta azione non può essere annullata.`)) {
+    if (
+      confirm(
+        `Sei sicuro di voler eliminare l'operatore "${operator.name}"?\n\nQuesta azione non può essere annullata.`
+      )
+    ) {
       const updatedOperators = operators.filter((o) => o.id !== operatorId);
       setOperators(updatedOperators);
       alert(`Operatore "${operator.name}" eliminato con successo`);

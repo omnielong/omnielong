@@ -7,7 +7,7 @@ interface AccessDeniedProps {
 }
 
 const AccessDenied: React.FC<AccessDeniedProps> = ({
-  message = 'Solo gli amministratori possono accedere a questa sezione'
+  message = 'Solo gli amministratori possono accedere a questa sezione',
 }) => {
   const navigate = useNavigate();
 
@@ -18,9 +18,7 @@ const AccessDenied: React.FC<AccessDeniedProps> = ({
           <Shield className="w-12 h-12 text-red-600" />
         </div>
         <h2 className="text-2xl font-bold text-gray-900 mb-3">Accesso Negato</h2>
-        <p className="text-gray-600 mb-8 leading-relaxed">
-          {message}
-        </p>
+        <p className="text-gray-600 mb-8 leading-relaxed">{message}</p>
         <button
           onClick={() => navigate('/pos')}
           className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-6 rounded-lg transition-all shadow-lg hover:shadow-xl"

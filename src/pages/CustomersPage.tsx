@@ -42,7 +42,7 @@ const CustomersPage: React.FC = () => {
       address: 'Via Roma 123, Milano',
       loyaltyCardId: 'lc-1',
       createdAt: new Date('2024-01-10'),
-      totalSpent: 2450.50,
+      totalSpent: 2450.5,
       visitCount: 15,
     },
     {
@@ -52,7 +52,7 @@ const CustomersPage: React.FC = () => {
       phone: '+39 320 7654321',
       loyaltyCardId: 'lc-2',
       createdAt: new Date('2024-03-15'),
-      totalSpent: 890.00,
+      totalSpent: 890.0,
       visitCount: 8,
     },
   ]);
@@ -107,13 +107,7 @@ const CustomersPage: React.FC = () => {
     }
 
     if (editingCustomer) {
-      setCustomers(
-        customers.map((c) =>
-          c.id === editingCustomer.id
-            ? { ...c, ...formData }
-            : c
-        )
-      );
+      setCustomers(customers.map((c) => (c.id === editingCustomer.id ? { ...c, ...formData } : c)));
     } else {
       const newCustomer: Customer = {
         id: `cust-${Date.now()}`,
@@ -162,14 +156,12 @@ const CustomersPage: React.FC = () => {
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
             <p className="text-purple-100 text-sm mb-1">Con Carta Fedeltà</p>
-            <p className="text-3xl font-bold">
-              {customers.filter(c => c.loyaltyCardId).length}
-            </p>
+            <p className="text-3xl font-bold">{customers.filter((c) => c.loyaltyCardId).length}</p>
           </div>
           <div className="bg-white/20 backdrop-blur-sm rounded-lg p-4">
             <p className="text-purple-100 text-sm mb-1">VIP</p>
             <p className="text-3xl font-bold">
-              {customers.filter(c => c.totalSpent >= 1000).length}
+              {customers.filter((c) => c.totalSpent >= 1000).length}
             </p>
           </div>
         </div>
@@ -193,9 +185,7 @@ const CustomersPage: React.FC = () => {
         {/* Customers Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCustomers.map((customer) => {
-            const loyaltyCard = loyaltyCards.find(
-              (lc) => lc.id === customer.loyaltyCardId
-            );
+            const loyaltyCard = loyaltyCards.find((lc) => lc.id === customer.loyaltyCardId);
 
             return (
               <div
@@ -262,9 +252,7 @@ const CustomersPage: React.FC = () => {
                   </div>
                   <div>
                     <p className="text-xs text-gray-500 mb-1">Visite</p>
-                    <p className="text-lg font-bold text-blue-600">
-                      {customer.visitCount}
-                    </p>
+                    <p className="text-lg font-bold text-blue-600">{customer.visitCount}</p>
                   </div>
                 </div>
               </div>
@@ -298,9 +286,7 @@ const CustomersPage: React.FC = () => {
 
             <div className="p-6 space-y-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Nome *
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Nome *</label>
                 <input
                   type="text"
                   value={formData.name}
@@ -312,9 +298,7 @@ const CustomersPage: React.FC = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Email
-                  </label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
                   <input
                     type="email"
                     value={formData.email}
@@ -325,9 +309,7 @@ const CustomersPage: React.FC = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-semibold text-gray-700 mb-2">
-                    Telefono
-                  </label>
+                  <label className="block text-sm font-semibold text-gray-700 mb-2">Telefono</label>
                   <input
                     type="tel"
                     value={formData.phone}
@@ -339,9 +321,7 @@ const CustomersPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Indirizzo
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Indirizzo</label>
                 <input
                   type="text"
                   value={formData.address}
@@ -352,9 +332,7 @@ const CustomersPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Note
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Note</label>
                 <textarea
                   value={formData.notes}
                   onChange={(e) => setFormData({ ...formData, notes: e.target.value })}

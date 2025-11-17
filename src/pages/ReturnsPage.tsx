@@ -81,10 +81,7 @@ const ReturnsPage: React.FC = () => {
 
     if (remaining <= 0) return;
 
-    setRefundPayments([
-      ...refundPayments,
-      { type, amount: remaining },
-    ]);
+    setRefundPayments([...refundPayments, { type, amount: remaining }]);
   };
 
   const handleCompleteReturn = () => {
@@ -174,9 +171,7 @@ const ReturnsPage: React.FC = () => {
         {!selectedSale ? (
           /* Search for Sale */
           <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">
-              Cerca Vendita da Rendere
-            </h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Cerca Vendita da Rendere</h2>
 
             {/* Search Bar */}
             <div className="relative mb-6">
@@ -304,7 +299,11 @@ const ReturnsPage: React.FC = () => {
                           max={item.cartItem.quantity}
                           value={item.quantityToReturn}
                           onChange={(e) =>
-                            handleUpdateReturnItem(index, 'quantityToReturn', parseInt(e.target.value) || 0)
+                            handleUpdateReturnItem(
+                              index,
+                              'quantityToReturn',
+                              parseInt(e.target.value) || 0
+                            )
                           }
                           className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         />
@@ -317,9 +316,7 @@ const ReturnsPage: React.FC = () => {
                         </label>
                         <select
                           value={item.reason}
-                          onChange={(e) =>
-                            handleUpdateReturnItem(index, 'reason', e.target.value)
-                          }
+                          onChange={(e) => handleUpdateReturnItem(index, 'reason', e.target.value)}
                           className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
                         >
                           <option value="customer_changed_mind">Cliente ha cambiato idea</option>
@@ -350,9 +347,7 @@ const ReturnsPage: React.FC = () => {
               <div className="mt-6 pt-6 border-t-2 border-gray-200">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-xl font-bold text-gray-900">Totale Rimborso:</span>
-                  <span className="text-3xl font-bold text-red-600">
-                    €{totalRefund.toFixed(2)}
-                  </span>
+                  <span className="text-3xl font-bold text-red-600">€{totalRefund.toFixed(2)}</span>
                 </div>
 
                 <button

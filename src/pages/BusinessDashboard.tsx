@@ -14,6 +14,8 @@ import {
   Calendar,
   LogOut,
   Users,
+  RefreshCw,
+  ShoppingCart,
 } from 'lucide-react';
 import type { Store, BusinessStats } from '../types';
 import useStore from '../store/useStore';
@@ -21,18 +23,33 @@ import { mockStores } from '../utils/storeMockData';
 
 const BusinessDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { stores, setStores, logoutUser } = useStore();
+  const { stores, setStores, logoutUser, currentUser, login, operators, setOperators } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
 
-  // Inizializza lo store con i mock data se vuoto
+  // Inizializza lo store con i mock data - forza ricaricamento se diversi
   useEffect(() => {
-    if (!initialized && stores.length === 0) {
-      setStores(mockStores);
+    if (!initialized) {
+      if (stores.length === 0 || stores.length !== mockStores.length) {
+        setStores(mockStores);
+      }
       setInitialized(true);
     }
   }, [stores.length, setStores, initialized]);
+
+  const handleReloadData = () => {
+    setStores(mockStores);
+    alert('Dati negozi ricaricati con successo!');
+  };
+
+  // Filtra gli store per il business corrente
+  const businessStores = useMemo(() => {
+    if (currentUser?.type === 'business') {
+      return stores.filter((s) => s.businessId === currentUser.data.id);
+    }
+    return stores;
+  }, [stores, currentUser]);
 
   const stats: BusinessStats = useMemo(() => {
     return {
@@ -40,13 +57,13 @@ const BusinessDashboard: React.FC = () => {
       activeStores: stores.filter(s => s.active).length,
       totalOperators: 25, // Mock
       totalSales: 1534,
-      totalRevenue: 125340.50,
+      totalRevenue: 125340.5,
       totalCustomers: 856,
     };
-  }, [stores]);
+  }, [businessStores]);
 
   const filteredStores = useMemo(() => {
-    return stores.filter((store) => {
+    return businessStores.filter((store) => {
       // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
@@ -66,7 +83,7 @@ const BusinessDashboard: React.FC = () => {
 
       return true;
     });
-  }, [stores, searchQuery, filterStatus]);
+  }, [businessStores, searchQuery, filterStatus]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('it-IT', {
@@ -95,6 +112,44 @@ const BusinessDashboard: React.FC = () => {
     return colors[sector];
   };
 
+  const handleAccessPOS = (store: Store) => {
+    // Cerca un operatore per questo negozio o crea un operatore demo
+    let operator = operators.find((op) => op.storeId === store.id && op.active);
+
+    if (!operator) {
+      // Crea un operatore demo per questo negozio
+      operator = {
+        id: `demo-op-${store.id}`,
+        storeId: store.id,
+        name: 'Demo Admin',
+        pin: '0000',
+        role: 'admin',
+        active: true,
+        permissions: {
+          canOpenCloseCashRegister: true,
+          canProcessSales: true,
+          canProcessRefunds: true,
+          canManageProducts: true,
+          canManagePromotions: true,
+          canAccessReports: true,
+          canManageOperators: true,
+          canAccessSettings: true,
+          canAccessFiscalClosure: true,
+          canAccessBackup: true,
+        },
+      };
+
+      // Aggiungi l'operatore alla lista
+      setOperators([...operators, operator]);
+    }
+
+    // Effettua il login come questo operatore
+    login(operator);
+
+    // Naviga alla pagina shift
+    navigate('/shift');
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-cyan-50 pb-20">
       {/* Header */}
@@ -119,6 +174,13 @@ const BusinessDashboard: React.FC = () => {
             >
               <Plus className="w-5 h-5 mr-2" />
               Nuovo Punto Vendita
+            </button>
+            <button
+              onClick={handleReloadData}
+              className="bg-white/20 hover:bg-white/30 text-white font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
+              title="Ricarica Dati"
+            >
+              <RefreshCw className="w-5 h-5" />
             </button>
             <button
               onClick={() => {
@@ -223,7 +285,9 @@ const BusinessDashboard: React.FC = () => {
 
               {/* Sector Badge */}
               <div className="mb-4">
-                <span className={`${getSectorColor(store.sector)} px-3 py-1 rounded-full text-xs font-bold`}>
+                <span
+                  className={`${getSectorColor(store.sector)} px-3 py-1 rounded-full text-xs font-bold`}
+                >
                   {getSectorLabel(store.sector)}
                 </span>
               </div>
@@ -232,7 +296,9 @@ const BusinessDashboard: React.FC = () => {
               <div className="space-y-2 text-sm mb-4">
                 <div className="flex items-center text-gray-700">
                   <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
-                  <span className="truncate">{store.address}, {store.city} ({store.province})</span>
+                  <span className="truncate">
+                    {store.address}, {store.city} ({store.province})
+                  </span>
                 </div>
                 {store.phone && (
                   <div className="flex items-center text-gray-700">
@@ -264,7 +330,8 @@ const BusinessDashboard: React.FC = () => {
                       <p>Lun-Dom: Orari personalizzati</p>
                     ) : (
                       <p>
-                        Lun-Sab: {store.openingHours.monday?.open}-{store.openingHours.monday?.close}
+                        Lun-Sab: {store.openingHours.monday?.open}-
+                        {store.openingHours.monday?.close}
                         {store.openingHours.sunday?.closed ? ' • Dom: Chiuso' : ''}
                       </p>
                     )}
@@ -291,11 +358,19 @@ const BusinessDashboard: React.FC = () => {
               {/* Actions */}
               <div className="flex gap-2 pt-4 border-t border-gray-200">
                 <button
+                  onClick={() => handleAccessPOS(store)}
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
+                  disabled={!store.active}
+                >
+                  <ShoppingCart className="w-4 h-4 mr-2" />
+                  Accedi al POS
+                </button>
+                <button
                   onClick={() => navigate(`/business/stores/${store.id}/edit`)}
                   className="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center justify-center text-sm"
                 >
                   <Edit2 className="w-4 h-4 mr-2" />
-                  Modifica Store
+                  Modifica
                 </button>
               </div>
             </div>

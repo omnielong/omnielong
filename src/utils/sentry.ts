@@ -19,8 +19,9 @@ export const initSentry = () => {
     environment,
     release: `omnielong@${appVersion}`,
     integrations: [
-      Sentry.browserTracingIntegration(),
-      Sentry.replayIntegration({
+      // Use Replay integration when available on the Sentry runtime
+      // @ts-ignore - some SDK setups expose Replay on Sentry namespace
+      new (Sentry as any).Replay({
         maskAllText: true,
         blockAllMedia: true,
       }),
@@ -42,7 +43,7 @@ export const initSentry = () => {
       }
 
       // Filter out common non-critical errors
-      const error = hint.originalException;
+      const error = hint?.originalException as unknown;
       if (error instanceof Error) {
         // Ignore network errors (user might be offline)
         if (error.message.includes('NetworkError') || error.message.includes('Failed to fetch')) {
@@ -57,6 +58,81 @@ export const initSentry = () => {
 
       return event;
     },
+
+    // Privacy: don't send sensitive data from breadcrumbs
+    beforeBreadcrumb(breadcrumb) {
+      // Don't log PIN inputs
+      if (breadcrumb.message?.toLowerCase().includes('pin')) {
+        return null;
+      }
+
+      // Don't log API keys
+      if (breadcrumb.data && typeof breadcrumb.data === 'object' && 'apiKey' in breadcrumb.data) {
+        // @ts-ignore
+        breadcrumb.data.apiKey = '[REDACTED]';
+      }
+
+      return breadcrumb;
+    },
+  });
+
+  console.log(`Sentry initialized for ${environment} environment`);
+};
+
+/**
+ * Wrapper/compat helpers for Sentry usage across the codebase
+ */
+export const captureException = (error: Error, context?: Record<string, unknown>) => {
+  if (context) {
+    Sentry.setContext('additional', context);
+  }
+  Sentry.captureException(error);
+};
+
+export const logError = captureException;
+
+export const captureMessage = (message: string, level: Sentry.SeverityLevel = 'info') => {
+  Sentry.captureMessage(message, level);
+};
+
+export const logMessage = captureMessage;
+
+export const setUser = (user: { id: string; email?: string; username?: string } | null) => {
+  Sentry.setUser(user);
+};
+
+export const setUserContext = (userId: string, email?: string, username?: string) => {
+  Sentry.setUser({
+    id: userId,
+    email,
+    username,
+  });
+};
+
+export const clearUserContext = () => {
+  Sentry.setUser(null);
+};
+
+export const addContext = (key: string, value: any) => {
+  Sentry.setContext(key, value);
+};
+
+export const addBreadcrumb = (message: string, category: string, data?: Record<string, any>) => {
+  Sentry.addBreadcrumb({
+    message,
+    category,
+    data,
+    level: 'info',
+  });
+};
+
+export const startTransaction = (name: string, op: string) => {
+  // Use runtime any to call startTransaction if available on the Sentry instance.
+  // This avoids TypeScript errors in projects where the typed SDK doesn't expose it.
+  // @ts-ignore
+  return (Sentry as any).startTransaction({
+    name,
+    op,
   });
 };
 
@@ -66,26 +142,4 @@ export const initSentry = () => {
  */
 export const SentryErrorBoundary = Sentry.ErrorBoundary;
 
-/**
- * Cattura un'eccezione manualmente e la invia a Sentry
- */
-export const captureException = (error: Error, context?: Record<string, unknown>) => {
-  if (context) {
-    Sentry.setContext('additional', context);
-  }
-  Sentry.captureException(error);
-};
-
-/**
- * Cattura un messaggio manualmente e lo invia a Sentry
- */
-export const captureMessage = (message: string, level: Sentry.SeverityLevel = 'info') => {
-  Sentry.captureMessage(message, level);
-};
-
-/**
- * Imposta informazioni sull'utente per Sentry
- */
-export const setUser = (user: { id: string; email?: string; username?: string } | null) => {
-  Sentry.setUser(user);
-};
+export default Sentry;

@@ -5,11 +5,12 @@ import useStore from '../store/useStore';
 import type { Reseller, Business } from '../types';
 import { mockOperators } from '../utils/mockData';
 import { mockStores } from '../utils/storeMockData';
+import { mockBusinesses as importedMockBusinesses } from '../utils/businessMockData';
 
 // Mock data - In produzione verrebbe da API
 const mockResellers: (Reseller & { password: string })[] = [
   {
-    id: 'reseller-1',
+    id: 'res-1',
     companyName: 'TechPOS Solutions',
     vatNumber: 'IT12345678901',
     email: 'admin@techpos.it',
@@ -25,29 +26,8 @@ const mockResellers: (Reseller & { password: string })[] = [
   },
 ];
 
-const mockBusinesses: (Business & { password: string })[] = [
-  {
-    id: 'business-1',
-    resellerId: 'reseller-1',
-    companyName: 'Fashion Store SRL',
-    vatNumber: 'IT98765432109',
-    fiscalCode: 'FSTSRL98765432',
-    email: 'admin@fashionstore.it',
-    password: 'business123',
-    phone: '+39 06 9876543',
-    address: 'Via Condotti 45, Roma',
-    active: true,
-    subscriptionPlan: 'professional',
-    subscriptionStartDate: new Date('2024-01-15'),
-    adminEmail: 'admin@fashionstore.it',
-    adminName: 'Laura Bianchi',
-    maxStores: 5,
-    maxOperatorsPerStore: 10,
-    billingEmail: 'billing@fashionstore.it',
-    paymentMethod: 'credit_card',
-    createdAt: new Date('2024-01-15'),
-  },
-];
+// Usa direttamente i business importati (hanno già la password)
+const mockBusinesses = importedMockBusinesses;
 
 type LoginType = 'business' | 'reseller' | 'operator';
 
@@ -94,8 +74,8 @@ const AdminLoginPage: React.FC = () => {
       );
 
       if (business) {
-        const { password: _, ...businessData } = business;
-        loginUser(businessData, 'business');
+        // Mantieni la password nel business per poterla modificare
+        loginUser(business, 'business');
         navigate('/business');
       } else {
         setError('Email o password non validi');
@@ -158,9 +138,7 @@ const AdminLoginPage: React.FC = () => {
             <button
               onClick={() => handleToggleType('operator')}
               className={`py-3 px-4 rounded-lg font-semibold transition-all flex items-center justify-center space-x-2 ${
-                loginType === 'operator'
-                  ? 'bg-white text-gray-900'
-                  : 'text-white hover:bg-white/20'
+                loginType === 'operator' ? 'bg-white text-gray-900' : 'text-white hover:bg-white/20'
               }`}
             >
               <User className="w-5 h-5" />
@@ -197,9 +175,7 @@ const AdminLoginPage: React.FC = () => {
         {loginType === 'operator' && (
           <div className="p-8">
             <div className="text-center mb-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-2">
-                Inserisci il tuo PIN
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-2">Inserisci il tuo PIN</h2>
               <p className="text-sm text-gray-600">PIN a 4 cifre per operatori POS</p>
             </div>
 
@@ -210,20 +186,14 @@ const AdminLoginPage: React.FC = () => {
                   <div
                     key={i}
                     className={`w-14 h-14 rounded-xl border-2 flex items-center justify-center ${
-                      pin.length > i
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-300 bg-gray-50'
+                      pin.length > i ? 'border-blue-500 bg-blue-50' : 'border-gray-300 bg-gray-50'
                     }`}
                   >
-                    {pin.length > i && (
-                      <div className="w-3 h-3 bg-blue-600 rounded-full"></div>
-                    )}
+                    {pin.length > i && <div className="w-3 h-3 bg-blue-600 rounded-full"></div>}
                   </div>
                 ))}
               </div>
-              {error && (
-                <p className="text-center text-red-500 text-sm mt-2">{error}</p>
-              )}
+              {error && <p className="text-center text-red-500 text-sm mt-2">{error}</p>}
             </div>
 
             {/* Keypad */}
@@ -288,15 +258,11 @@ const AdminLoginPage: React.FC = () => {
               <h2 className="text-xl font-bold text-gray-900 mb-2">
                 Accesso {loginType === 'reseller' ? 'Rivenditore' : 'Business'}
               </h2>
-              <p className="text-sm text-gray-600">
-                Inserisci le tue credenziali
-              </p>
+              <p className="text-sm text-gray-600">Inserisci le tue credenziali</p>
             </div>
 
             <div className="mb-6">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Email
-              </label>
+              <label className="block text-gray-700 font-semibold mb-2">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -311,9 +277,7 @@ const AdminLoginPage: React.FC = () => {
             </div>
 
             <div className="mb-6">
-              <label className="block text-gray-700 font-semibold mb-2">
-                Password
-              </label>
+              <label className="block text-gray-700 font-semibold mb-2">Password</label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                 <input
@@ -329,11 +293,7 @@ const AdminLoginPage: React.FC = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
                 >
-                  {showPassword ? (
-                    <EyeOff className="w-5 h-5" />
-                  ) : (
-                    <Eye className="w-5 h-5" />
-                  )}
+                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
                 </button>
               </div>
             </div>
@@ -353,13 +313,15 @@ const AdminLoginPage: React.FC = () => {
 
             {/* Demo Credentials */}
             <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-              <p className="text-sm font-semibold text-blue-900 mb-2">
-                Credenziali Demo:
-              </p>
+              <p className="text-sm font-semibold text-blue-900 mb-2">Credenziali Demo:</p>
               {loginType === 'reseller' ? (
                 <div className="text-sm text-blue-800 space-y-1">
-                  <p>Email: <span className="font-mono">admin@techpos.it</span></p>
-                  <p>Password: <span className="font-mono">reseller123</span></p>
+                  <p>
+                    Email: <span className="font-mono">admin@techpos.it</span>
+                  </p>
+                  <p>
+                    Password: <span className="font-mono">reseller123</span>
+                  </p>
                 </div>
               ) : (
                 <div className="text-sm text-blue-800 space-y-1">
