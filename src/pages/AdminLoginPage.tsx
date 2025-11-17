@@ -27,7 +27,7 @@ const mockResellers: (Reseller & { password: string })[] = [
 
 const mockBusinesses: (Business & { password: string })[] = [
   {
-    id: 'business-1',
+    id: 'bus-1',
     resellerId: 'reseller-1',
     companyName: 'Fashion Store SRL',
     vatNumber: 'IT98765432109',
