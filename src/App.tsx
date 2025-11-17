@@ -1,5 +1,24 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
+import ShiftPage from './pages/ShiftPage';
+import POSPage from './pages/POSPage';
+import DashboardPage from './pages/DashboardPage';
+import SettingsPage from './pages/SettingsPage';
+import SetupPage from './pages/SetupPage';
+import ProductsPage from './pages/ProductsPage';
+import CustomersPage from './pages/CustomersPage';
+import PromotionsPage from './pages/PromotionsPage';
+import ReturnsPage from './pages/ReturnsPage';
+import OperatorsPage from './pages/OperatorsPage';
+import FiscalClosurePage from './pages/FiscalClosurePage';
+import BackupPage from './pages/BackupPage';
+import ResellerDashboard from './pages/ResellerDashboard';
+import BusinessDashboard from './pages/BusinessDashboard';
+import BusinessForm from './pages/BusinessForm';
+import StoreForm from './pages/StoreForm';
+import BusinessOperatorsPage from './pages/BusinessOperatorsPage';
+import OperatorForm from './pages/OperatorForm';
+import RoleSelectionPage from './pages/RoleSelectionPage';
+import AdminLoginPage from './pages/AdminLoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import useStore from './store/useStore';
 
@@ -60,37 +79,37 @@ function App() {
           <Route path="/admin-login" element={<AdminLoginPage />} />
           <Route path="/role-selection" element={<RoleSelectionPage />} />
 
-          {/* Reseller Routes - Protected */}
-          <Route
-            path="/reseller"
-            element={
-              currentUser?.type === 'reseller' ? (
-                <ResellerDashboard />
-              ) : (
-                <Navigate to="/admin-login" replace />
-              )
-            }
-          />
-          <Route
-            path="/reseller/businesses/new"
-            element={
-              currentUser?.type === 'reseller' ? (
-                <BusinessForm />
-              ) : (
-                <Navigate to="/admin-login" replace />
-              )
-            }
-          />
-          <Route
-            path="/reseller/businesses/:id/edit"
-            element={
-              currentUser?.type === 'reseller' ? (
-                <BusinessForm />
-              ) : (
-                <Navigate to="/admin-login" replace />
-              )
-            }
-          />
+        {/* Reseller Routes - Protected */}
+        <Route
+          path="/reseller"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <ResellerDashboard />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/new"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <BusinessForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
+        <Route
+          path="/reseller/businesses/:id/edit"
+          element={
+            currentUser?.type === 'reseller' ? (
+              <BusinessForm />
+            ) : (
+              <Navigate to="/admin-login" replace />
+            )
+          }
+        />
 
           {/* Business Routes - Protected */}
           <Route

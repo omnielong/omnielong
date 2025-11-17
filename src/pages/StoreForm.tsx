@@ -18,9 +18,10 @@ import useStore from '../store/useStore';
 
 const StoreForm: React.FC = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
+  const { id, businessId } = useParams<{ id?: string; businessId?: string }>();
   const isEditing = !!id;
-  const { stores, addStore, updateStore } = useStore();
+  const isResellerMode = !!businessId; // Se c'è businessId, siamo in modalità reseller
+  const { stores, addStore, updateStore, currentUser } = useStore();
 
   const [formData, setFormData] = useState({
     name: '',
@@ -286,9 +287,14 @@ const StoreForm: React.FC = () => {
     // Trova lo store esistente per preservare date
     const existingStore = isEditing && id ? stores.find((s) => s.id === id) : null;
 
+    // Ottieni il businessId dal currentUser (business admin)
+    const businessId = currentUser?.type === 'business'
+      ? currentUser.data.id
+      : existingStore?.businessId || 'bus-1'; // Fallback per sicurezza
+
     const storeData: Store = {
       id: isEditing ? id! : `store-${Date.now()}`,
-      businessId: existingStore?.businessId || 'bus-1', // Mock - verrebbe dal contesto
+      businessId,
       name: formData.name,
       code: formData.code,
       address: formData.address,
@@ -349,7 +355,13 @@ const StoreForm: React.FC = () => {
     }
 
     alert(`Punto vendita ${isEditing ? 'aggiornato' : 'creato'} con successo!`);
-    navigate('/business');
+
+    // Naviga alla pagina corretta in base al ruolo
+    if (isResellerMode && businessId) {
+      navigate(`/reseller/businesses/${businessId}/stores`);
+    } else {
+      navigate('/business');
+    }
   };
 
   const copyHours = (sourceDay: string) => {
@@ -399,7 +411,13 @@ const StoreForm: React.FC = () => {
       <div className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white p-6 shadow-lg">
         <div className="flex items-center">
           <button
-            onClick={() => navigate('/business')}
+            onClick={() => {
+              if (isResellerMode && businessId) {
+                navigate(`/reseller/businesses/${businessId}/stores`);
+              } else {
+                navigate('/business');
+              }
+            }}
             className="mr-4 p-2 hover:bg-white/20 rounded-lg transition-colors"
           >
             <ArrowLeft className="w-6 h-6" />
@@ -723,7 +741,13 @@ const StoreForm: React.FC = () => {
           <div className="flex gap-4">
             <button
               type="button"
-              onClick={() => navigate('/business')}
+              onClick={() => {
+                if (isResellerMode && businessId) {
+                  navigate(`/reseller/businesses/${businessId}/stores`);
+                } else {
+                  navigate('/business');
+                }
+              }}
               className="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-4 px-6 rounded-lg transition-colors"
             >
               Annulla

@@ -15,6 +15,7 @@ import {
   Phone,
   MapPin,
   LogOut,
+  RefreshCw,
 } from 'lucide-react';
 import type { Business, ResellerStats } from '../types';
 import useStore from '../store/useStore';
@@ -30,13 +31,21 @@ const ResellerDashboard: React.FC = () => {
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
 
-  // Inizializza lo store con i mock data se vuoto
+  // Inizializza lo store con i mock data - forza ricaricamento se diversi
   useEffect(() => {
-    if (!initialized && businesses.length === 0) {
-      setBusinesses(mockBusinesses);
+    if (!initialized) {
+      // Forza il caricamento dei mockBusinesses se vuoti o se il numero è diverso
+      if (businesses.length === 0 || businesses.length !== mockBusinesses.length) {
+        setBusinesses(mockBusinesses);
+      }
       setInitialized(true);
     }
   }, [businesses.length, setBusinesses, initialized]);
+
+  const handleReloadData = () => {
+    setBusinesses(mockBusinesses);
+    alert('Dati clienti ricaricati con successo!');
+  };
 
   const stats: ResellerStats = useMemo(() => {
     return {
@@ -117,6 +126,13 @@ const ResellerDashboard: React.FC = () => {
             >
               <Plus className="w-5 h-5 mr-2" />
               Nuovo Cliente
+            </button>
+            <button
+              onClick={handleReloadData}
+              className="bg-white/20 hover:bg-white/30 text-white font-bold py-3 px-6 rounded-lg flex items-center transition-colors shadow-lg"
+              title="Ricarica Dati"
+            >
+              <RefreshCw className="w-5 h-5" />
             </button>
             <button
               onClick={() => {
