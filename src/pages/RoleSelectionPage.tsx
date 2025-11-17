@@ -8,7 +8,7 @@ import {
   ShoppingBag,
   TrendingUp,
   BarChart3,
-  Layers
+  Layers,
 } from 'lucide-react';
 
 const RoleSelectionPage: React.FC = () => {
@@ -19,7 +19,8 @@ const RoleSelectionPage: React.FC = () => {
       id: 'reseller',
       title: 'Reseller',
       subtitle: 'Gestisci i tuoi clienti Business',
-      description: 'Accedi alla dashboard reseller per gestire i tuoi clienti, monitorare le sottoscrizioni e visualizzare statistiche aggregate.',
+      description:
+        'Accedi alla dashboard reseller per gestire i tuoi clienti, monitorare le sottoscrizioni e visualizzare statistiche aggregate.',
       icon: Building2,
       gradient: 'from-indigo-600 to-purple-600',
       bgGradient: 'from-indigo-50 to-purple-50',
@@ -35,7 +36,8 @@ const RoleSelectionPage: React.FC = () => {
       id: 'business',
       title: 'Business Admin',
       subtitle: 'Gestisci i tuoi punti vendita',
-      description: 'Accedi alla dashboard business per gestire i tuoi negozi, configurare operatori e monitorare le performance.',
+      description:
+        'Accedi alla dashboard business per gestire i tuoi negozi, configurare operatori e monitorare le performance.',
       icon: StoreIcon,
       gradient: 'from-blue-600 to-cyan-600',
       bgGradient: 'from-blue-50 to-cyan-50',
@@ -51,7 +53,8 @@ const RoleSelectionPage: React.FC = () => {
       id: 'store',
       title: 'Store Operator',
       subtitle: 'Accedi al POS del negozio',
-      description: 'Accedi come operatore di cassa per gestire vendite, clienti e operazioni quotidiane del punto vendita.',
+      description:
+        'Accedi come operatore di cassa per gestire vendite, clienti e operazioni quotidiane del punto vendita.',
       icon: ShoppingBag,
       gradient: 'from-green-600 to-teal-600',
       bgGradient: 'from-green-50 to-teal-50',
@@ -86,8 +89,8 @@ const RoleSelectionPage: React.FC = () => {
             Benvenuto nel Sistema Multi-Tenant
           </h2>
           <p className="text-gray-600 text-lg max-w-2xl mx-auto">
-            Scegli il ruolo appropriato per accedere alle funzionalità dedicate.
-            Ogni ruolo ha accesso a strumenti specifici per le proprie esigenze.
+            Scegli il ruolo appropriato per accedere alle funzionalità dedicate. Ogni ruolo ha
+            accesso a strumenti specifici per le proprie esigenze.
           </p>
         </div>
 
@@ -104,7 +107,9 @@ const RoleSelectionPage: React.FC = () => {
                 {/* Card Header */}
                 <div className={`bg-gradient-to-r ${role.gradient} p-6 text-white`}>
                   <div className="flex items-center mb-4">
-                    <div className={`w-16 h-16 bg-gradient-to-br ${role.iconBg} rounded-xl flex items-center justify-center mr-4 shadow-lg`}>
+                    <div
+                      className={`w-16 h-16 bg-gradient-to-br ${role.iconBg} rounded-xl flex items-center justify-center mr-4 shadow-lg`}
+                    >
                       <Icon className="w-8 h-8 text-white" />
                     </div>
                     <div>
@@ -116,9 +121,7 @@ const RoleSelectionPage: React.FC = () => {
 
                 {/* Card Body */}
                 <div className="p-6">
-                  <p className="text-gray-700 mb-6 leading-relaxed">
-                    {role.description}
-                  </p>
+                  <p className="text-gray-700 mb-6 leading-relaxed">{role.description}</p>
 
                   {/* Features */}
                   <div className="space-y-3 mb-6">
@@ -154,29 +157,27 @@ const RoleSelectionPage: React.FC = () => {
 
         {/* Info Section */}
         <div className="mt-12 bg-white rounded-xl shadow-lg p-8">
-          <h3 className="text-xl font-bold text-gray-900 mb-4">
-            Architettura Multi-Tenant
-          </h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-4">Architettura Multi-Tenant</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-600">
             <div>
               <h4 className="font-bold text-indigo-600 mb-2">🏢 Reseller</h4>
               <p>
-                I reseller gestiscono più aziende clienti, configurano le sottoscrizioni
-                e monitorano le performance globali della rete di vendita.
+                I reseller gestiscono più aziende clienti, configurano le sottoscrizioni e
+                monitorano le performance globali della rete di vendita.
               </p>
             </div>
             <div>
               <h4 className="font-bold text-blue-600 mb-2">🏪 Business</h4>
               <p>
-                Le aziende gestiscono i propri punti vendita, configurano prodotti,
-                operatori e monitorano le vendite aggregate dei loro negozi.
+                Le aziende gestiscono i propri punti vendita, configurano prodotti, operatori e
+                monitorano le vendite aggregate dei loro negozi.
               </p>
             </div>
             <div>
               <h4 className="font-bold text-green-600 mb-2">💼 Store</h4>
               <p>
-                Gli operatori di negozio utilizzano il POS per gestire vendite quotidiane,
-                clienti, inventario e chiusure fiscali del punto vendita.
+                Gli operatori di negozio utilizzano il POS per gestire vendite quotidiane, clienti,
+                inventario e chiusure fiscali del punto vendita.
               </p>
             </div>
           </div>

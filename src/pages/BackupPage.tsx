@@ -1,5 +1,14 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Download, Upload, Database, FileJson, FileText, CheckCircle, AlertCircle } from 'lucide-react';
+import {
+  ArrowLeft,
+  Download,
+  Upload,
+  Database,
+  FileJson,
+  FileText,
+  CheckCircle,
+  AlertCircle,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
 import useStore from '../store/useStore';
@@ -182,19 +191,46 @@ const BackupPage: React.FC = () => {
         }
 
         // Show confirmation
-        if (!confirm('ATTENZIONE: L\'importazione sovrascriverà tutti i dati esistenti. Continuare?')) {
+        if (
+          !confirm("ATTENZIONE: L'importazione sovrascriverà tutti i dati esistenti. Continuare?")
+        ) {
           return;
         }
 
-        // Import would need to use store actions to update all data
-        // For now, just show success (full implementation would require store refactoring)
-        alert('Funzionalità di importazione in fase di sviluppo. Per ora usa solo l\'export.');
+        // Import data using store actions
+        const store = useStore.getState();
+
+        // Import each data type if present
+        if (data.data.products) store.setProducts(data.data.products);
+        if (data.data.categories) store.setCategories(data.data.categories);
+        if (data.data.discounts) store.setDiscounts(data.data.discounts);
+        if (data.data.loyaltyCards) store.setLoyaltyCards(data.data.loyaltyCards);
+        if (data.data.operators) store.setOperators(data.data.operators);
+
+        // Import other data types via direct state update
+        if (
+          data.data.sales ||
+          data.data.returns ||
+          data.data.sectorConfig ||
+          data.data.tables ||
+          data.data.quickButtons ||
+          data.data.fiscalClosures
+        ) {
+          useStore.setState({
+            sales: data.data.sales || [],
+            returns: data.data.returns || [],
+            sectorConfig: data.data.sectorConfig || null,
+            tables: data.data.tables || [],
+            quickButtons: data.data.quickButtons || [],
+            fiscalClosures: data.data.fiscalClosures || [],
+          });
+        }
 
         setImportError(null);
         setImportSuccess(true);
-        setTimeout(() => setImportSuccess(false), 3000);
+        setTimeout(() => setImportSuccess(false), 5000);
       } catch (error) {
-        setImportError(error instanceof Error ? error.message : 'Errore durante l\'importazione');
+        setImportError(error instanceof Error ? error.message : "Errore durante l'importazione");
         setTimeout(() => setImportError(null), 5000);
       }
     };
@@ -327,9 +363,7 @@ const BackupPage: React.FC = () => {
             >
               <FileJson className="w-8 h-8 mb-3" />
               <h3 className="text-xl font-bold mb-2">Prodotti</h3>
-              <p className="text-blue-100 text-sm">
-                Esporta catalogo prodotti e categorie
-              </p>
+              <p className="text-blue-100 text-sm">Esporta catalogo prodotti e categorie</p>
             </button>
 
             {/* Customers Export */}
@@ -339,9 +373,7 @@ const BackupPage: React.FC = () => {
             >
               <FileJson className="w-8 h-8 mb-3" />
               <h3 className="text-xl font-bold mb-2">Clienti</h3>
-              <p className="text-purple-100 text-sm">
-                Esporta anagrafica clienti e carte fedeltà
-              </p>
+              <p className="text-purple-100 text-sm">Esporta anagrafica clienti e carte fedeltà</p>
             </button>
 
             {/* Fiscal Closures Export */}
@@ -351,9 +383,7 @@ const BackupPage: React.FC = () => {
             >
               <FileJson className="w-8 h-8 mb-3" />
               <h3 className="text-xl font-bold mb-2">Chiusure Fiscali</h3>
-              <p className="text-indigo-100 text-sm">
-                Esporta storico chiusure fiscali
-              </p>
+              <p className="text-indigo-100 text-sm">Esporta storico chiusure fiscali</p>
             </button>
 
             {/* CSV Export */}
@@ -363,9 +393,7 @@ const BackupPage: React.FC = () => {
             >
               <FileText className="w-8 h-8 mb-3" />
               <h3 className="text-xl font-bold mb-2">CSV Vendite</h3>
-              <p className="text-orange-100 text-sm">
-                Esporta vendite in formato CSV per Excel
-              </p>
+              <p className="text-orange-100 text-sm">Esporta vendite in formato CSV per Excel</p>
             </button>
           </div>
         </div>
@@ -394,20 +422,11 @@ const BackupPage: React.FC = () => {
 
           <div className="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-cyan-400 transition-colors">
             <Upload className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-bold text-gray-900 mb-2">
-              Importa File di Backup
-            </h3>
-            <p className="text-gray-600 mb-4">
-              Carica un file JSON di backup precedente
-            </p>
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Importa File di Backup</h3>
+            <p className="text-gray-600 mb-4">Carica un file JSON di backup precedente</p>
             <label className="inline-block bg-cyan-600 hover:bg-cyan-700 text-white font-bold py-3 px-6 rounded-lg cursor-pointer transition-colors">
               Seleziona File
-              <input
-                type="file"
-                accept=".json"
-                onChange={handleImportFile}
-                className="hidden"
-              />
+              <input type="file" accept=".json" onChange={handleImportFile} className="hidden" />
             </label>
           </div>
         </div>
@@ -422,7 +441,9 @@ const BackupPage: React.FC = () => {
             </li>
             <li className="flex items-start">
               <span className="text-cyan-600 mr-2">•</span>
-              <span>Gli export selettivi permettono di esportare solo specifiche categorie di dati</span>
+              <span>
+                Gli export selettivi permettono di esportare solo specifiche categorie di dati
+              </span>
             </li>
             <li className="flex items-start">
               <span className="text-cyan-600 mr-2">•</span>

@@ -131,10 +131,7 @@ class APIService {
   /**
    * Aggiorna i punti di una carta fedeltà
    */
-  async updateLoyaltyCardPoints(
-    cardNumber: string,
-    points: number
-  ): Promise<boolean> {
+  async updateLoyaltyCardPoints(cardNumber: string, points: number): Promise<boolean> {
     if (!this.config) {
       throw new Error('API non configurata');
     }

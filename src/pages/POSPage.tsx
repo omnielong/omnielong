@@ -88,7 +88,18 @@ const POSPage: React.FC = () => {
     setCategories(mockCategories);
     setDiscounts(mockDiscounts);
     setLoyaltyCards(mockLoyaltyCards);
-  }, [currentOperator, currentShift, navigate, sectorConfig, products.length, setProducts, setCategories, setDiscounts, setLoyaltyCards, setQuickButtons]);
+  }, [
+    currentOperator,
+    currentShift,
+    navigate,
+    sectorConfig,
+    products.length,
+    setProducts,
+    setCategories,
+    setDiscounts,
+    setLoyaltyCards,
+    setQuickButtons,
+  ]);
 
   const handleLogout = () => {
     if (cart.length > 0) {
@@ -185,11 +196,15 @@ const POSPage: React.FC = () => {
                           {sectorConfig?.sector === 'bar' ? 'BAR' : 'POS'}
                         </h1>
                         {sectorConfig?.sector && (
-                          <span className={`ml-3 px-3 py-1 rounded-full text-xs font-bold ${
-                            sectorConfig.sector === 'fashion' ? 'bg-purple-100 text-purple-700' :
-                            sectorConfig.sector === 'bar' ? 'bg-amber-100 text-amber-700' :
-                            'bg-blue-100 text-blue-700'
-                          }`}>
+                          <span
+                            className={`ml-3 px-3 py-1 rounded-full text-xs font-bold ${
+                              sectorConfig.sector === 'fashion'
+                                ? 'bg-purple-100 text-purple-700'
+                                : sectorConfig.sector === 'bar'
+                                  ? 'bg-amber-100 text-amber-700'
+                                  : 'bg-blue-100 text-blue-700'
+                            }`}
+                          >
                             {sectorConfig.sector === 'fashion' && '👗 MODA'}
                             {sectorConfig.sector === 'bar' && '☕ BAR'}
                             {sectorConfig.sector === 'generic' && '🏪 GENERICO'}
@@ -198,9 +213,7 @@ const POSPage: React.FC = () => {
                       </div>
                       <p className="text-sm text-gray-600">
                         {currentStore && (
-                          <span className="font-semibold text-blue-600">
-                            {currentStore.name}
-                          </span>
+                          <span className="font-semibold text-blue-600">{currentStore.name}</span>
                         )}
                         {currentStore && ' • '}
                         {currentOperator?.name} - Turno aperto
@@ -305,10 +318,7 @@ const POSPage: React.FC = () => {
                 {sectorConfig?.sector === 'bar' && barViewMode === 'quick' ? (
                   <BarQuickButtons />
                 ) : (
-                  <ProductGrid
-                    categoryFilter={selectedCategory}
-                    searchQuery={searchQuery}
-                  />
+                  <ProductGrid categoryFilter={selectedCategory} searchQuery={searchQuery} />
                 )}
               </div>
 
@@ -350,9 +360,7 @@ const POSPage: React.FC = () => {
       />
 
       {/* Checkout Modal */}
-      {showCheckout && (
-        <Checkout onClose={handleCloseCheckout} />
-      )}
+      {showCheckout && <Checkout onClose={handleCloseCheckout} />}
     </div>
   );
 };

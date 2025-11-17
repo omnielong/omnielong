@@ -186,11 +186,7 @@ const PromotionsPage: React.FC = () => {
     const maxUsed = isMaxUsesReached(promotion);
     if (expired || maxUsed) return;
 
-    setDiscounts(
-      discounts.map((d) =>
-        d.id === promotion.id ? { ...d, active: !d.active } : d
-      )
-    );
+    setDiscounts(discounts.map((d) => (d.id === promotion.id ? { ...d, active: !d.active } : d)));
   };
 
   const getTypeIcon = (type: DiscountType) => {
@@ -306,12 +302,16 @@ const PromotionsPage: React.FC = () => {
   };
 
   const stats = useMemo(() => {
-    const active = discounts.filter(d => d.active && !isExpired(d) && !isMaxUsesReached(d)).length;
-    const expired = discounts.filter(d => isExpired(d)).length;
-    const maxUsed = discounts.filter(d => isMaxUsesReached(d)).length;
-    const inactive = discounts.filter(d => !d.active && !isExpired(d) && !isMaxUsesReached(d)).length;
-    const combinable = discounts.filter(d => d.combinable).length;
-    const loyaltyOnly = discounts.filter(d => d.loyaltyOnly).length;
+    const active = discounts.filter(
+      (d) => d.active && !isExpired(d) && !isMaxUsesReached(d)
+    ).length;
+    const expired = discounts.filter((d) => isExpired(d)).length;
+    const maxUsed = discounts.filter((d) => isMaxUsesReached(d)).length;
+    const inactive = discounts.filter(
+      (d) => !d.active && !isExpired(d) && !isMaxUsesReached(d)
+    ).length;
+    const combinable = discounts.filter((d) => d.combinable).length;
+    const loyaltyOnly = discounts.filter((d) => d.loyaltyOnly).length;
 
     return { active, expired, maxUsed, inactive, combinable, loyaltyOnly };
   }, [discounts]);
@@ -425,7 +425,9 @@ const PromotionsPage: React.FC = () => {
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex-1">
                     <div className="flex flex-wrap items-center gap-2 mb-2">
-                      <span className={`${getTypeColor(promo.type)} px-3 py-1 rounded-full text-xs font-bold flex items-center`}>
+                      <span
+                        className={`${getTypeColor(promo.type)} px-3 py-1 rounded-full text-xs font-bold flex items-center`}
+                      >
                         {getTypeIcon(promo.type)}
                         <span className="ml-1">{getTypeLabel(promo.type)}</span>
                       </span>
@@ -464,13 +466,13 @@ const PromotionsPage: React.FC = () => {
                     {promo.validDays && promo.validDays.length > 0 && (
                       <div className="flex items-center">
                         <Calendar className="w-3 h-3 mr-1 text-purple-600" />
-                        {promo.validDays.map(d => dayNames[d]).join(', ')}
+                        {promo.validDays.map((d) => dayNames[d]).join(', ')}
                       </div>
                     )}
                     {promo.timeRanges && promo.timeRanges.length > 0 && (
                       <div className="flex items-center">
                         <Clock className="w-3 h-3 mr-1 text-cyan-600" />
-                        {promo.timeRanges.map(tr => `${tr.startTime}-${tr.endTime}`).join(', ')}
+                        {promo.timeRanges.map((tr) => `${tr.startTime}-${tr.endTime}`).join(', ')}
                       </div>
                     )}
                     {promo.categoryIds && promo.categoryIds.length > 0 && (
@@ -503,14 +505,18 @@ const PromotionsPage: React.FC = () => {
                     </div>
                   )}
                   {promo.validUntil && (
-                    <div className={`flex items-center ${expired ? 'text-red-600 font-semibold' : 'text-gray-600'}`}>
+                    <div
+                      className={`flex items-center ${expired ? 'text-red-600 font-semibold' : 'text-gray-600'}`}
+                    >
                       <Calendar className="w-3 h-3 mr-1" />
                       Fino: {new Date(promo.validUntil).toLocaleDateString('it-IT')}
                       {expired && <span className="ml-1">(Scaduto)</span>}
                     </div>
                   )}
                   {promo.maxUses && (
-                    <div className={`flex items-center ${maxUsed ? 'text-red-600 font-semibold' : 'text-gray-600'}`}>
+                    <div
+                      className={`flex items-center ${maxUsed ? 'text-red-600 font-semibold' : 'text-gray-600'}`}
+                    >
                       <Users className="w-3 h-3 mr-1" />
                       Utilizzi: {promo.usedCount || 0} / {promo.maxUses}
                       {maxUsed && <span className="ml-1">(Esaurito)</span>}
@@ -565,7 +571,9 @@ const PromotionsPage: React.FC = () => {
           <div className="text-center py-12">
             <Tag className="w-16 h-16 text-gray-300 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-              {searchQuery || filterType !== 'all' ? 'Nessuna promozione trovata' : 'Nessuna promozione'}
+              {searchQuery || filterType !== 'all'
+                ? 'Nessuna promozione trovata'
+                : 'Nessuna promozione'}
             </h3>
             <p className="text-gray-600 mb-4">
               {searchQuery || filterType !== 'all'
@@ -626,7 +634,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
   const toggleDay = (day: number) => {
     const days = formData.validDays || [];
     const newDays = days.includes(day)
-      ? days.filter(d => d !== day)
+      ? days.filter((d) => d !== day)
       : [...days, day].sort((a, b) => a - b);
     setFormData({ ...formData, validDays: newDays });
   };
@@ -635,7 +643,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
     const ranges = formData.timeRanges || [];
     setFormData({
       ...formData,
-      timeRanges: [...ranges, { startTime: '09:00', endTime: '18:00' }]
+      timeRanges: [...ranges, { startTime: '09:00', endTime: '18:00' }],
     });
   };
 
@@ -643,7 +651,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
     const ranges = formData.timeRanges || [];
     setFormData({
       ...formData,
-      timeRanges: ranges.filter((_, i) => i !== index)
+      timeRanges: ranges.filter((_, i) => i !== index),
     });
   };
 
@@ -658,7 +666,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
     const tiers = formData.progressiveTiers || [];
     setFormData({
       ...formData,
-      progressiveTiers: [...tiers, { minSpend: 0, discount: 0 }]
+      progressiveTiers: [...tiers, { minSpend: 0, discount: 0 }],
     });
   };
 
@@ -666,7 +674,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
     const tiers = formData.progressiveTiers || [];
     setFormData({
       ...formData,
-      progressiveTiers: tiers.filter((_, i) => i !== index)
+      progressiveTiers: tiers.filter((_, i) => i !== index),
     });
   };
 
@@ -735,9 +743,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
 
           {/* Descrizione */}
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Descrizione
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Descrizione</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
@@ -748,19 +754,53 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
           </div>
 
           {/* Campi specifici per tipo */}
-          {(formData.type === 'percentage' || formData.type === 'fixed' || formData.type === 'coupon' || formData.type === 'category' || formData.type === 'happy_hour' || formData.type === 'quantity') && (
+          {(formData.type === 'percentage' ||
+            formData.type === 'fixed' ||
+            formData.type === 'coupon' ||
+            formData.type === 'category' ||
+            formData.type === 'happy_hour' ||
+            formData.type === 'quantity') && (
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Valore Sconto * {formData.type === 'percentage' || formData.type === 'category' || formData.type === 'happy_hour' || formData.type === 'quantity' ? '(%)' : '(€)'}
+                Valore Sconto *{' '}
+                {formData.type === 'percentage' ||
+                formData.type === 'category' ||
+                formData.type === 'happy_hour' ||
+                formData.type === 'quantity'
+                  ? '(%)'
+                  : '(€)'}
               </label>
               <input
                 type="number"
                 value={formData.value}
-                onChange={(e) => setFormData({ ...formData, value: parseFloat(e.target.value) || 0 })}
-                placeholder={formData.type === 'percentage' || formData.type === 'category' || formData.type === 'happy_hour' || formData.type === 'quantity' ? '10' : '5.00'}
-                step={formData.type === 'percentage' || formData.type === 'category' || formData.type === 'happy_hour' || formData.type === 'quantity' ? '1' : '0.01'}
+                onChange={(e) =>
+                  setFormData({ ...formData, value: parseFloat(e.target.value) || 0 })
+                }
+                placeholder={
+                  formData.type === 'percentage' ||
+                  formData.type === 'category' ||
+                  formData.type === 'happy_hour' ||
+                  formData.type === 'quantity'
+                    ? '10'
+                    : '5.00'
+                }
+                step={
+                  formData.type === 'percentage' ||
+                  formData.type === 'category' ||
+                  formData.type === 'happy_hour' ||
+                  formData.type === 'quantity'
+                    ? '1'
+                    : '0.01'
+                }
                 min="0"
-                max={formData.type === 'percentage' || formData.type === 'category' || formData.type === 'happy_hour' || formData.type === 'quantity' ? '100' : undefined}
+                max={
+                  formData.type === 'percentage' ||
+                  formData.type === 'category' ||
+                  formData.type === 'happy_hour' ||
+                  formData.type === 'quantity'
+                    ? '100'
+                    : undefined
+                }
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 required
               />
@@ -776,7 +816,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <input
                 type="text"
                 value={formData.couponCode}
-                onChange={(e) => setFormData({ ...formData, couponCode: e.target.value.toUpperCase() })}
+                onChange={(e) =>
+                  setFormData({ ...formData, couponCode: e.target.value.toUpperCase() })
+                }
                 placeholder="SUMMER2024"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 font-mono font-bold"
                 required
@@ -794,7 +836,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
                 <input
                   type="number"
                   value={formData.buyQuantity}
-                  onChange={(e) => setFormData({ ...formData, buyQuantity: parseInt(e.target.value) || 3 })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, buyQuantity: parseInt(e.target.value) || 3 })
+                  }
                   min="1"
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 />
@@ -806,7 +850,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
                 <input
                   type="number"
                   value={formData.getQuantity}
-                  onChange={(e) => setFormData({ ...formData, getQuantity: parseInt(e.target.value) || 1 })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, getQuantity: parseInt(e.target.value) || 1 })
+                  }
                   min="1"
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 />
@@ -823,12 +869,16 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <input
                 type="number"
                 value={formData.bundlePrice}
-                onChange={(e) => setFormData({ ...formData, bundlePrice: parseFloat(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setFormData({ ...formData, bundlePrice: parseFloat(e.target.value) || 0 })
+                }
                 step="0.01"
                 min="0"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
-              <p className="text-xs text-gray-500 mt-1">Seleziona i prodotti del bundle nella sezione "Prodotti Specifici" sotto</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Seleziona i prodotti del bundle nella sezione "Prodotti Specifici" sotto
+              </p>
             </div>
           )}
 
@@ -838,32 +888,37 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <label className="block text-sm font-semibold text-gray-700 mb-2">
                 Fasce di Spesa
               </label>
-              {formData.progressiveTiers && formData.progressiveTiers.map((tier, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                  <input
-                    type="number"
-                    value={tier.minSpend}
-                    onChange={(e) => updateProgressiveTier(index, 'minSpend', parseFloat(e.target.value) || 0)}
-                    placeholder="Min. spesa (€)"
-                    step="0.01"
-                    className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                  />
-                  <input
-                    type="number"
-                    value={tier.discount}
-                    onChange={(e) => updateProgressiveTier(index, 'discount', parseFloat(e.target.value) || 0)}
-                    placeholder="Sconto (%)"
-                    max="100"
-                    className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                  />
-                  <button
-                    onClick={() => removeProgressiveTier(index)}
-                    className="px-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
+              {formData.progressiveTiers &&
+                formData.progressiveTiers.map((tier, index) => (
+                  <div key={index} className="flex gap-2 mb-2">
+                    <input
+                      type="number"
+                      value={tier.minSpend}
+                      onChange={(e) =>
+                        updateProgressiveTier(index, 'minSpend', parseFloat(e.target.value) || 0)
+                      }
+                      placeholder="Min. spesa (€)"
+                      step="0.01"
+                      className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    />
+                    <input
+                      type="number"
+                      value={tier.discount}
+                      onChange={(e) =>
+                        updateProgressiveTier(index, 'discount', parseFloat(e.target.value) || 0)
+                      }
+                      placeholder="Sconto (%)"
+                      max="100"
+                      className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    />
+                    <button
+                      onClick={() => removeProgressiveTier(index)}
+                      className="px-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))}
               <button
                 onClick={addProgressiveTier}
                 className="text-sm text-yellow-600 hover:text-yellow-700 font-semibold"
@@ -882,7 +937,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <input
                 type="number"
                 value={formData.secondItemDiscount}
-                onChange={(e) => setFormData({ ...formData, secondItemDiscount: parseFloat(e.target.value) || 50 })}
+                onChange={(e) =>
+                  setFormData({ ...formData, secondItemDiscount: parseFloat(e.target.value) || 50 })
+                }
                 min="0"
                 max="100"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
@@ -893,32 +950,31 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
           {/* Happy Hour - Fasce Orarie */}
           {formData.type === 'happy_hour' && (
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Fasce Orarie
-              </label>
-              {formData.timeRanges && formData.timeRanges.map((range, index) => (
-                <div key={index} className="flex gap-2 mb-2">
-                  <input
-                    type="time"
-                    value={range.startTime}
-                    onChange={(e) => updateTimeRange(index, 'startTime', e.target.value)}
-                    className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                  />
-                  <span className="flex items-center text-gray-500">-</span>
-                  <input
-                    type="time"
-                    value={range.endTime}
-                    onChange={(e) => updateTimeRange(index, 'endTime', e.target.value)}
-                    className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
-                  />
-                  <button
-                    onClick={() => removeTimeRange(index)}
-                    className="px-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
-                  >
-                    <X className="w-5 h-5" />
-                  </button>
-                </div>
-              ))}
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Fasce Orarie</label>
+              {formData.timeRanges &&
+                formData.timeRanges.map((range, index) => (
+                  <div key={index} className="flex gap-2 mb-2">
+                    <input
+                      type="time"
+                      value={range.startTime}
+                      onChange={(e) => updateTimeRange(index, 'startTime', e.target.value)}
+                      className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    />
+                    <span className="flex items-center text-gray-500">-</span>
+                    <input
+                      type="time"
+                      value={range.endTime}
+                      onChange={(e) => updateTimeRange(index, 'endTime', e.target.value)}
+                      className="flex-1 px-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
+                    />
+                    <button
+                      onClick={() => removeTimeRange(index)}
+                      className="px-3 bg-red-100 hover:bg-red-200 text-red-600 rounded-lg"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+                ))}
               <button
                 onClick={addTimeRange}
                 className="text-sm text-yellow-600 hover:text-yellow-700 font-semibold"
@@ -937,7 +993,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <input
                 type="number"
                 value={formData.minQuantity}
-                onChange={(e) => setFormData({ ...formData, minQuantity: parseInt(e.target.value) || 1 })}
+                onChange={(e) =>
+                  setFormData({ ...formData, minQuantity: parseInt(e.target.value) || 1 })
+                }
                 min="1"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
@@ -954,41 +1012,57 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
                 multiple
                 value={formData.categoryIds || []}
                 onChange={(e) => {
-                  const selected = Array.from(e.target.selectedOptions, option => option.value);
+                  const selected = Array.from(e.target.selectedOptions, (option) => option.value);
                   setFormData({ ...formData, categoryIds: selected });
                 }}
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 size={4}
               >
-                {categories.map(cat => (
-                  <option key={cat.id} value={cat.id}>{cat.name}</option>
+                {categories.map((cat) => (
+                  <option key={cat.id} value={cat.id}>
+                    {cat.name}
+                  </option>
                 ))}
               </select>
-              <p className="text-xs text-gray-500 mt-1">Tieni premuto Ctrl/Cmd per selezionare multiple</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Tieni premuto Ctrl/Cmd per selezionare multiple
+              </p>
             </div>
           )}
 
           {/* Validità */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Valido Da
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Valido Da</label>
               <input
                 type="date"
-                value={formData.validFrom ? new Date(formData.validFrom).toISOString().split('T')[0] : ''}
-                onChange={(e) => setFormData({ ...formData, validFrom: e.target.value ? new Date(e.target.value) : undefined })}
+                value={
+                  formData.validFrom ? new Date(formData.validFrom).toISOString().split('T')[0] : ''
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    validFrom: e.target.value ? new Date(e.target.value) : undefined,
+                  })
+                }
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
             </div>
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Valido Fino
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Valido Fino</label>
               <input
                 type="date"
-                value={formData.validUntil ? new Date(formData.validUntil).toISOString().split('T')[0] : ''}
-                onChange={(e) => setFormData({ ...formData, validUntil: e.target.value ? new Date(e.target.value) : undefined })}
+                value={
+                  formData.validUntil
+                    ? new Date(formData.validUntil).toISOString().split('T')[0]
+                    : ''
+                }
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    validUntil: e.target.value ? new Date(e.target.value) : undefined,
+                  })
+                }
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
             </div>
@@ -1026,7 +1100,9 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <input
                 type="number"
                 value={formData.minPurchase}
-                onChange={(e) => setFormData({ ...formData, minPurchase: parseFloat(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setFormData({ ...formData, minPurchase: parseFloat(e.target.value) || 0 })
+                }
                 placeholder="0.00"
                 step="0.01"
                 min="0"
@@ -1040,7 +1116,12 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <input
                 type="number"
                 value={formData.maxUses || ''}
-                onChange={(e) => setFormData({ ...formData, maxUses: e.target.value ? parseInt(e.target.value) : undefined })}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    maxUses: e.target.value ? parseInt(e.target.value) : undefined,
+                  })
+                }
                 placeholder="Illimitati"
                 min="1"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
@@ -1071,7 +1152,12 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
                 </label>
                 <select
                   value={formData.minLoyaltyLevel || ''}
-                  onChange={(e) => setFormData({ ...formData, minLoyaltyLevel: e.target.value as any || undefined })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      minLoyaltyLevel: (e.target.value as any) || undefined,
+                    })
+                  }
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
                 >
                   <option value="">Qualsiasi</option>
@@ -1102,12 +1188,16 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
               <input
                 type="number"
                 value={formData.priority}
-                onChange={(e) => setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })}
+                onChange={(e) =>
+                  setFormData({ ...formData, priority: parseInt(e.target.value) || 0 })
+                }
                 min="0"
                 max="100"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500"
               />
-              <p className="text-xs text-gray-500 mt-1">Priorità più alta viene applicata per prima</p>
+              <p className="text-xs text-gray-500 mt-1">
+                Priorità più alta viene applicata per prima
+              </p>
             </div>
 
             <div className="flex items-center">
@@ -1117,9 +1207,7 @@ const PromotionModal: React.FC<PromotionModalProps> = ({
                 onChange={(e) => setFormData({ ...formData, active: e.target.checked })}
                 className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
               />
-              <label className="ml-2 text-sm font-semibold text-gray-700">
-                Promozione attiva
-              </label>
+              <label className="ml-2 text-sm font-semibold text-gray-700">Promozione attiva</label>
             </div>
           </div>
         </div>
