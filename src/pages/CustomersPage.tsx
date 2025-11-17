@@ -22,6 +22,7 @@ interface Customer {
   phone?: string;
   address?: string;
   notes?: string;
+  password?: string;
   loyaltyCardId?: string;
   createdAt: Date;
   totalSpent: number;
@@ -67,6 +68,7 @@ const CustomersPage: React.FC = () => {
     phone: '',
     address: '',
     notes: '',
+    password: '',
   });
 
   const filteredCustomers = customers.filter(
@@ -78,7 +80,7 @@ const CustomersPage: React.FC = () => {
 
   const handleOpenAdd = () => {
     setEditingCustomer(null);
-    setFormData({ name: '', email: '', phone: '', address: '', notes: '' });
+    setFormData({ name: '', email: '', phone: '', address: '', notes: '', password: '' });
     setShowAddModal(true);
   };
 
@@ -90,6 +92,7 @@ const CustomersPage: React.FC = () => {
       phone: customer.phone || '',
       address: customer.address || '',
       notes: customer.notes || '',
+      password: customer.password || '',
     });
     setShowAddModal(true);
   };
@@ -318,6 +321,17 @@ const CustomersPage: React.FC = () => {
                     placeholder="+39 320 1234567"
                   />
                 </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
+                <input
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Password del cliente"
+                />
               </div>
 
               <div>

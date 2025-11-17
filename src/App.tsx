@@ -24,6 +24,7 @@ const BusinessOperatorsPage = lazy(() => import('./pages/BusinessOperatorsPage')
 const OperatorForm = lazy(() => import('./pages/OperatorForm'));
 const RoleSelectionPage = lazy(() => import('./pages/RoleSelectionPage'));
 const AdminLoginPage = lazy(() => import('./pages/AdminLoginPage'));
+const BusinessStoresPage = lazy(() => import('./pages/BusinessStoresPage'));
 
 // Loading fallback component
 const LoadingFallback = () => (
@@ -86,6 +87,16 @@ function App() {
             element={
               currentUser?.type === 'reseller' ? (
                 <BusinessForm />
+              ) : (
+                <Navigate to="/admin-login" replace />
+              )
+            }
+          />
+          <Route
+            path="/reseller/businesses/:id/stores"
+            element={
+              currentUser?.type === 'reseller' ? (
+                <BusinessStoresPage />
               ) : (
                 <Navigate to="/admin-login" replace />
               )
