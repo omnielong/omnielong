@@ -1,5 +1,4 @@
 import * as Sentry from '@sentry/react';
-import { BrowserTracing } from '@sentry/browser';
 
 /**
  * Inizializza Sentry per error tracking e performance monitoring
@@ -20,8 +19,8 @@ export const initSentry = () => {
     environment,
     release: `omnielong@${appVersion}`,
     integrations: [
-      new BrowserTracing(),
-      new Sentry.Replay({
+      Sentry.browserTracingIntegration(),
+      Sentry.replayIntegration({
         maskAllText: true,
         blockAllMedia: true,
       }),
