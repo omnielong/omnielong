@@ -174,8 +174,7 @@ const useStore = create<AppState>()(
         }),
 
       // Auth actions - Reseller/Business
-      loginUser: (user, type) =>
-        set({ currentUser: { type, data: user } as AuthUser }),
+      loginUser: (user, type) => set({ currentUser: { type, data: user } as AuthUser }),
       logoutUser: () => set({ currentUser: null }),
 
       // Cash Register Shift
@@ -196,9 +195,7 @@ const useStore = create<AppState>()(
         const { currentShift, sales } = get();
         if (currentShift) {
           const shiftSales = sales.filter(
-            (sale) =>
-              new Date(sale.date) >= currentShift.openedAt &&
-              sale.status === 'completed'
+            (sale) => new Date(sale.date) >= currentShift.openedAt && sale.status === 'completed'
           );
 
           const totalCash = shiftSales.reduce((sum, sale) => {
@@ -338,9 +335,7 @@ const useStore = create<AppState>()(
         })),
       updateLoyaltyCard: (card) =>
         set((state) => ({
-          loyaltyCards: state.loyaltyCards.map((c) =>
-            c.id === card.id ? card : c
-          ),
+          loyaltyCards: state.loyaltyCards.map((c) => (c.id === card.id ? card : c)),
         })),
 
       // Operators
@@ -373,9 +368,7 @@ const useStore = create<AppState>()(
         })),
       updateBusiness: (business) =>
         set((state) => ({
-          businesses: state.businesses.map((b) =>
-            b.id === business.id ? business : b
-          ),
+          businesses: state.businesses.map((b) => (b.id === business.id ? business : b)),
         })),
 
       // Stores

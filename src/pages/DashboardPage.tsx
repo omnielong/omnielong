@@ -1,13 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  ArrowLeft,
-  TrendingUp,
-  ShoppingBag,
-  CreditCard,
-  Euro,
-  Clock,
-} from 'lucide-react';
+import { ArrowLeft, TrendingUp, ShoppingBag, CreditCard, Euro, Clock } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import useStore from '../store/useStore';
@@ -19,26 +12,21 @@ const DashboardPage: React.FC = () => {
   // Calculate statistics
   const todaySales = sales.filter(
     (sale) =>
-      format(new Date(sale.date), 'yyyy-MM-dd') ===
-      format(new Date(), 'yyyy-MM-dd') && sale.status === 'completed'
+      format(new Date(sale.date), 'yyyy-MM-dd') === format(new Date(), 'yyyy-MM-dd') &&
+      sale.status === 'completed'
   );
 
   const totalRevenue = todaySales.reduce((sum, sale) => sum + sale.total, 0);
   const totalTransactions = todaySales.length;
-  const averageTransaction =
-    totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
+  const averageTransaction = totalTransactions > 0 ? totalRevenue / totalTransactions : 0;
 
   const cashPayments = todaySales.reduce((sum, sale) => {
-    const cash = sale.payments
-      .filter((p) => p.type === 'cash')
-      .reduce((s, p) => s + p.amount, 0);
+    const cash = sale.payments.filter((p) => p.type === 'cash').reduce((s, p) => s + p.amount, 0);
     return sum + cash;
   }, 0);
 
   const cardPayments = todaySales.reduce((sum, sale) => {
-    const card = sale.payments
-      .filter((p) => p.type === 'card')
-      .reduce((s, p) => s + p.amount, 0);
+    const card = sale.payments.filter((p) => p.type === 'card').reduce((s, p) => s + p.amount, 0);
     return sum + card;
   }, 0);
 
@@ -108,9 +96,7 @@ const DashboardPage: React.FC = () => {
               <TrendingUp className="w-5 h-5 text-green-500" />
             </div>
             <p className="text-sm text-gray-600 mb-1">Incasso Totale</p>
-            <p className="text-3xl font-bold text-gray-900">
-              €{totalRevenue.toFixed(2)}
-            </p>
+            <p className="text-3xl font-bold text-gray-900">€{totalRevenue.toFixed(2)}</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -120,9 +106,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Transazioni</p>
-            <p className="text-3xl font-bold text-gray-900">
-              {totalTransactions}
-            </p>
+            <p className="text-3xl font-bold text-gray-900">{totalTransactions}</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -132,9 +116,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </div>
             <p className="text-sm text-gray-600 mb-1">Scontrino Medio</p>
-            <p className="text-3xl font-bold text-gray-900">
-              €{averageTransaction.toFixed(2)}
-            </p>
+            <p className="text-3xl font-bold text-gray-900">€{averageTransaction.toFixed(2)}</p>
           </div>
 
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
@@ -145,9 +127,7 @@ const DashboardPage: React.FC = () => {
             </div>
             <p className="text-sm text-gray-600 mb-1">Turno Aperto</p>
             <p className="text-xl font-bold text-gray-900">
-              {currentShift?.openedAt
-                ? format(new Date(currentShift.openedAt), 'HH:mm')
-                : '--:--'}
+              {currentShift?.openedAt ? format(new Date(currentShift.openedAt), 'HH:mm') : '--:--'}
             </p>
           </div>
         </div>
@@ -155,9 +135,7 @@ const DashboardPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           {/* Payment Methods */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
-              Metodi di Pagamento
-            </h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Metodi di Pagamento</h2>
             <div className="space-y-4">
               <div>
                 <div className="flex items-center justify-between mb-2">
@@ -214,20 +192,14 @@ const DashboardPage: React.FC = () => {
 
           {/* Top Products */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">
-              Prodotti più Venduti
-            </h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Prodotti più Venduti</h2>
             {topProducts.length > 0 ? (
               <div className="space-y-4">
                 {topProducts.map((product, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <div className="flex-1">
-                      <p className="text-sm font-semibold text-gray-900">
-                        {product.name}
-                      </p>
-                      <p className="text-xs text-gray-600">
-                        {product.quantity} unità vendute
-                      </p>
+                      <p className="text-sm font-semibold text-gray-900">{product.name}</p>
+                      <p className="text-xs text-gray-600">{product.quantity} unità vendute</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-gray-900">
@@ -248,17 +220,13 @@ const DashboardPage: React.FC = () => {
 
         {/* Recent Sales */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">
-            Ultime Transazioni
-          </h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Ultime Transazioni</h2>
           {todaySales.length > 0 ? (
             <div className="overflow-x-auto">
               <table className="min-w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600">
-                      ORA
-                    </th>
+                    <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600">ORA</th>
                     <th className="text-left py-3 px-4 text-xs font-semibold text-gray-600">
                       ARTICOLI
                     </th>
@@ -277,8 +245,7 @@ const DashboardPage: React.FC = () => {
                         {format(new Date(sale.date), 'HH:mm')}
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
-                        {sale.items.reduce((sum, item) => sum + item.quantity, 0)}{' '}
-                        articoli
+                        {sale.items.reduce((sum, item) => sum + item.quantity, 0)} articoli
                       </td>
                       <td className="py-3 px-4 text-sm text-gray-600">
                         {sale.payments.map((p) => p.type).join(', ')}

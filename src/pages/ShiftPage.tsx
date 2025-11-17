@@ -41,7 +41,9 @@ const ShiftPage: React.FC = () => {
             <p className="text-sm text-green-100">Operatore</p>
             <p className="font-bold">{currentOperator?.name}</p>
             <p className="text-xs text-green-100">
-              {(currentOperator?.role === 'store_admin' || currentOperator?.role === 'business_admin') && 'Amministratore'}
+              {(currentOperator?.role === 'store_admin' ||
+                currentOperator?.role === 'business_admin') &&
+                'Amministratore'}
               {currentOperator?.role === 'cashier' && 'Cassiere'}
               {currentOperator?.role === 'manager' && 'Manager'}
             </p>
@@ -63,7 +65,6 @@ const ShiftPage: React.FC = () => {
 
       <div className="max-w-2xl mx-auto px-4 py-8">
         <div className="bg-white rounded-xl shadow-lg p-8">
-
           {/* Opening Balance */}
           <div className="mb-8">
             <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -109,9 +110,9 @@ const ShiftPage: React.FC = () => {
           {/* Info */}
           <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-xs text-blue-800">
-              💡 <strong>Suggerimento:</strong> Il fondo cassa iniziale dovrebbe
-              corrispondere al contante presente in cassa all'inizio del turno.
-              Verrà utilizzato per il conteggio finale.
+              💡 <strong>Suggerimento:</strong> Il fondo cassa iniziale dovrebbe corrispondere al
+              contante presente in cassa all'inizio del turno. Verrà utilizzato per il conteggio
+              finale.
             </p>
           </div>
         </div>

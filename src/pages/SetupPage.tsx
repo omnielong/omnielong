@@ -34,7 +34,7 @@ const SetupPage: React.FC = () => {
       icon: Shirt,
       description: 'Abbigliamento, scarpe, accessori con taglie e colori',
       color: 'from-pink-500 to-purple-600',
-      features: ['Taglie e colori', 'Stagionalità', 'Brand e collezioni', 'Varianti prodotto']
+      features: ['Taglie e colori', 'Stagionalità', 'Brand e collezioni', 'Varianti prodotto'],
     },
     {
       id: 'bar' as BusinessSector,
@@ -42,7 +42,7 @@ const SetupPage: React.FC = () => {
       icon: Coffee,
       description: 'Vendita veloce con pulsanti rapidi per caffetteria',
       color: 'from-orange-500 to-amber-600',
-      features: ['Pulsanti rapidi', 'Gratta e vinci', 'Ricariche', 'Vendita al volo']
+      features: ['Pulsanti rapidi', 'Gratta e vinci', 'Ricariche', 'Vendita al volo'],
     },
     {
       id: 'restaurant' as BusinessSector,
@@ -50,7 +50,7 @@ const SetupPage: React.FC = () => {
       icon: UtensilsCrossed,
       description: 'Gestione tavoli, comande, modificatori e menu',
       color: 'from-green-500 to-emerald-600',
-      features: ['Gestione tavoli', 'Comande cucina/bar', 'Modificatori', 'Coperti']
+      features: ['Gestione tavoli', 'Comande cucina/bar', 'Modificatori', 'Coperti'],
     },
     {
       id: 'generic' as BusinessSector,
@@ -58,7 +58,7 @@ const SetupPage: React.FC = () => {
       icon: Package,
       description: 'Punto vendita flessibile per qualsiasi settore',
       color: 'from-blue-500 to-indigo-600',
-      features: ['Massima flessibilità', 'Personalizzabile', 'Multi-categoria', 'Universale']
+      features: ['Massima flessibilità', 'Personalizzabile', 'Multi-categoria', 'Universale'],
     },
   ];
 
@@ -95,12 +95,8 @@ const SetupPage: React.FC = () => {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-blue-600 rounded-full mb-6">
               <Store className="w-10 h-10 text-white" />
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-3">
-              Configurazione Iniziale
-            </h1>
-            <p className="text-xl text-gray-600">
-              Scegli il settore del tuo punto vendita
-            </p>
+            <h1 className="text-4xl font-bold text-gray-900 mb-3">Configurazione Iniziale</h1>
+            <p className="text-xl text-gray-600">Scegli il settore del tuo punto vendita</p>
           </div>
 
           {/* Sectors Grid */}
@@ -113,17 +109,15 @@ const SetupPage: React.FC = () => {
                   onClick={() => handleSectorSelect(sector.id)}
                   className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 p-8 text-left border-2 border-transparent hover:border-blue-500 transform hover:-translate-y-1"
                 >
-                  <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${sector.color} rounded-xl mb-4 group-hover:scale-110 transition-transform`}>
+                  <div
+                    className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${sector.color} rounded-xl mb-4 group-hover:scale-110 transition-transform`}
+                  >
                     <Icon className="w-8 h-8 text-white" />
                   </div>
 
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                    {sector.name}
-                  </h3>
+                  <h3 className="text-2xl font-bold text-gray-900 mb-2">{sector.name}</h3>
 
-                  <p className="text-gray-600 mb-4">
-                    {sector.description}
-                  </p>
+                  <p className="text-gray-600 mb-4">{sector.description}</p>
 
                   <div className="space-y-2">
                     {sector.features.map((feature, idx) => (
@@ -153,14 +147,16 @@ const SetupPage: React.FC = () => {
       <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${sectors.find(s => s.id === selectedSector)?.color} rounded-xl mb-4`}>
-            {React.createElement(sectors.find(s => s.id === selectedSector)?.icon || Store, { className: 'w-8 h-8 text-white' })}
+          <div
+            className={`inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br ${sectors.find((s) => s.id === selectedSector)?.color} rounded-xl mb-4`}
+          >
+            {React.createElement(sectors.find((s) => s.id === selectedSector)?.icon || Store, {
+              className: 'w-8 h-8 text-white',
+            })}
           </div>
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">
-            Dati del Negozio
-          </h2>
+          <h2 className="text-3xl font-bold text-gray-900 mb-2">Dati del Negozio</h2>
           <p className="text-gray-600">
-            Settore: <strong>{sectors.find(s => s.id === selectedSector)?.name}</strong>
+            Settore: <strong>{sectors.find((s) => s.id === selectedSector)?.name}</strong>
           </p>
         </div>
 
@@ -184,9 +180,7 @@ const SetupPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Partita IVA
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Partita IVA</label>
             <div className="relative">
               <Hash className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -200,9 +194,7 @@ const SetupPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">
-              Indirizzo
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-2">Indirizzo</label>
             <div className="relative">
               <Building className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
               <input
@@ -217,9 +209,7 @@ const SetupPage: React.FC = () => {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Telefono
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Telefono</label>
               <div className="relative">
                 <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input
@@ -233,9 +223,7 @@ const SetupPage: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                Email
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Email</label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                 <input

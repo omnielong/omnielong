@@ -95,9 +95,7 @@ const SettingsPage: React.FC = () => {
           </button>
           <div>
             <h1 className="text-2xl font-bold">Impostazioni</h1>
-            <p className="text-slate-100">
-              Configura l'integrazione con sistemi esterni
-            </p>
+            <p className="text-slate-100">Configura l'integrazione con sistemi esterni</p>
           </div>
         </div>
       </div>
@@ -109,9 +107,7 @@ const SettingsPage: React.FC = () => {
             <div className="flex items-center">
               <Store className="w-6 h-6 text-blue-600 mr-3" />
               <div>
-                <h2 className="text-xl font-bold text-gray-900">
-                  Configurazione Settore
-                </h2>
+                <h2 className="text-xl font-bold text-gray-900">Configurazione Settore</h2>
                 <p className="text-sm text-gray-600">
                   Impostazioni del settore merceologico attualmente configurato
                 </p>
@@ -161,9 +157,9 @@ const SettingsPage: React.FC = () => {
             <p className="text-xs text-yellow-800 flex items-start">
               <AlertTriangle className="w-4 h-4 mr-2 flex-shrink-0 mt-0.5" />
               <span>
-                <strong>Attenzione:</strong> Cambiare il settore potrebbe richiedere una riconfigurazione
-                dei prodotti e delle funzionalità specifiche. Si consiglia di fare questa operazione solo
-                se necessario.
+                <strong>Attenzione:</strong> Cambiare il settore potrebbe richiedere una
+                riconfigurazione dei prodotti e delle funzionalità specifiche. Si consiglia di fare
+                questa operazione solo se necessario.
               </span>
             </p>
           </div>
@@ -174,9 +170,7 @@ const SettingsPage: React.FC = () => {
           <div className="flex items-center mb-6">
             <Database className="w-6 h-6 text-blue-600 mr-3" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                Integrazione Database Esterno
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900">Integrazione Database Esterno</h2>
               <p className="text-sm text-gray-600">
                 Connetti il POS a Zucchetti o altri sistemi gestionali
               </p>
@@ -185,15 +179,11 @@ const SettingsPage: React.FC = () => {
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">
-                URL Base API
-              </label>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">URL Base API</label>
               <input
                 type="url"
                 value={apiConfig.baseUrl}
-                onChange={(e) =>
-                  setApiConfig({ ...apiConfig, baseUrl: e.target.value })
-                }
+                onChange={(e) => setApiConfig({ ...apiConfig, baseUrl: e.target.value })}
                 placeholder="https://api.zucchetti.it"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -206,9 +196,7 @@ const SettingsPage: React.FC = () => {
               <input
                 type="password"
                 value={apiConfig.apiKey}
-                onChange={(e) =>
-                  setApiConfig({ ...apiConfig, apiKey: e.target.value })
-                }
+                onChange={(e) => setApiConfig({ ...apiConfig, apiKey: e.target.value })}
                 placeholder="••••••••••••••••"
                 className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
@@ -216,30 +204,22 @@ const SettingsPage: React.FC = () => {
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Username
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Username</label>
                 <input
                   type="text"
                   value={apiConfig.username}
-                  onChange={(e) =>
-                    setApiConfig({ ...apiConfig, username: e.target.value })
-                  }
+                  onChange={(e) => setApiConfig({ ...apiConfig, username: e.target.value })}
                   placeholder="username"
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Password
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Password</label>
                 <input
                   type="password"
                   value={apiConfig.password}
-                  onChange={(e) =>
-                    setApiConfig({ ...apiConfig, password: e.target.value })
-                  }
+                  onChange={(e) => setApiConfig({ ...apiConfig, password: e.target.value })}
                   placeholder="••••••••"
                   className="w-full px-4 py-3 bg-gray-50 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
@@ -275,9 +255,7 @@ const SettingsPage: React.FC = () => {
                 )}
               </button>
 
-              <button
-                className="px-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center"
-              >
+              <button className="px-6 bg-green-600 hover:bg-green-700 text-white font-semibold py-3 rounded-lg transition-colors flex items-center">
                 <Save className="w-5 h-5 mr-2" />
                 Salva
               </button>
@@ -290,9 +268,7 @@ const SettingsPage: React.FC = () => {
           <div className="flex items-center mb-6">
             <RefreshCw className="w-6 h-6 text-green-600 mr-3" />
             <div>
-              <h2 className="text-xl font-bold text-gray-900">
-                Sincronizzazione Dati
-              </h2>
+              <h2 className="text-xl font-bold text-gray-900">Sincronizzazione Dati</h2>
               <p className="text-sm text-gray-600">
                 Sincronizza prodotti, carte fedeltà e operatori dal sistema esterno
               </p>
@@ -305,8 +281,8 @@ const SettingsPage: React.FC = () => {
                 syncStatus.includes('Errore')
                   ? 'bg-red-50 text-red-700 border border-red-200'
                   : syncStatus.includes('completata')
-                  ? 'bg-green-50 text-green-700 border border-green-200'
-                  : 'bg-blue-50 text-blue-700 border border-blue-200'
+                    ? 'bg-green-50 text-green-700 border border-green-200'
+                    : 'bg-blue-50 text-blue-700 border border-blue-200'
               }`}
             >
               <p className="text-sm font-semibold flex items-center">
@@ -321,51 +297,44 @@ const SettingsPage: React.FC = () => {
             disabled={syncing}
             className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-400 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"
           >
-            <RefreshCw
-              className={`w-5 h-5 mr-2 ${syncing ? 'animate-spin' : ''}`}
-            />
+            <RefreshCw className={`w-5 h-5 mr-2 ${syncing ? 'animate-spin' : ''}`} />
             {syncing ? 'Sincronizzazione...' : 'Sincronizza Dati'}
           </button>
         </div>
 
         {/* Info Box */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
-          <h3 className="text-sm font-bold text-blue-900 mb-2">
-            ℹ️ Come funziona l'integrazione
-          </h3>
+          <h3 className="text-sm font-bold text-blue-900 mb-2">ℹ️ Come funziona l'integrazione</h3>
           <ul className="text-xs text-blue-800 space-y-1">
             <li>
-              • <strong>Zucchetti:</strong> Il sistema si connette alle API REST
-              di Zucchetti per sincronizzare i dati
+              • <strong>Zucchetti:</strong> Il sistema si connette alle API REST di Zucchetti per
+              sincronizzare i dati
             </li>
             <li>
-              • <strong>Prodotti:</strong> I prodotti vengono scaricati dal
-              gestionale e aggiornati nel POS
+              • <strong>Prodotti:</strong> I prodotti vengono scaricati dal gestionale e aggiornati
+              nel POS
             </li>
             <li>
-              • <strong>Vendite:</strong> Le transazioni vengono inviate
-              automaticamente al gestionale
+              • <strong>Vendite:</strong> Le transazioni vengono inviate automaticamente al
+              gestionale
             </li>
             <li>
-              • <strong>Carte Fedeltà:</strong> I punti e i dati delle carte
-              vengono sincronizzati bidirezionalmente
+              • <strong>Carte Fedeltà:</strong> I punti e i dati delle carte vengono sincronizzati
+              bidirezionalmente
             </li>
             <li>
-              • <strong>Sicurezza:</strong> Tutte le comunicazioni sono
-              crittografate con HTTPS
+              • <strong>Sicurezza:</strong> Tutte le comunicazioni sono crittografate con HTTPS
             </li>
           </ul>
         </div>
 
         {/* API Documentation */}
         <div className="mt-6 bg-gray-100 border border-gray-300 rounded-lg p-4">
-          <h3 className="text-sm font-bold text-gray-900 mb-2">
-            📚 Documentazione API richiesta
-          </h3>
+          <h3 className="text-sm font-bold text-gray-900 mb-2">📚 Documentazione API richiesta</h3>
           <div className="text-xs text-gray-700 space-y-2">
             <p>
-              Per integrare il POS con il tuo sistema, assicurati che le seguenti
-              API REST siano disponibili:
+              Per integrare il POS con il tuo sistema, assicurati che le seguenti API REST siano
+              disponibili:
             </p>
             <code className="block bg-white p-2 rounded border border-gray-300 overflow-x-auto">
               GET /api/v1/health - Test connessione

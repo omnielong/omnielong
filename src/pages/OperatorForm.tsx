@@ -35,9 +35,10 @@ const OperatorForm: React.FC = () => {
   const [touched, setTouched] = useState<{ [key: string]: boolean }>({});
 
   // Filtra gli store del business corrente
-  const businessStores = currentUser?.type === 'business'
-    ? stores.filter((s) => s.businessId === currentUser.data.id)
-    : [];
+  const businessStores =
+    currentUser?.type === 'business'
+      ? stores.filter((s) => s.businessId === currentUser.data.id)
+      : [];
 
   // Carica i dati dell'operatore in modalità edit
   useEffect(() => {
@@ -193,9 +194,7 @@ const OperatorForm: React.FC = () => {
 
       if (isEditing) {
         // Update existing operator
-        const updatedOperators = operators.map((o) =>
-          o.id === id ? operatorData : o
-        );
+        const updatedOperators = operators.map((o) => (o.id === id ? operatorData : o));
         setOperators(updatedOperators);
       } else {
         // Add new operator
@@ -240,7 +239,9 @@ const OperatorForm: React.FC = () => {
               {isEditing ? 'Modifica Operatore' : 'Nuovo Operatore'}
             </h1>
             <p className="text-blue-100">
-              {isEditing ? 'Aggiorna i dati dell\'operatore' : 'Crea un nuovo operatore per i tuoi store'}
+              {isEditing
+                ? "Aggiorna i dati dell'operatore"
+                : 'Crea un nuovo operatore per i tuoi store'}
             </p>
           </div>
         </div>
@@ -292,9 +293,7 @@ const OperatorForm: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email *
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
