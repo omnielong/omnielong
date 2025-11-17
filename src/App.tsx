@@ -1,24 +1,5 @@
+import React, { lazy, Suspense } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ShiftPage from './pages/ShiftPage';
-import POSPage from './pages/POSPage';
-import DashboardPage from './pages/DashboardPage';
-import SettingsPage from './pages/SettingsPage';
-import SetupPage from './pages/SetupPage';
-import ProductsPage from './pages/ProductsPage';
-import CustomersPage from './pages/CustomersPage';
-import PromotionsPage from './pages/PromotionsPage';
-import ReturnsPage from './pages/ReturnsPage';
-import OperatorsPage from './pages/OperatorsPage';
-import FiscalClosurePage from './pages/FiscalClosurePage';
-import BackupPage from './pages/BackupPage';
-import ResellerDashboard from './pages/ResellerDashboard';
-import BusinessDashboard from './pages/BusinessDashboard';
-import BusinessForm from './pages/BusinessForm';
-import StoreForm from './pages/StoreForm';
-import BusinessOperatorsPage from './pages/BusinessOperatorsPage';
-import OperatorForm from './pages/OperatorForm';
-import RoleSelectionPage from './pages/RoleSelectionPage';
-import AdminLoginPage from './pages/AdminLoginPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import useStore from './store/useStore';
 
