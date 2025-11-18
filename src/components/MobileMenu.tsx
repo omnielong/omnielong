@@ -1,5 +1,19 @@
 import React from 'react';
-import { X, Package, Users, Tag, BarChart3, Clock, Settings, LogOut, RotateCcw, UserCog, ClipboardCheck, Database, ShoppingCart } from 'lucide-react';
+import {
+  X,
+  Package,
+  Users,
+  Tag,
+  BarChart3,
+  Clock,
+  Settings,
+  LogOut,
+  RotateCcw,
+  UserCog,
+  ClipboardCheck,
+  Database,
+  ShoppingCart,
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import type { Operator } from '../types';
 import { getAccessibleMenuItems, ROLE_LABELS } from '../utils/permissions';
@@ -41,10 +55,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, curr
   return (
     <div className="fixed inset-0 z-50 lg:hidden">
       {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black bg-opacity-50"
-        onClick={onClose}
-      />
+      <div className="absolute inset-0 bg-black bg-opacity-50" onClick={onClose} />
 
       {/* Menu Panel */}
       <div className="absolute left-0 top-0 bottom-0 w-80 bg-gradient-to-b from-blue-600 to-blue-700 shadow-2xl flex flex-col animate-slide-left">
@@ -61,9 +72,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({ isOpen, onClose, onLogout, curr
           </div>
           {currentOperator && (
             <div className="bg-blue-500 rounded-lg p-3">
-              <p className="text-xs text-blue-200">
-                {ROLE_LABELS[currentOperator.role].label}
-              </p>
+              <p className="text-xs text-blue-200">{ROLE_LABELS[currentOperator.role].label}</p>
               <p className="text-white font-semibold">{currentOperator.name}</p>
               <p className="text-xs text-blue-200 mt-1">
                 {ROLE_LABELS[currentOperator.role].description}

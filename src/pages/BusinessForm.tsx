@@ -104,7 +104,13 @@ const BusinessForm: React.FC = () => {
       maxStores: 5,
       maxOperatorsPerStore: 10,
       price: '€99/mese',
-      features: ['5 punti vendita', 'Max 10 operatori per store', 'Report avanzati', 'API Access', 'Supporto prioritario'],
+      features: [
+        '5 punti vendita',
+        'Max 10 operatori per store',
+        'Report avanzati',
+        'API Access',
+        'Supporto prioritario',
+      ],
     },
     {
       id: 'enterprise',
@@ -112,12 +118,19 @@ const BusinessForm: React.FC = () => {
       maxStores: 999,
       maxOperatorsPerStore: 50,
       price: 'Personalizzato',
-      features: ['Punti vendita illimitati', 'Max 50 operatori per store', 'Tutte le funzionalità', 'API completa', 'Custom branding', 'Supporto dedicato'],
+      features: [
+        'Punti vendita illimitati',
+        'Max 50 operatori per store',
+        'Tutte le funzionalità',
+        'API completa',
+        'Custom branding',
+        'Supporto dedicato',
+      ],
     },
   ];
 
   const handlePlanChange = (planId: string) => {
-    const plan = plans.find(p => p.id === planId);
+    const plan = plans.find((p) => p.id === planId);
     if (plan) {
       setFormData({
         ...formData,
@@ -286,9 +299,7 @@ const BusinessForm: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Email *
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Email *</label>
                 <div className="relative">
                   <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
@@ -305,9 +316,7 @@ const BusinessForm: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Telefono *
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Telefono *</label>
                 <div className="relative">
                   <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
                   <input
@@ -324,9 +333,7 @@ const BusinessForm: React.FC = () => {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Indirizzo
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Indirizzo</label>
                 <div className="relative">
                   <MapPin className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
                   <input
@@ -340,9 +347,7 @@ const BusinessForm: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Sito Web
-                </label>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Sito Web</label>
                 <input
                   type="url"
                   value={formData.website}
@@ -489,7 +494,9 @@ const BusinessForm: React.FC = () => {
                 <input
                   type="number"
                   value={formData.maxStores}
-                  onChange={(e) => setFormData({ ...formData, maxStores: parseInt(e.target.value) || 1 })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, maxStores: parseInt(e.target.value) || 1 })
+                  }
                   min="1"
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
@@ -501,7 +508,12 @@ const BusinessForm: React.FC = () => {
                 <input
                   type="number"
                   value={formData.maxOperatorsPerStore}
-                  onChange={(e) => setFormData({ ...formData, maxOperatorsPerStore: parseInt(e.target.value) || 1 })}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      maxOperatorsPerStore: parseInt(e.target.value) || 1,
+                    })
+                  }
                   min="1"
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 />
@@ -514,7 +526,9 @@ const BusinessForm: React.FC = () => {
                 <input
                   type="date"
                   value={formData.subscriptionEndDate}
-                  onChange={(e) => setFormData({ ...formData, subscriptionEndDate: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, subscriptionEndDate: e.target.value })
+                  }
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                   placeholder="YYYY-MM-DD"
                 />
@@ -550,7 +564,9 @@ const BusinessForm: React.FC = () => {
                 </label>
                 <select
                   value={formData.paymentMethod}
-                  onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value as any })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, paymentMethod: e.target.value as any })
+                  }
                   className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                   <option value="bank_transfer">Bonifico Bancario</option>

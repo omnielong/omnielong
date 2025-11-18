@@ -21,7 +21,7 @@ import { mockStores } from '../utils/storeMockData';
 
 const BusinessDashboard: React.FC = () => {
   const navigate = useNavigate();
-  const { stores, setStores, logoutUser } = useStore();
+  const { stores, setStores, logoutUser, currentUser } = useStore();
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
   const [initialized, setInitialized] = useState(false);
@@ -34,19 +34,25 @@ const BusinessDashboard: React.FC = () => {
     }
   }, [stores.length, setStores, initialized]);
 
+  // Filtra gli store del business corrente
+  const businessStores = useMemo(() => {
+    if (currentUser?.type !== 'business') return [];
+    return stores.filter((s) => s.businessId === currentUser.data.id);
+  }, [stores, currentUser]);
+
   const stats: BusinessStats = useMemo(() => {
     return {
-      totalStores: stores.length,
-      activeStores: stores.filter(s => s.active).length,
+      totalStores: businessStores.length,
+      activeStores: businessStores.filter((s) => s.active).length,
       totalOperators: 25, // Mock
       totalSales: 1534,
-      totalRevenue: 125340.50,
+      totalRevenue: 125340.5,
       totalCustomers: 856,
     };
-  }, [stores]);
+  }, [businessStores]);
 
   const filteredStores = useMemo(() => {
-    return stores.filter((store) => {
+    return businessStores.filter((store) => {
       // Search filter
       if (searchQuery.trim()) {
         const query = searchQuery.toLowerCase();
@@ -66,7 +72,7 @@ const BusinessDashboard: React.FC = () => {
 
       return true;
     });
-  }, [stores, searchQuery, filterStatus]);
+  }, [businessStores, searchQuery, filterStatus]);
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat('it-IT', {
@@ -223,7 +229,9 @@ const BusinessDashboard: React.FC = () => {
 
               {/* Sector Badge */}
               <div className="mb-4">
-                <span className={`${getSectorColor(store.sector)} px-3 py-1 rounded-full text-xs font-bold`}>
+                <span
+                  className={`${getSectorColor(store.sector)} px-3 py-1 rounded-full text-xs font-bold`}
+                >
                   {getSectorLabel(store.sector)}
                 </span>
               </div>
@@ -232,7 +240,9 @@ const BusinessDashboard: React.FC = () => {
               <div className="space-y-2 text-sm mb-4">
                 <div className="flex items-center text-gray-700">
                   <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
-                  <span className="truncate">{store.address}, {store.city} ({store.province})</span>
+                  <span className="truncate">
+                    {store.address}, {store.city} ({store.province})
+                  </span>
                 </div>
                 {store.phone && (
                   <div className="flex items-center text-gray-700">
@@ -264,7 +274,8 @@ const BusinessDashboard: React.FC = () => {
                       <p>Lun-Dom: Orari personalizzati</p>
                     ) : (
                       <p>
-                        Lun-Sab: {store.openingHours.monday?.open}-{store.openingHours.monday?.close}
+                        Lun-Sab: {store.openingHours.monday?.open}-
+                        {store.openingHours.monday?.close}
                         {store.openingHours.sunday?.closed ? ' • Dom: Chiuso' : ''}
                       </p>
                     )}

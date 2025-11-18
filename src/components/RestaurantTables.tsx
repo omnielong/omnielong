@@ -1,5 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import { UtensilsCrossed, Plus, Users, Clock, Euro, X, ShoppingCart, DollarSign, Calendar } from 'lucide-react';
+import {
+  UtensilsCrossed,
+  Plus,
+  Users,
+  Clock,
+  Euro,
+  X,
+  ShoppingCart,
+  DollarSign,
+  Calendar,
+} from 'lucide-react';
 import useStore from '../store/useStore';
 import type { Table } from '../types';
 
@@ -79,12 +89,15 @@ const RestaurantTables: React.FC = () => {
   };
 
   // Raggruppa tavoli per sezione
-  const tablesBySection = tables.reduce((acc, table) => {
-    const section = table.section || 'Default';
-    if (!acc[section]) acc[section] = [];
-    acc[section].push(table);
-    return acc;
-  }, {} as Record<string, Table[]>);
+  const tablesBySection = tables.reduce(
+    (acc, table) => {
+      const section = table.section || 'Default';
+      if (!acc[section]) acc[section] = [];
+      acc[section].push(table);
+      return acc;
+    },
+    {} as Record<string, Table[]>
+  );
 
   const getStatusColor = (status: Table['status']) => {
     switch (status) {
@@ -209,9 +222,7 @@ const RestaurantTables: React.FC = () => {
                   </div>
 
                   {/* Table number */}
-                  <div className="text-3xl font-bold mb-2">
-                    {table.number}
-                  </div>
+                  <div className="text-3xl font-bold mb-2">{table.number}</div>
 
                   {/* Seats */}
                   <div className="flex items-center text-sm mb-2">
@@ -240,7 +251,9 @@ const RestaurantTables: React.FC = () => {
                       </div>
                       <div className="flex items-center text-xs font-bold">
                         <Euro className="w-3 h-3 mr-1" />
-                        {table.currentOrder.items.reduce((sum, item) => sum + item.subtotal, 0).toFixed(2)}
+                        {table.currentOrder.items
+                          .reduce((sum, item) => sum + item.subtotal, 0)
+                          .toFixed(2)}
                       </div>
                     </div>
                   )}
@@ -288,9 +301,7 @@ const RestaurantTables: React.FC = () => {
 
               <div className="flex items-start">
                 <div className="flex-1">
-                  <div className="text-5xl font-bold mb-2">
-                    Tavolo {selectedTable.number}
-                  </div>
+                  <div className="text-5xl font-bold mb-2">Tavolo {selectedTable.number}</div>
                   <div className="flex items-center text-sm mb-1">
                     <Users className="w-4 h-4 mr-1" />
                     {selectedTable.seats} posti
@@ -299,14 +310,10 @@ const RestaurantTables: React.FC = () => {
                     {getStatusLabel(selectedTable.status)}
                   </div>
                   {selectedTable.section && (
-                    <div className="text-xs mt-2 opacity-75">
-                      📍 {selectedTable.section}
-                    </div>
+                    <div className="text-xs mt-2 opacity-75">📍 {selectedTable.section}</div>
                   )}
                 </div>
-                <div className="text-5xl ml-4">
-                  {getStatusIcon(selectedTable.status)}
-                </div>
+                <div className="text-5xl ml-4">{getStatusIcon(selectedTable.status)}</div>
               </div>
             </div>
 
@@ -315,9 +322,7 @@ const RestaurantTables: React.FC = () => {
               {/* Tavolo Libero */}
               {selectedTable.status === 'free' && (
                 <div className="space-y-3">
-                  <p className="text-sm text-gray-600 mb-4">
-                    Il tavolo è libero. Cosa vuoi fare?
-                  </p>
+                  <p className="text-sm text-gray-600 mb-4">Il tavolo è libero. Cosa vuoi fare?</p>
                   <button
                     onClick={handleStartOrder}
                     className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-colors flex items-center justify-center"

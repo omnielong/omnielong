@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   UserPlus,
@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import useStore from '../store/useStore';
 import type { Operator } from '../types';
+import { mockOperators } from '../utils/mockData';
 
 const BusinessOperatorsPage: React.FC = () => {
   const navigate = useNavigate();
@@ -22,6 +23,15 @@ const BusinessOperatorsPage: React.FC = () => {
   const [filterStore, setFilterStore] = useState<string>('all');
   const [filterRole, setFilterRole] = useState<string>('all');
   const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+  const [initialized, setInitialized] = useState(false);
+
+  // Inizializza gli operatori con i mock data se vuoti
+  useEffect(() => {
+    if (!initialized && operators.length === 0) {
+      setOperators(mockOperators);
+      setInitialized(true);
+    }
+  }, [operators.length, setOperators, initialized]);
 
   // Filtra gli operatori del business corrente
   const businessOperators = useMemo(() => {
@@ -89,7 +99,11 @@ const BusinessOperatorsPage: React.FC = () => {
       return;
     }
 
-    if (confirm(`Sei sicuro di voler eliminare l'operatore "${operator.name}"?\n\nQuesta azione non può essere annullata.`)) {
+    if (
+      confirm(
+        `Sei sicuro di voler eliminare l'operatore "${operator.name}"?\n\nQuesta azione non può essere annullata.`
+      )
+    ) {
       const updatedOperators = operators.filter((o) => o.id !== operatorId);
       setOperators(updatedOperators);
       alert(`Operatore "${operator.name}" eliminato con successo`);
