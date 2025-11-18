@@ -1,7 +1,8 @@
 import type { Operator } from '../types';
 
 // Permessi predefiniti per ogni ruolo
-export const ROLE_PERMISSIONS = {
+// CORE role-permissions (camelCase) - current internal shape
+export const ROLE_PERMISSIONS_CORE = {
   business_admin: {
     canAccessReports: true,
     canManageProducts: true,
@@ -58,6 +59,27 @@ export const ROLE_PERMISSIONS = {
     canAccessBackup: false,
     canAccessFiscalClosure: false,
   },
+};
+
+// Compatibility layer for older tests/consumers that expect
+// snake_case permission names and different role keys
+const mapCoreToLegacy = (core: Record<string, any>) => ({
+  manage_operators: !!core.canManageOperators,
+  manage_products: !!core.canManageProducts,
+  view_reports: !!core.canAccessReports,
+  manage_promotions: !!core.canManagePromotions,
+  process_sales: !!core.canOpenCloseCashRegister || !!core.canManageProducts,
+  manage_customers: !!core.canManageCustomers,
+  fiscal_operations: !!core.canAccessFiscalClosure,
+});
+
+export const ROLE_PERMISSIONS = {
+  // keep business_admin as-is
+  business_admin: mapCoreToLegacy(ROLE_PERMISSIONS_CORE.business_admin),
+  // map legacy role names to current roles
+  pos_manager: mapCoreToLegacy(ROLE_PERMISSIONS_CORE.manager),
+  pos_operator: mapCoreToLegacy(ROLE_PERMISSIONS_CORE.cashier),
+  reseller_admin: mapCoreToLegacy(ROLE_PERMISSIONS_CORE.business_admin),
 };
 
 // Ottieni i permessi per un operatore
